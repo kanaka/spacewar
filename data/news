@@ -1,31 +1,24 @@
+0.3
 
 
-1.5
+Spacewar 0.4
+December 10, 2004
+Health, shields, shield powerups. Insults and complements.
+Added 9 more preference settings. Added win at a certain score.
+Fixed download news.
 
+Spacewar 0.3
+December 06, 2004
+Integration with SolarWolf game frame work.
 
+Spacewar 0.2
+December 04, 2004
+Development version. Not playable.
 
-Graphics Source
-January 15, 2004
-Eero Tamminen has released his source graphic files for Solarwolf.
-Now you can experiment with the Solarwolf graphics for yourself.
-See the Solarwolf website.
-
-
-
-
-SolarWolf 1.4
-January 7, 2004
-For the new 2004 I give you Solarwolf version 1.4.  This release
-adds all new graphics. And of course several new surprise features.
-Be careful out there!
-
-
-
-Mac OSX Package
-October 1, 2003
-A new package for Mac OSX has been created. This runs just as clean
-and easy as the other packages, get this one out to all your Mac buddies!
-
+Spacewar 0.1
+November 22, 2004
+Here we go! First real public release. All the basic feature set
+should now be working.
 
 
 

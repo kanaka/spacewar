@@ -1,7 +1,7 @@
 """main module, starts game and main loop"""
 
 import pygame
-import game, gfx, snd, txt, input
+import game, pref, gfx, snd, txt, input
 import allmodules
 import gamepref
 
@@ -31,7 +31,7 @@ def gamemain(args):
     gamepref.load_prefs()
 
     size = 800, 600
-    full = game.display
+    full = pref.display
     if '-window' in args:
         full = 0
     gfx.initialize(size, full)
@@ -87,7 +87,7 @@ def gamemain(args):
                 continue
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 if event.mod&pygame.KMOD_ALT:
-                    game.display = not game.display
+                    pref.display = not pref.display
                     gfx.switchfullscreen()
                     continue
             inputevent = input.translate(event)

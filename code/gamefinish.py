@@ -4,7 +4,6 @@ import pygame
 import gfx, game, snd
 
 
-
 class GameFinish:
     def __init__(self, prevhandler):
         self.prevhandler = prevhandler
@@ -31,9 +30,6 @@ class GameFinish:
             #pygame.time.delay(200)
             game.handler = self.prevhandler
 
-
     def background(self, area):
         return gfx.surface.fill((0, 0, 0), area)
-
-
 

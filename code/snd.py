@@ -2,7 +2,8 @@
 
 import pygame, os
 from pygame.locals import *
-import game, input
+###import game, input
+import pref, input
 
 
 mixer = music = None
@@ -44,7 +45,7 @@ def fetch(name):
 
 
 def play(name, volume=1.0, pos=-1):
-    prefvolume = [0, 0.6, 1.0][game.volume]
+    prefvolume = [0, 0.6, 1.0][pref.volume]
     volume *= prefvolume
     if not volume:
         return
@@ -66,7 +67,7 @@ CurrentSong = None
 CurrentVolume = 1.0
 SwitchingSongs = 0
 def playmusic(musicname, volume=1.0):
-    if not music or not game.music: return
+    if not music or not pref.music: return
     global CurrentSong, SwitchingSongs, CurrentVolume
     if musicname == CurrentSong:
         return
@@ -79,7 +80,7 @@ def playmusic(musicname, volume=1.0):
         music.set_endevent(input.FINISHMUSIC)
         music.fadeout(1000)
     else:
-        prefvolume = [0, 0.6, 1.0][game.music]
+        prefvolume = [0, 0.6, 1.0][pref.music]
         fullname = os.path.join('data', 'music', musicname)
         music.load(fullname)
         music.play(-1)
@@ -88,7 +89,7 @@ def playmusic(musicname, volume=1.0):
 def finish_playmusic():
     global CurrentSong, SwitchingSongs, CurrentVolume
     SwitchingSongs = 0
-    prefvolume = [0, 0.6, 1.0][game.music]
+    prefvolume = [0, 0.6, 1.0][pref.music]
     fullname = os.path.join('data', 'music', CurrentSong)
     music.load(fullname)
     music.play(-1)
@@ -99,7 +100,7 @@ def finish_playmusic():
 def tweakmusicvolume():
     if not music:
         return
-    prefvolume = [0, 0.6, 1.0][game.music]
+    prefvolume = [0, 0.6, 1.0][pref.music]
     if not prefvolume:
         music.stop()
     if not music.get_busy():

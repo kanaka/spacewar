@@ -1,40 +1,38 @@
 #!/usr/bin/env python
+
 from pygame import transform, font, Rect, key
 from pygame.locals import *
-import gfx, snd
+import gfx, snd, pref
 from math import *
 from random import randint, random
 
-import game
+# *** TODO: make calculations use arena.left and arena.top 
+#       instead of assuming 0,0
+if __name__ != '__main__': 
+    # We were imported normally from gameplay.py
+    import game
+    arena = game.arena
+else:
+    # We are running objs.py standalone
+    arena = (0, 0, 800, 600)
 
-testmode = 0
-
-# *** TODO: make calculations use left and top instead of assuming 0,0
-left = game.arena.left
-right = game.arena.right
-top = game.arena.top
-bottom = game.arena.bottom
-
-# Timing settings
+# Timing settings, proportional to frames_per_sec
+game_clock = None  # Set in load_game_resources or main()
 frames_per_sec = 40
-# these are proportional to frames_per_sec
 fire_delay_frames = frames_per_sec / 2
 compass_dirs = frames_per_sec
-death_frames = 3 * frames_per_sec
-spike_rate = frames_per_sec * 25
+###death_frames = 3 * frames_per_sec
 fire_life = frames_per_sec * 4
+fps_list = [30] * frames_per_sec
 
 # Game physics settings
 reverse_power = -0.08
-turbo_power = 0.12
+thrust_power = 0.12
 fire_speed = 5.0
-fire_damage = 40
 explosion_damage = 3
-heal_rate = 0.03
+bobble_power = 50.0
 smoke_speed = 5.0
-gravity_const = 20.0
-start_clearance = 25  # distance ships start from other objects
-stationary_sun = 1
+start_clearance = 30  # distance ships start from other objects
 
 # Object lists:
 #   - vapors for smoke and other "vapors"
@@ -42,26 +40,25 @@ stationary_sun = 1
 #   - high for the fire and explosions
 #   - virtual for help text, and non-colliding objects
 #   - pend for non-rendered objects still being tracked
-vapors = []
-low = []
-high = []
-virtual = []
-pend = []
-
-# List of object lists in rendering order, top is last
+#   - list: rendered lists in rendering order
+vapors, low, high, virtual, pend = [], [], [], [], []
 list = [vapors, low, high, virtual]
 
 # Ship images are 3D arrays [player][phase][direction]
 images_ship = images_reverse = images_turbo = images_shield = None
 images_explosion = images_pop = images_smoke = images_fire = None
-images_box = images_spike = images_tele = None
+images_box = images_spike = images_tele = images_bobble = None
 
 # Load all the images
 def load_game_resources():
-    #load ship graphics
+    global game_clock 
     global images_ship, images_reverse, images_turbo, images_shield
     global images_explosion, images_pop, images_smoke, images_fire
-    global images_box, images_spike, images_tele
+    global images_box, images_spike, images_tele, images_bobble
+
+    if not game_clock:
+        # objs.py is imported, not standalone
+        game_clock = game.clock
 
     # Load normal ship image
     images_ship   = [[],[],[],[]]
@@ -101,8 +98,23 @@ def load_game_resources():
             for i in range(0, 361, 360/compass_dirs):
                 images_turbo[ship][p].append(transform.rotate(img_anim[p],i))
 
+    images_smoke = []
+    img = gfx.load('smoke.png')
+    #img = transform.scale(img, (img.get_width()*2/3, img.get_height()*2/3))
+    img_anim = gfx.animstrip(img)
+    if gfx.surface.get_bytesize()>1: #16 or 32bit
+        i = 1
+        for img in img_anim:
+            img.set_alpha((1.8-log(i))*40, RLEACCEL)
+            i += 1
+    phases = len(img_anim)
+    for p in range(phases):
+        images_smoke.append([])
+        images_smoke[p].append(img_anim[p])
+
     images_shield = []
     img = gfx.load('bonus-shield.png')
+    #img.set_alpha(128)
     #img = transform.scale(img, (img.get_width()*2/3, img.get_height()*2/3))
     img_anim = gfx.animstrip(img)
     phases = len(img_anim)
@@ -164,19 +176,14 @@ def load_game_resources():
         images_spike.append([])
         images_spike[p].append(img_anim[p])
 
-    images_smoke = []
-    img = gfx.load('smoke.png')
+    images_bobble = []
+    img = gfx.load('powerup.png')
     #img = transform.scale(img, (img.get_width()*2/3, img.get_height()*2/3))
     img_anim = gfx.animstrip(img)
-    if gfx.surface.get_bytesize()>1: #16 or 32bit
-        i = 1
-        for img in img_anim:
-            img.set_alpha((1.8-log(i))*40, RLEACCEL)
-            i += 1
     phases = len(img_anim)
     for p in range(phases):
-        images_smoke.append([])
-        images_smoke[p].append(img_anim[p])
+        images_bobble.append([])
+        images_bobble[p].append(img_anim[p])
 
 
 # All game play objects are a subclass of Mass
@@ -201,8 +208,8 @@ class Mass:
         self.phase = 0.0
 
     def tick(self, speedadjust):
-        self.x = (self.x + self.vel_x) % right
-        self.y = (self.y + self.vel_y) % bottom
+        self.x = (self.x + self.vel_x) % arena[2]
+        self.y = (self.y + self.vel_y) % arena[3]
         
         self.rect = Rect(int(self.x)-self.width/2, int(self.y)-self.height/2, 
                      self.width, self.height)
@@ -210,16 +217,15 @@ class Mass:
     def draw(self):
         phase = int(self.phase)
         dir = self.dir
-        cx = int(self.x)-(self.imgs[phase][dir].get_rect()[2] /2)
-        cy = int(self.y)-(self.imgs[phase][dir].get_rect()[3] /2)
-        gfx.surface.blit(self.imgs[phase][dir], (cx, cy))
+        ###cx = int(self.x)-(self.imgs[phase][dir].get_rect()[2] /2)
+        ###cy = int(self.y)-(self.imgs[phase][dir].get_rect()[3] /2)
+        ###gfx.surface.blit(self.imgs[phase][dir], (cx, cy))
+        gfx.surface.blit(self.imgs[phase][dir], self.rect)
         gfx.dirty2(self.rect, self.lastrect)
         self.lastrect = self.rect
-        if testmode:
-            gfx.update()
 
-    def erase(self, background):
-        background(self.rect)
+    def erase(self):
+        gfx.surface.fill(0, self.rect)
         if self.dead:
             gfx.dirty2(self.rect, self.lastrect)
 
@@ -251,8 +257,8 @@ class Mass:
         force = other_mass.mass/(dist*dist)
         
         rads = self.direction(other_mass)
-        self.vel_x = self.vel_x - sin(rads)*force*gravity_const
-        self.vel_y = self.vel_y - cos(rads)*force*gravity_const
+        self.vel_x = self.vel_x - sin(rads)*force*pref.gravity_const
+        self.vel_y = self.vel_y - cos(rads)*force*pref.gravity_const
 
     def clearance(self, other_mass):
         # *** TODO: this needs to account for motion
@@ -262,8 +268,8 @@ class Mass:
         found_spot = 0
         new_dir = randint(0, compass_dirs-1)
         while not found_spot:
-            self.x = randint(50, right-50)
-            self.y = randint(50, bottom-50)
+            self.x = randint(50, arena[2]-50)
+            self.y = randint(50, arena[3]-50)
             found_spot = 1
             for object in low + high:
                 if object is not self:
@@ -344,13 +350,13 @@ class Explosion(Mass):
         pass
 
 class Sun(Mass):
-    def __init__(self, x=game.arena.width/2, y=game.arena.height/2):
+    def __init__(self, x=arena[2]/2, y=arena[3]/2):
         self.imgs = images_box
         self.phases = len(self.imgs)
         Mass.__init__(self, x, y, vel_x=0, vel_y=0, mass=10.0, radius=10)
 
     def tick(self, speedadjust):
-        if not stationary_sun: 
+        if not pref.sun: 
             Mass.tick(self, speedadjust)
         self.phase = (self.phase+0.4)%self.phases
 
@@ -373,6 +379,8 @@ class Spike(Mass):
             if self.pending_frames <= 0:
                 self.dead = 0
                 self.find_spot()
+                self.vel_x = (random()-0.5) * 4
+                self.vel_y = (random()-0.5) * 4
                 snd.play('klank2', 1.0, self.rect.centerx)
 
     def hit_by(self, other_mass):
@@ -384,6 +392,37 @@ class Spike(Mass):
                 explosion.mass = self.mass
                 high[0:0] = [explosion]
                 # gameplay.runobjects() will remove spike
+
+class Bobble(Mass):
+    def __init__(self, x, y, vel_x, vel_y):
+        self.imgs = images_bobble
+        self.phases = len(self.imgs)
+        Mass.__init__(self, x, y, vel_x, vel_y, mass=0.5, radius=10)
+
+    def tick(self, speedadjust):
+        Mass.tick(self, speedadjust)
+
+        self.phase = (self.phase+0.2)%self.phases
+
+        if self.pending_frames > 0:
+            self.pending_frames = self.pending_frames -1
+            # Make the spike appear again
+            if self.pending_frames <= 0:
+                self.dead = 0
+                self.find_spot()
+                self.vel_x = (random()-0.5) * 6
+                self.vel_y = (random()-0.5) * 6
+                snd.play('chimeout', 1.0, self.rect.centerx)
+
+    def hit_by(self, other_mass):
+        if not self.dead:
+            # If dead by another method, don't over-ride
+            self.dead = 1
+            vel_x = self.vel_x / 5
+            vel_y = self.vel_y / 5
+            if not other_mass.__class__ == Ship:
+                snd.play('boxhit', 1.0, other_mass.rect.centerx)
+                vapors.append(Pop(other_mass.x, other_mass.y, vel_x, vel_y))
 
 class Tele(Mass):
     def __init__(self, x, y):
@@ -398,16 +437,20 @@ class Tele(Mass):
             self.dead = 1
 
 class Ship(Mass):
-    PK_LEFT = [K_LEFT, K_a, K_j, K_KP2]
-    PK_RIGHT = [K_RIGHT, K_d, K_l, K_KP8]
-    PK_REVERSE = [K_DOWN, K_s, K_k, K_KP5]
-    PK_THRUST = [K_UP, K_w, K_i, K_KP4]
-    PK_FIRE = [K_RCTRL, K_TAB, K_SPACE, K_KP0]
+    PK_LEFT = (K_LEFT, K_a, K_j, K_KP2)
+    PK_RIGHT = (K_RIGHT, K_d, K_l, K_KP8)
+    PK_REVERSE = (K_DOWN, K_s, K_k, K_KP5)
+    PK_THRUST = (K_UP, K_w, K_i, K_KP4)
+    PK_FIRE = (K_RCTRL, K_TAB, K_SPACE, K_KP0)
+
+    BASE_COLOR = ((75, 0, 0), (0, 75, 0), (0, 0, 75), (75, 75, 0))
 
     def __init__(self, player=0, x=50.0, y=50.0, dir=0):
         self.player=player
+        self.mycolor = self.BASE_COLOR[player]
         self.score = 0
         self.max_health = 100.0
+        self.max_shield = 100.0
         self.start(x, y, dir=dir)
 
     def start(self, x=50.0, y=50.0, vel_x=0, vel_y=0, mass=1.0, radius=11, dir=0):
@@ -416,14 +459,15 @@ class Ship(Mass):
         Mass.__init__(self, x, y, vel_x, vel_y, mass, radius, dir)
       
         self.health = 100.0
-        self.shield = 0
-        self.shield_phase = 0.0
+        self.shield = 0.0
         self.shield_phases = len(images_shield)
         self.thrust = 0
-        self.turbo = 0
         self.turn = 0
         self.fire_delay = 0
+        self.smoke_rate = 0.0
         self.pending_frames = 0
+        self.complement = 0
+        self.insult = 0
        
     def tick(self, speedadjust):
         # Ship is dead, waiting to re-appear 
@@ -432,11 +476,13 @@ class Ship(Mass):
                 snd.play('startlife', 1.0, self.rect.centerx)
             self.pending_frames = self.pending_frames -1
             self.health = (self.max_health * 
-                          (death_frames - self.pending_frames) / death_frames)
+                (pref.death_time * frames_per_sec - self.pending_frames) / 
+                (pref.death_time * frames_per_sec))
             # Make the ship appear again
             if self.pending_frames <= 0:
                 self.dead = 0
-                self.start()
+                dir = randint(0, 359)
+                self.start(dir=dir)
                 self.find_spot()
             # Since we're dead, no more to do
             return
@@ -446,14 +492,24 @@ class Ship(Mass):
             rads = radians(self.dir*(360/compass_dirs))
             self.vel_x = self.vel_x - sin(rads)*self.thrust
             self.vel_y = self.vel_y - cos(rads)*self.thrust
-            # Smoke trails
+            # Smoke trails, don't overload frame rate
             if gfx.surface.get_bytesize()>1:
                 if self.thrust > 0: rads = (rads+pi) % (2.0*pi)
-                if game.clock.get_fps() > 35.0:
-                    loop = 2
-                else: 
-                    loop = 1
-                for i in range(loop):
+                fps = min(fps_list)
+                if fps > 40.0:
+                    self.smoke_rate += 2.0
+                if fps > 35.0:
+                    self.smoke_rate += 1.0
+                elif fps > 30.0:
+                    self.smoke_rate += 0.4
+                elif fps > 25.0:
+                    self.smoke_rate += 0.2
+                elif fps > 20.0:
+                    self.smoke_rate += 0.1
+                else:
+                    self.smoke_rate += 0.05
+                for i in range(int(self.smoke_rate)):
+                    self.smoke_rate -= 1.0
                     x = (self.x - sin(rads)*(self.radius+5) + randint(-7,7))
                     y = (self.y - cos(rads)*(self.radius+5) + randint(-7,7))
                     vel_x = (self.vel_x - sin(rads)*smoke_speed + random()/3)
@@ -471,23 +527,23 @@ class Ship(Mass):
         
         # Next phase from animation
         self.phase = (self.phase+1.0)%self.phases
-        self.shield_phase = (self.shield_phase+0.2)%self.shield_phases
         if self.health < self.max_health:
-            self.health = min (self.max_health, self.health + heal_rate)
+            self.health = min (self.max_health, 
+                               self.health + pref.heal_rate/100.0)
 
         # Slow down firing rate
         if self.fire_delay > 0:
             self.fire_delay = self.fire_delay -1
 
     def draw(self):
-        if self.shield:
-            global images_shield
-            imgs = images_shield
-            phase = int(self.shield_phase)
-            cx = int(self.x)-(imgs[phase][0].get_rect()[2] /2)
-            cy = int(self.y)-(imgs[phase][0].get_rect()[3] /2)
-            gfx.surface.blit(imgs[phase][0], (cx, cy))
         Mass.draw(self)
+        if self.shield:
+            phases = self.shield_phases-1
+            phase = phases - int((phases+0.99) * self.shield / self.max_shield)
+            imgs = images_shield[phase][0]
+            cx = int(self.x)-(imgs.get_rect()[2] /2)
+            cy = int(self.y)-(imgs.get_rect()[3] /2)
+            gfx.surface.blit(imgs, (cx, cy))
 
     def do_input(self):
         player = self.player
@@ -527,8 +583,8 @@ class Ship(Mass):
             self.phase = 0.0
     
     def cmd_turbo(self):
-        if not self.thrust == turbo_power:
-            self.thrust = turbo_power
+        if not self.thrust == thrust_power:
+            self.thrust = thrust_power
             self.imgs = images_turbo[self.player]
             self.phases = len(self.imgs)
             self.phase = 0.0
@@ -556,109 +612,203 @@ class Ship(Mass):
         global high
         if self.dead: return
         if other_mass.__class__ == Fire:
-            self.health -= fire_damage
+            damage = ((pref.fire_damage-10) * 
+                      other_mass.ticks_to_live/fire_life + 10)
+            self.shield -= damage
+            if self.shield < 0.0:
+                self.health += self.shield
+                self.shield = 0.0
             if self.health <= 0.0:
                 if other_mass.owner is not self:
                     other_mass.owner.score = other_mass.owner.score + 1
+                    other_mass.owner.complement = 1
         elif other_mass.__class__ == Explosion:
-            self.health -= explosion_damage
+            if not self.shield:
+                self.health -= explosion_damage
+        elif other_mass.__class__ == Bobble:
+            self.shield = min (self.max_shield, self.shield + bobble_power)
+            snd.play('chimein', 1.0, other_mass.rect.centerx)
         else:
             self.health = 0.0
             if self.score > 0:
-                self.score = self.score - 1
+                if pref.scoring == 0:
+                    self.score = self.score - 1
+                self.insult = 1
         if self.health <= 0.0: 
             self.health = 0.0
             self.dead = 1
-            self.pending_frames = death_frames
+            self.pending_frames = pref.death_time * frames_per_sec
             explosion = Explosion(self.x, self.y, self.vel_x, self.vel_y)
             explosion.mass = self.mass
             high[0:0] = [explosion]
             # gameplay.runobjects() will move ship to pending
 
 
-###def main():
-###    clock = pygame.time.Clock()
-###
-###    # Load the main game objects
-###    ship1 = Ship("ship1.png", "ship2.png", 100, 100, 270)
-###    objects.append(ship1)
-###    ship2 = Ship("ship1.png", "ship3.png", 540, 380, 90)
-###    objects.append(ship2)
-###    sun = Sun("spikeball.png")
-###    objects.append(sun)
-###
-###    # Setup scoring
-###    score = Score(ship1, ship2)
-###
-###    # Main game event loop
-###    while 1:
-###        # Set the max frame rate
-###        clock.tick(frames_per_sec)
-###
-###        # Handle keyboard events
-###        if pygame.key.get_pressed()[K_LEFT]:
-###            ship1.rotate_left()
-###        if pygame.key.get_pressed()[K_RIGHT]:
-###            ship1.rotate_right()
-###        if pygame.key.get_pressed()[K_DOWN]:
-###            ship1.fire()
-###        if pygame.key.get_pressed()[K_UP]:
-###            ship1.thrust_on()
-###        else:
-###            ship1.thrust_off()
-###        if pygame.key.get_pressed()[K_a]:
-###            ship2.rotate_left()
-###        if pygame.key.get_pressed()[K_d]:
-###            ship2.rotate_right()
-###        if pygame.key.get_pressed()[K_s]:
-###            ship2.fire()
-###        if pygame.key.get_pressed()[K_w]:
-###            ship2.thrust_on()
-###        else:
-###            ship2.thrust_off()
-###
-###        for event in pygame.event.get():
-###            if event.type == QUIT:
-###                sys.exit()
-###            elif event.type == KEYDOWN and event.key == K_ESCAPE:
-###                sys.exit()
-###      
-###        # For each object against every other object:
-###        # - determine gravitational effect
-###        # - determine whether they have collided
-###        for object1 in objects:
-###            for object2 in objects:
-###                if object1 is not object2:
-###                    object1.gravitate(object2)
-###        for object1 in objects:
-###            for object2 in objects:
-###                if object1 is not object2:
-###                    if object1.clearance(object2) < 0:
-###                        object1.hit_by(object2)
-###                        object2.hit_by(object1)
-###
-###        # Tell objects to update (position, etc)
-###        for object in objects:
-###            object.tick()
-###        for object in pending:
-###            object.tick()
-###
-###        # Update the screen and draw all objects
-###        screen.fill(black)
-###        for object in objects:
-###            object.draw()
-###        score.draw()
-###
-###        pygame.display.flip()
+# Standalone execution only
+class Score:
+    def __init__(self, ships):
+        self.font = font.SysFont("sans", 25)
+        self.ships = ships
+        self.render()
+        self.dead = 0
+
+    def render(self):
+        self.imgs = []
+        self.scores = []
+        for ship in self.ships:
+            self.scores.append(ship.score)
+            self.imgs.append(self.font.render(
+                "Player %d: %d" % (ship.player+1, ship.score), 1, (0,128,255)))
+
+    def tick(self, speedadjust):
+        realscores = [x.score for x in self.ships]
+        if self.scores != realscores:
+            self.render()
+        pass
+
+    def erase(self):
+        self.draw(erase=1)
+
+    def draw(self, erase=0):
+        for i in range(len(self.scores)):
+            width = self.imgs[i].get_width()
+            height = self.imgs[i].get_height()
+            cx = arena[2] - width - 20
+            cy = 20 + i*30
+            if not erase:
+                r = gfx.surface.blit(self.imgs[i], (cx, cy))
+                gfx.dirty(r)
+            else:
+                gfx.surface.fill(0, (cx, cy, width+15, height))
 
 
-###if __name__ == '__main__': 
-###    main()
-###else:
-###    global testmode
-###    testmode = 1
-###    ship1 = Ship("ship1.png", "ship2.png", 100, 100, 270)
-###    ship2 = Ship("ship1.png", "ship3.png", 150, 100, 90)
-###    ship1.draw()
-###    ship2.draw()
-###    print "Test mode"
+def fps_update():
+    global fps_list
+    fps_list.append(game_clock.get_fps())
+    fps_list = fps_list[1:]
+
+
+def runobjects(speedadjust):
+    # Miscellaneous housekeeping
+    fps_update()
+
+    # Make spikes appear
+    if randint(0,pref.spike_rate * frames_per_sec) == 1:
+        spike = Spike(0,0,0,0)
+        spike.dead = 1
+        spike.pending_frames = frames_per_sec
+        pend.append(spike)
+
+    # Make shield powerups appear
+    if randint(0,pref.shield_powerup_rate * frames_per_sec) == 1:
+        bobble = Bobble(0,0,0,0)
+        bobble.dead = 1
+        bobble.pending_frames = frames_per_sec
+        pend.append(bobble)
+
+    # Gravitate
+    for o1 in vapors + low + high:
+        for o2 in low + high:
+            if o1 is not o2:
+                o1.gravitate(o2)
+
+    # Tick pending objects
+    for o in pend:
+        o.tick(speedadjust)
+        if not o.dead:
+            if o.__class__ == Ship:
+                pend.remove(o)
+                low.append(o)
+            if o.__class__ == Spike:
+                pend.remove(o)
+                low.append(o)
+            if o.__class__ == Bobble:
+                pend.remove(o)
+                low.append(o)
+
+    # Erase and tick visible objects
+    for l in list:
+        for o in l[:]:
+            o.erase()
+            o.tick(speedadjust)
+
+    # Check for collisions, skip virtual and pending objects
+    for o1 in low + high:
+        for o2 in low + high:
+            if o1 is not o2 and not o1.dead:
+                if o1.clearance(o2) < 0:
+                    o1.hit_by(o2)
+
+    # Check all objects for death
+    for l in list:
+        for o in l[:]:
+            if o.dead:
+                o.erase()
+                l.remove(o)
+                # Put ships on pending list
+                if o.__class__ == Ship:
+                    pend.append(o)
+                # Replace fires with pops
+                if o.__class__ == Fire and o.dead != 2:
+                    vel_x = o.vel_x
+                    vel_y = o.vel_y
+                    if o.dead_by_hit:
+                        vel_x = vel_x / 5
+                        vel_y = vel_y / 5
+                        snd.play('shoot', 1.0, o.rect.centerx)
+                    vapors.append(Pop(o.x, o.y, vel_x, vel_y))
+
+    for l in list:
+        for o in l[:]:
+            o.draw()
+
+
+
+def main():
+    global game_clock
+
+    import pygame, sys
+
+    pygame.init()
+    game_clock = pygame.time.Clock()
+
+    full=1
+    if '-window' in sys.argv:
+        full = 0
+
+    gfx.initialize((800,600), full)
+    pygame.display.set_caption('Spacewar')
+
+    load_game_resources()
+
+    if not '-nosound' in sys.argv:
+        snd.initialize()
+
+    # Load the main game objects
+    ships = []
+    ships.append( Ship(player=0, x=100, y=100))
+    low.append(ships[0])
+    ships.append(Ship(player=1, x=540, y=380))
+    low.append(ships[1])
+    sun = Sun()
+    low.append(sun)
+    virtual.append(Score(ships))
+
+    # Main game event loop
+    while 1:
+        game_clock.tick(frames_per_sec)  # max frame rate
+
+        for ship in ships: ship.do_input()
+
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                sys.exit()
+            elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                sys.exit()
+        
+        runobjects(1.0)
+
+        gfx.update()
+
+if __name__ == '__main__': 
+    main()

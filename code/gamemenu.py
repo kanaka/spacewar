@@ -3,7 +3,7 @@
 import math, os
 import pygame, pygame.draw
 from pygame.locals import *
-import game
+import game, pref
 import gfx, snd, txt
 import input
 import gamecreds, gamenews, gamepref, gameplay
@@ -28,7 +28,6 @@ class MenuItem:
         self.smallrect.center = self.rect.center
 
 
-
 menu = [
     MenuItem('start', gameplay.GamePlay),
     MenuItem('news', gamenews.GameNews),
@@ -36,7 +35,6 @@ menu = [
     MenuItem('setup', gamepref.GamePref),
     MenuItem('quit', None),
 ]
-
 
 
 def load_game_resources():
@@ -88,10 +86,6 @@ class GameMenu:
         self.logorect = self.logo.get_rect().move(100, 25)
         self.logorectsmall = self.logorect.inflate(-2,-2)
         self.boxtick = 0
-        ###if players.winners:
-        ###    self.boximages = rboximages
-        ###else:
-        ###    self.boximages = boximages
         self.boximages = boximages
         self.boxrect = self.boximages[0].get_rect().move(580, 80)
         self.bigship = images[2]
@@ -111,7 +105,7 @@ class GameMenu:
 
         fnt = txt.Font(None, 22)
         self.players = fnt.text((200, 175, 120), 
-                'with %d players' % (game.player_cnt), (65, 490), 'topleft')
+                'with %d players' % (pref.players), (65, 490), 'topleft')
 
     def quit(self):
         self.current = len(menu)-1
@@ -234,8 +228,6 @@ class GameMenu:
                 self.switchclock = 0
                 self.switchhandler = None
                 self.startclock = 5
-            ###if self.fame:
-            ###    gfx.dirty(self.background(self.fame[1]))
             gfx.dirty(self.background(self.version[1]))
             gfx.dirty(self.background(self.players[1]))
             gfx.dirty(gfx.surface.fill((0, 0, 0), self.logorect))
@@ -259,5 +251,4 @@ class GameMenu:
                     r = area.move(-self.logorect.left, -self.logorect.top)
                     return gfx.surface.blit(self.logo, area, r)
         return fullr
-
 

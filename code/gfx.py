@@ -3,7 +3,7 @@
 import sys, pygame, pygame.image
 from pygame.locals import *
 
-import game, stars
+import game, pref, stars
 
 #the accessable screen surface and size
 surface = None
@@ -39,7 +39,7 @@ def initialize(size, fullscreen):
 
 def switchfullscreen():
     oldfull = surface.get_flags() & FULLSCREEN == FULLSCREEN
-    newfull = game.display == 1
+    newfull = pref.display == 1
     if newfull == oldfull:
         return
     global wantscreentoggle
@@ -79,7 +79,7 @@ def update():
         screencapture = pygame.Surface(surface.get_size())
         screencapture.blit(surface, (0,0))
         clipcapture = surface.get_clip()
-        initialize(surface.get_size(), game.display)
+        initialize(surface.get_size(), pref.display)
 #        if game.handler:
 #            game.handler.background(rect)
         surface.blit(screencapture, (0,0))

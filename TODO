@@ -1,59 +1,19 @@
 Spacewar TODO list
 
-- means still to do
-* means done
-
 Short term:
-    - Insults and compliments
-    - Make smoke more dependant on fps
-    * Add health
-        - Health bar below score
-    * Update changes file
-    * Change credits back to full names and shrink font
-    * Make ships and score appear one at a time at startup
-    * Fix score display bug
-    * Make number of players configurable in prefs and show on menu
-      screen.
-    * Startup sounds (change to something other than howl)
-    * Change title logo
-    * Move fast_input into objs
-    * Color ships differently
-       - color indexes to change for ship-up.png: 36, 40, 45, 61, 66,
-         67, 68, 80, 82, 88, 89, 94, 99, 110, 112, 114, 122, 135, 136,
-         144, 147, 162, 163, 164 , 172, 192, 199, 200, 206, 209, 212,
-         234, 236, 239
-       - color indexes to change to ship-up-boost1.png: 28, 34, 51,
-         57, 63, 66, 67, 82, 94, 114, 116, 118, 126, 143, 144, 153,
-         155, 160, 163, 169, 193, 198, 200, 223, 224,
-       - color indexes to change to ship-up-boost2.png: 4, 5, 17, 21,
-         22, 25, 26, 55, 56, 57, 65 (->58), 72, 73, 80, 81 (->88), 93
-         (->78), 96 (->88), 101 (->88), 107 (->88), 117 (->88), 122
-         (->88), 132 (->88), 154,
-    * Make hud relevant
-      - Ships and Score
+    - Better shield graphics/transparent
+    - Create Windows executable and test
+    - Better insult and complement determination
 
 Medium term:
-    - Create Windows executable and test
-    - Make menu spinning box transparent around edges
-    - Get news download working
-    - Better health
-        - Create nice image for health container
-        - Option for amount of health and recharge rate
-    - Add shields gotten from powerup
-        - Perhaps powerup triggered by number of kills in a row, and 
-          weighted to appear near ship of "killer"
     - teleport in ships after death, not just start
         - develop colorless teleport images
+    - Better sorting order for preferences
+    - Give on screen help if players don't appear to know the keys
 
 Long term:
+    - Make menu spinning box transparent around edges
+    - network play
     - Option for floating health and shield bar above ship
-    - Give on screen help if players don't appear to know the keys
     - import preferences file instead of parsing it
     - possibly scale everything down, pygame.transform.scale
-    - Add preferences to change gameplay
-        - Add prefs class to game.py
-        - Add a value to each preference, simplify number of players
-    - Move runobjects into objs
-    - Move hud into objs
-    - Make objs runable by itself with default values and no stars, etc
-

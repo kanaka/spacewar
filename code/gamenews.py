@@ -4,7 +4,7 @@ import math, os, threading, re
 import urllib, tempfile, shutil
 import pygame, pygame.font
 from pygame.locals import *
-import game
+import game, pref
 import gfx, snd, txt
 import input
 import gameplay
@@ -105,7 +105,7 @@ class GameNews:
 
     def quit(self):
         if self.tempwindowed:
-            game.display = 1
+            pref.display = 1
             gfx.switchfullscreen()
         game.handler = self.prevhandler
         self.done = 1
@@ -129,15 +129,17 @@ class GameNews:
         if not os.path.isfile(newsfilename):
             newsfilename = game.get_resource('news')
         if os.path.isfile(newsfilename):
-            news = open(newsfilename).readlines()[3:]
+            news = open(newsfilename).readlines()
             if not news:
                 self.makebadnews(' ', 'Invalid News File')
                 return
-            self.newsversion = news[0].split()[-1]
+            i = 0
+            while not news[i].rstrip(): i += 1
+            self.newsversion = news[i].split()[-1]
             newsitems = []
             title = date = None
             body = []
-            for line in news[0:]:
+            for line in news[i+1:]:
                 line = line.rstrip()
                 if not line:
                     if title: newsitems.append((title, date, body))

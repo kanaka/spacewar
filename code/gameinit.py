@@ -144,7 +144,7 @@ class GameInit:
             self.background(self.rect)
         gfx.updatestars(self.background, gfx)
 
-        gfx.dirty(gfx.surface.blit(self.img_logo, (30, 25)))
+        gfx.dirty(gfx.surface.blit(self.img_logo, (100, 25)))
         gfx.dirty(gfx.surface.blit(self.img_powered, (510, 490)))
 
         for b in self.blocks:
@@ -176,6 +176,4 @@ class GameInit:
 
     def background(self, area):
         return gfx.surface.fill((0, 0, 0), area)
-
-
 

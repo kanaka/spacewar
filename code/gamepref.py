@@ -2,31 +2,37 @@
 import string, math
 import pygame
 from pygame.locals import *
-import game
+import game, pref
 import gfx, snd, txt
 import input
 import gameplay
 
-
+# Values must be integers
 Prefs = {
-"music": ("Off", "Low", "Normal"),
-"volume": ("Off", "Low", "Normal"),
-"display": ("Window", "Fullscreen"),
-"players": ("1", "2", "3", "4"),
+"music": (("Off", 0), ("Low", 1), ("Normal", 2)),
+"volume": (("Off", 0), ("Low", 1), ("Normal", 2)),
+"display": (("Window", 0), ("Fullscreen", 1)),
+"players": (("1", 1), ("2", 2), ("3", 3), ("4", 4)),
+"win_score": (("1", 1), ("5", 5), ("7", 7), ("10", 10), ("21", 21)),
+"fire_damage": (("Low", 20), ("Medium", 50), ("Normal", 80), ("Super", 120)),
+"spike_rate": (("Infrequent", 60), ("Normal", 30), ("Frequent", 10)),
+"shield_powerup_rate": (("Infrequent", 40), ("Normal", 20), ("Frequent", 12)),
+"sun": (("Tethered", 1), ("Free Floating", 0)),
+"gravity_const": (("Weak", 10), ("Normal", 20), ("Strong", 40)),
+"heal_rate": (("Slow", 1), ("Normal", 3), ("Fast", 10)),
+"death_time": (("Quick", 3), ("Normal", 5), ("Slow", 10)),
+"scoring": (("Death Subtract", 0), ("Never Subtract", 1)),
 #"help": ("Full Screens", "Quick Comments"),
 #"thruster": ("Normal", "Inverted"),
 }
 
 
 def load_prefs():
-    prefs = {}
     try:
         filename = game.make_dataname('prefs')
         for line in open(filename).readlines():
             name, val = [s.strip() for s in line.split('=')]
-            setattr(game, name, int(val))
-        # Special setting copy
-        game.player_cnt = game.players + 1
+            setattr(pref, name, int(val))
     except (IOError, OSError, KeyError):
         #print 'ERROR OPENING PREFS FILE'
         pass
@@ -37,7 +43,7 @@ def save_prefs():
         filename = game.make_dataname('prefs')
         f = open(filename, 'w')
         for p in Prefs.keys():
-            val = getattr(game, p)
+            val = getattr(pref, p)
             f.write("%s = %d\n" % (p, int(val)))
         f.close()
     except (IOError, OSError), msg:
@@ -59,8 +65,8 @@ def load_game_resources():
     img = gfx.load('menu_setup_on.png')
     images.append((img, img.get_rect().move(20, 20)))
 
-    namefont = txt.Font(None, 42)
-    valuefont = txt.Font(None, 36)
+    namefont = txt.Font(None, 30)
+    valuefont = txt.Font(None, 25)
 
     snd.preload('select_choose', 'select_move', 'delete')
 
@@ -73,11 +79,11 @@ class GamePref:
         self.prefs = []
         for n,v in Prefs.items():
             self.prefs.append((n,v))
-        self.prefs.append(("", ("Return To Menu",)))
+        self.prefs.append(("", (("Return To Menu",),)))
 
         self.done = 0
         self.aborted = 0
-        self.linesize = 60
+        self.linesize = 30
         self.gamelist = []
         self.buildlabels()
         self.buildlist()
@@ -160,36 +166,39 @@ class GamePref:
 
     def buildlabels(self):
         clr = 160, 200, 250
-        x, y = 190, 170
-        for pref, vals in self.prefs:
-            pref = pref.capitalize()
-            imgpos = namefont.text(clr, pref, (x,y), "midright")
+        x, y = 245, 150
+        for p, vals in self.prefs:
+            p = p.replace("_", " ")
+            p = p.capitalize()
+            imgpos = namefont.text(clr, p, (x,y), "midright")
             images.append(imgpos)
             y += self.linesize
 
     def buildlist(self):
         clr = 220, 230, 240
         clr2 = 140, 150, 160
-        offsetx, offsety = 260, 170
+        offsetx, offsety = 290, 150
         self.clearlist()
         self.gamelist = []
-        for pref, vals in self.prefs:
+        for p, vals in self.prefs:
             x = offsetx
             y = offsety
-            if not pref:
+            if not p:
                 y += 30
             allvals = []
-            if pref:
-                realval = getattr(game, pref)
-            else:
-                realval = -1
+            valpos = -1
+            if p:
+                realval = getattr(pref, p)
+                for i in range(len(Prefs[p])):
+                    if realval == Prefs[p][i][1]:
+                        valpos = i
             i = 0
             for val in vals:
-                if i == realval:
+                if i == valpos:
                     c = clr
                 else:
                     c = clr2
-                imgpos = valuefont.text(c, val, (x,y), "midleft")
+                imgpos = valuefont.text(c, val[0], (x,y), "midleft")
                 allvals.append(imgpos)
                 x = imgpos[1].right + 60
                 i += 1
@@ -233,20 +242,20 @@ class GamePref:
 
 
     def pressed(self):
-        pref, vals = self.prefs[self.current[0]]
-        if not pref:
+        p, vals = self.prefs[self.current[0]]
+        if not p:
             snd.play('select_choose')
             self.done = 1
         else:
-            val = self.current[1]
-            oldval = getattr(game, pref)
+            val = vals[self.current[1]][1]
+            oldval = getattr(pref, p)
             if oldval == val:
                 return
-            setattr(game, pref, val)
+            setattr(pref, p, val)
             self.buildlist()
             #some of these need callbacks, music/volume/display
-            if hasattr(self, "do_" + pref):
-                getattr(self, "do_" + pref)()
+            if hasattr(self, "do_" + p):
+                getattr(self, "do_" + p)()
             snd.play('select_choose')
 
 
@@ -255,6 +264,4 @@ class GamePref:
 
     def do_display(self):
         gfx.switchfullscreen()
-    
-    def do_players(self):
-        game.player_cnt = game.players + 1
+

@@ -3,7 +3,7 @@
 import math
 import pygame
 from pygame.locals import *
-import game
+import game, pref
 import gfx, snd, txt
 import input
 import gameplay, objtext
@@ -19,11 +19,6 @@ def load_game_resources():
 Help = {
 "player":"""Spacewar Help
 You pilot the mighty Spacewar fleet of ships.
--
-There are no weapons, but it has the most advanced
-manuevering of it's kind. Control your ship with the
-arrow keys or a joystick.
-(You can also use "vi" keys, if you know what that is.)
 -
 Take advantage of the Hyper Jets by holding the space
 bar or joystick button.
@@ -48,12 +43,12 @@ QuickHelp = {
 def help(helpname, helppos):
     if not game.player.help.has_key(helpname):
         game.player.help[helpname] = 1
-        if game.help == 0:
+        if pref.help == 0:
             game.handler = GameHelp(game.handler, helpname, helppos)
         elif hasattr(game.handler, "textobjs"):
             t = getattr(game.handler, "textobjs")
             message = QuickHelp.get(helpname, None)
-            if message and game.comments >= 1:
+            if message and pref.comments >= 1:
                 t.append(objtext.Text(message))
 
 
@@ -153,7 +148,6 @@ class GameHelp:
             gfx.drawhorzdashline(s, pts[3], pts[2], clr, 10, -off)
 
         #gfx.updatestars(self.background, gfx)
-
 
     def background(self, area):
         return gfx.surface.fill((0, 0, 0), area)

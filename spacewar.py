@@ -6,15 +6,13 @@ Spacewar, created by Joel Martin (based on Solarwolf by Pete Shinners)
 import sys, os
 
 
-#these directories will be used if spacewar cannot find
-#the directories in the location of the main program
+# These dirs used if can't find them locally
 if sys.platform == "win32":
     DATADIR = "C:\\Program Files\\Spacewar"
     CODEDIR = "C:\\Program Files\\Spacewar\\code"
 else:
     DATADIR = "/usr/share/games/spacewar"
     CODEDIR = "/usr/lib/games/spacewar"
-
 
 
 def main():
@@ -64,7 +62,6 @@ def main():
 
 
 
-
 def checkdependencies():
     "only returns if everything looks ok"
     msgs = []
@@ -102,7 +99,6 @@ def checkdependencies():
 
 
 #Pretty Error Handling Code...
-
 def __windowsbox(title, message):
     raise ImportError #the MessageBox command is crashing!
     import win32ui, win32con

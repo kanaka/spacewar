@@ -15,13 +15,14 @@ def load_game_resources():
 
 
 class Text:
-    def __init__(self, message):
+    def __init__(self, message, text_length=game.text_length):
         global availpos, numtexts
         bgd = 0, 0, 0
         self.img, self.rect = fonts[0].text((128, 255, 255), message, availpos)
         if gfx.surface.get_bytesize() > 1:
             self.img.set_alpha(128, RLEACCEL)
-        self.clocks = game.text_length
+        self.start_clocks = text_length
+        self.clocks = text_length
         self.dead = 0
         availpos = availpos[0], availpos[1] + self.rect.height + 10
         numtexts += 1
@@ -32,8 +33,10 @@ class Text:
         if not numtexts:
             availpos = availpos_start
 
-    def erase(self, background):
-        r = background(self.rect)
+    ###def erase(self, background):
+    ###    r = background(self.rect)
+    def erase(self):
+        r = gfx.surface.fill(0, self.rect)
         if self.dead:
             gfx.dirty(r)
 
@@ -43,7 +46,7 @@ class Text:
 
     def tick(self, speedadjust):
         self.clocks -= 1
-        runtime = game.text_length - self.clocks
+        runtime = self.start_clocks - self.clocks
         if runtime < 15 and gfx.surface.get_bytesize()>1:
             self.img.set_alpha(runtime*13)
         elif self.clocks < 15 :

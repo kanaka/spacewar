@@ -1,8 +1,6 @@
-#all modules
 #this is simply to ensure init type functions
 #will work, because all needed game modules will
 #be imported. groove on
-
 
 #we'll just parse this string out and import everything in it
 modules_string = """
@@ -17,6 +15,4 @@ def modules_import():
         __import__(m)
 
 modules_import()
-
-
 

@@ -4,7 +4,7 @@ import os
 from pygame.rect import Rect
 from cStringIO import StringIO
 
-version = "0.3"
+version = "0.4"
 
 #various data constants
 arena = Rect(0, 0, 700, 600)
@@ -23,10 +23,20 @@ news_url = 'http://joelandrebecca.martintribe.org/spacewar/thenews.html'
 Complements = (
     'Hotshot',
     'Smooth Moves',
+    'Deck',
+    'Last Starfighter',
+    'Oh yeah!',
+    'Rocket Scientist',
+    'Go, go, go!',
 )
 Insults = (
     'Ouch',
     'Sloppy',
+    'What was that?',
+    '...your ship on drugs',
+    'Flying by braile',
+    'Flying blind',
+    'Look ma, no ...',
 )
 
 
@@ -45,18 +55,6 @@ handler = None
 thread = None  #any background thread
 stopthread = 0 #request thread terminate
 
-
-
-#these are the defualt 'setup' controlled by Preferences
-music = 2
-volume = 2
-display = 1
-help = 0
-thruster = 0
-comments = 1
-players = 0
-
-player_cnt = 2
 
 def get_resource(filename):
     fullname = os.path.join('data', filename)

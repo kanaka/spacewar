@@ -4,7 +4,7 @@ import pygame
 from pygame.locals import *
 import random
 
-import game, gfx, input, snd
+import game, pref, gfx, input, snd
 import gamehelp, gamepause
 import objs, objtext, hud
 
@@ -20,20 +20,22 @@ def load_game_resources():
 class GamePlay:
     def __init__(self, prevhandler):
         self.prevhandler = prevhandler
-        self.ship = []
-        self.ship.append(objs.Ship(x=game.arena.right-50, 
+        self.ships = []
+        self.ships.append(objs.Ship(x=game.arena.right-50, 
                                    y=game.arena.bottom-50, player=0))
-        #self.ship[0].shield = 1
-        self.ship.append(objs.Ship(x=game.arena.left+50, 
-                                   y=game.arena.top+50, player=1))
-        if game.player_cnt > 2:
-            self.ship.append(objs.Ship(x=game.arena.right-50, 
+        #self.ships[0].shield = 100.0
+        #self.ships[0].score = 9
+        if pref.players > 1:
+            self.ships.append(objs.Ship(x=game.arena.left+50, 
+                                       y=game.arena.top+50, player=1))
+        if pref.players > 2:
+            self.ships.append(objs.Ship(x=game.arena.right-50, 
                                        y=game.arena.top+50, player=2))
-        if game.player_cnt > 3:
-            self.ship.append(objs.Ship(x=game.arena.left+50, 
+        if pref.players > 3:
+            self.ships.append(objs.Ship(x=game.arena.left+50, 
                                        y=game.arena.bottom-50, player=3))
 
-        self.hud = hud.HUD(self.ship)
+        self.hud = hud.HUD(self.ships)
 
         self.state = ''
         self.statetick = self.dummyfunc
@@ -46,8 +48,6 @@ class GamePlay:
         self.songtime = 0
 
         self.changestate('gamestart')
-
-        self.bgfill = gfx.surface.fill
 
     def starting(self):
         if self.startmusic:
@@ -87,7 +87,7 @@ class GamePlay:
                 objs.virtual.append(objtext.Text('"joel" Cheat: <desc>'))
                 # *** TODO: implement cheat
             if e.key == pygame.K_PAUSE or e.key == pygame.K_p:
-                if game.handler is self: #just in case some "help" gets in first?
+                if game.handler is self: # in case some "help" gets in first
                     game.handler = gamepause.GamePause(self)
 
     def run(self):
@@ -100,13 +100,14 @@ class GamePlay:
         elif game.speedmult: #if true must be 1
             self.speedadjust *= 0.75
 
-        # Do input for each player/ship
-        for i in range(game.player_cnt):
-            self.ship[i].do_input()
+        for ship in self.ships:
+            ship.do_input() # Do input for each player/ship
 
         self.statetick()
 
-        self.runobjects()
+        gfx.updatestars(self.background, gfx)
+        
+        objs.runobjects(self.speedadjust)
         
         if self.state == 'normal':
             self.hud.draw()
@@ -117,86 +118,34 @@ class GamePlay:
         if game.handler is self:
             game.handler = gamepause.GamePause(self)
 
-
-    def runobjects(self):
-        B, S = self.background, self.speedadjust
-        gfx.updatestars(B, gfx)
-        
-        # Gravitate
-        for o1 in objs.vapors + objs.low + objs.high:
-            for o2 in objs.low + objs.high:
-                if o1 is not o2:
-                    o1.gravitate(o2)
-
-        # Erase and tick visible objects
-        for l in objs.list:
-            for o in l[:]:
-                o.erase(B)
-                o.tick(S)
-
-        # Tick pending objects
-        for o in objs.pend:
-            o.tick(S)
-            if not o.dead:
-                if o.__class__ == objs.Ship:
-                    objs.pend.remove(o)
-                    objs.low.append(o)
-                if o.__class__ == objs.Spike:
-                    objs.pend.remove(o)
-                    objs.low.append(o)
-       
-        # Check for collisions, skip virtual and pending objects
-        for o1 in objs.low + objs.high:
-            for o2 in objs.low + objs.high:
-                if o1 is not o2 and not o1.dead:
-                    if o1.clearance(o2) < 0:
-                        o1.hit_by(o2)
-                        #o2.hit_by(o1)
-
-        # Check all objects for death
-        for l in objs.list:
-            for o in l[:]:
-                if o.dead:
-                    o.erase(B)
-                    l.remove(o)
-                    # Put ships on pending list
-                    if o.__class__ == objs.Ship:
-                        objs.pend.append(o)
-                    # Replace fires with pops
-                    if o.__class__ == objs.Fire and o.dead != 2:
-                        vel_x = o.vel_x
-                        vel_y = o.vel_y
-                        if o.dead_by_hit:
-                            vel_x = vel_x / 5
-                            vel_y = vel_y / 5
-                            snd.play('shoot', 1.0, o.rect.centerx)
-                        objs.vapors.append(objs.Pop(o.x, o.y, vel_x, vel_y))
-
-        for l in objs.list:
-            for o in l[:]:
-                o.draw()
-
     def background(self, area):
-        return self.bgfill(0, area)
+        return gfx.surface.fill(0, area)
         #return self.bgfill((70,70,70), area)
 
 
 #normal play
     def normal_tick(self):
         self.clocks += 1
-        if random.randint(0,objs.spike_rate) == 1:
-            pass
-            spike = objs.Spike(0,0,0,0)
-            spike.dead = 1
-            spike.pending_frames = objs.frames_per_sec
-            objs.pend.append(spike)
+        # Check for winner, complements and insults
+        for ship in self.ships:
+            if ship.score >= pref.win_score:
+                self.changestate('gameover')
+                break
+            if ship.complement:
+                ship.complement = 0
+                complement = random.randint(0, len(game.Complements)-1)
+                objs.virtual.append(objtext.Text(game.Complements[complement]))
+            if ship.insult:
+                ship.insult = 0
+                insult = random.randint(0, len(game.Insults)-1)
+                objs.virtual.append(objtext.Text(game.Insults[insult]))
 
 #appear
     def appear_start(self):
         snd.play('startlife', 1.0, gfx.rect[2] / 2)
-        self.hud.drawships(game.player_cnt)
-        for i in range(game.player_cnt):
-            teleport = objs.Tele(self.ship[i].x, self.ship[i].y)
+        self.hud.drawships(pref.players)
+        for ship in self.ships:
+            teleport = objs.Tele(ship.x, ship.y)
             objs.virtual.append(teleport)
         self.lastteleport = teleport
 
@@ -206,8 +155,8 @@ class GamePlay:
         #when animations done
         if self.lastteleport.dead:
             self.changestate('normal')
-            for i in range(game.player_cnt):
-                objs.high.append(self.ship[i])
+            for ship in self.ships:
+                objs.high.append(ship)
 
     def appear_end(self):
         input.resetexclusive()
@@ -221,10 +170,6 @@ class GamePlay:
     def gamestart_start(self):
         self.ticks = 0
         self.donehud = 0
-        sound = snd.fetch('whip')
-        self.whip = None
-        if sound:
-            self.whip = sound.play(-1)
 
 
     def gamestart_tick(self):
@@ -237,23 +182,20 @@ class GamePlay:
         else:
             if not self.ticks % 3:
                 self.hud.drawstats()
-            #if not self.ticks % 16 and self.start_player < game.player_cnt:
-            if not self.ticks % 16 and self.start_player < game.player_cnt:
+            if not self.ticks % 30 and self.start_player < pref.players:
                 self.start_player += 1
                 self.hud.drawships(self.start_player)
-            if self.start_player == game.player_cnt:
+                snd.play('shoot')
+            if self.start_player == pref.players:
                 self.changestate('appear')
 
     def gamestart_end(self):
-        if game.comments >= 1:
+        if pref.comments >= 1:
             objs.virtual.append(objtext.Text('Begin'))
-        if self.whip:
-            self.whip.stop()
         del self.ticks
-        del self.whip
         
         self.hud.drawstats()
-        if game.comments >= 2:
+        if pref.comments >= 2:
             objs.virtual.append(objtext.Text(msg))
 
         #rotate music
@@ -271,16 +213,26 @@ class GamePlay:
         objs.virtual.append(objtext.Text('Game Over'))
 
         # Clean-up the ships
-        for i in range(game.player_cnt):
-            self.ship[i].dead = 1
-            self.ship[i].erase(self.background)
-            try:
-                objs.high.remove(self.ship[i])
-            except:
-                pass
-        objs.pend = []
+        for ship in self.ships:
+            if ship.score >= pref.win_score:
+                text = "Player %d wins!" % (ship.player+1)
+                length = game.text_length * 2
+                objs.virtual.append(objtext.Text(text, text_length=length))
+            else:
+                if not ship.dead:
+                    ship.dead = 1
+                    explosion = objs.Explosion(ship.x,ship.y,
+                                               ship.vel_x,ship.vel_y)
+                    explosion.mass = ship.mass
+                    objs.high[0:0] = [explosion]
+                ship.erase()
+                try:
+                    objs.low.remove(ship)
+                except:
+                    pass
 
     def gameover_tick(self):
+        objs.pend = []
         if self.ticks:
             self.ticks -= 1
         self.hud.setwidth(self.ticks * 20)
@@ -288,7 +240,6 @@ class GamePlay:
             for x in objs.vapors + objs.low + objs.high: x.dead = 2
             game.handler = self.prevhandler
 
-        B = self.background
         for l in objs.list:
             for o in l:
-                o.erase(B)
+                o.erase()
