@@ -1,5 +1,12 @@
 Spacewar Change Log
 
+Version 0.3
+Health bar. Health bar gradually recharges. Health bar re-charge shows
+how much time until re-appearance. Fire/bullets and explosions simply
+take away health instead of instant death.
+4211 lines of code.
+
+
 Version 0.2
 Integrated original spacewar game into the SolarWolf game framework.
 Now we have sound effects, background music, main menu, credits, 
@@ -9,12 +16,14 @@ better looking, the "sun" is now a spinning box which fits better
 with the menu screen and startup. I changed the startup sound to be
 the explosion instead of the howl. The main screen specifies how many
 players is currently selected under the start button.
+4387 lines of code.
 
 
 Version 0.1
 Initial release. Two players, fixed key controls, gravity, spiked ball
 in the middle. Animated spiked ball, ships, blaster, explosion.
 Simple scoring. Start up screen logo.
+453 lines of code.
 
 
 

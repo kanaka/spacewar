@@ -4,9 +4,10 @@ Spacewar TODO list
 * means done
 
 Short term:
-    - Make menu spinning box transparent around edges
-    - Get news download working
-    - Create Windows executable and test
+    - Insults and compliments
+    - Make smoke more dependant on fps
+    * Add health
+        - Health bar below score
     * Update changes file
     * Change credits back to full names and shrink font
     * Make ships and score appear one at a time at startup
@@ -32,14 +33,20 @@ Short term:
       - Ships and Score
 
 Medium term:
-    - Add shields
-    - Add health, shield strength, score
-    - Make hud more useful
-        - health, shield strength
+    - Create Windows executable and test
+    - Make menu spinning box transparent around edges
+    - Get news download working
+    - Better health
+        - Create nice image for health container
+        - Option for amount of health and recharge rate
+    - Add shields gotten from powerup
+        - Perhaps powerup triggered by number of kills in a row, and 
+          weighted to appear near ship of "killer"
     - teleport in ships after death, not just start
         - develop colorless teleport images
 
 Long term:
+    - Option for floating health and shield bar above ship
     - Give on screen help if players don't appear to know the keys
     - import preferences file instead of parsing it
     - possibly scale everything down, pygame.transform.scale

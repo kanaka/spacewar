@@ -13,8 +13,8 @@ Prefs = {
 "volume": ("Off", "Low", "Normal"),
 "display": ("Window", "Fullscreen"),
 "players": ("1", "2", "3", "4"),
-"help": ("Full Screens", "Quick Comments"),
-"thruster": ("Normal", "Inverted"),
+#"help": ("Full Screens", "Quick Comments"),
+#"thruster": ("Normal", "Inverted"),
 }
 
 

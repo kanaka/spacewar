@@ -48,7 +48,6 @@ class GameInit:
         self.textrect = self.text.get_rect()
         self.textrect.center = self.rect.center
         self.lastcurrent = -1
-        #snd.play('startup')
         snd.play('explode')
         self.top = 120
         self.left = 100

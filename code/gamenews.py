@@ -8,8 +8,6 @@ import game
 import gfx, snd, txt
 import input
 import gameplay
-import webbrowser
-###import objbox
 
 images = []
 fonts = []
@@ -21,7 +19,6 @@ ship = None
 Options = [
 "Main Menu",
 "Download News",
-"Visit Website",
 ]
 
 
@@ -77,7 +74,6 @@ class GameNews:
         self.prevhandler = prevhandler
         self.images = images
         self.imgs = []
-        self.boxes = []
         self.thread = None
         self.newsversion = "0.0"
         self.loadnews()
@@ -100,7 +96,6 @@ class GameNews:
         self.shipmovey = 14
         self.moveto(self.gamelist[0][1])
         self.tempwindowed = 0
-        self.launchthebrowser = 0
 
 
 
@@ -130,12 +125,11 @@ class GameNews:
     def loadnews(self):
         self.cleartext()
         self.imgs = []
-        self.boxes = []
         newsfilename = game.make_dataname('news')
         if not os.path.isfile(newsfilename):
             newsfilename = game.get_resource('news')
         if os.path.isfile(newsfilename):
-            news = open(newsfilename).readlines()[2:]
+            news = open(newsfilename).readlines()[3:]
             if not news:
                 self.makebadnews(' ', 'Invalid News File')
                 return
@@ -143,7 +137,7 @@ class GameNews:
             newsitems = []
             title = date = None
             body = []
-            for line in news[2:]:
+            for line in news[0:]:
                 line = line.rstrip()
                 if not line:
                     if title: newsitems.append((title, date, body))
@@ -154,9 +148,6 @@ class GameNews:
                 else: body.append(line)
             top = 150
             for t, d, body in newsitems:
-                ###self.boxes.append(objbox.Box((28, top+3), 1))
-                ###self.boxes[-1].rotspeed = 2.0
-                ###self.boxes[-1].rotate = 0.0
                 text, r = self.rendertext(0, t)
                 trect = r.move(60, top)
                 self.imgs.append((text, trect))
@@ -268,22 +259,9 @@ class GameNews:
             self.moveship()
             r = gfx.surface.blit(self.shipimage[0], self.shipimage[1])
             gfx.dirty(r)
-            ###for b in self.boxes:
-            ###    b.erase(self.background)
-            ###    b.tick(1.0)
-            ###    b.draw(gfx)
         else:
             #game.handler = self.prevhandler
-            ###for b in self.boxes:
-            ###    b.erase(self.background)
             self.clearlist()
-
-        if self.launchthebrowser:
-            #we do it like this so the window can get
-            #unfullscreened and not minimized on windows
-            self.launchthebrowser -= 1
-            if not self.launchthebrowser:
-                webbrowser.open(game.site_url, 1, 1)
 
 
     def downimg(self):
@@ -333,9 +311,6 @@ class GameNews:
     def clearlist(self):
         for o in self.gamelist:
             gfx.dirty(self.background(o[1]))
-        ###for b in self.boxes:
-        ###    b.dead = 1
-        ###    b.erase(self.background)
 
     def drawlist(self):
         for o in self.gamelist:
@@ -378,11 +353,4 @@ class GameNews:
 
     def do_download(self): #Download News
         self.download_start()
-
-    def do_visit(self): #Visit Website
-        if game.display: #fullscreen
-            self.tempwindowed = 1
-            game.display = 0
-            gfx.switchfullscreen()
-        self.launchthebrowser = 2 #funny windows workaround
 

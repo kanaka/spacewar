@@ -148,10 +148,10 @@ class GamePlay:
         # Check for collisions, skip virtual and pending objects
         for o1 in objs.low + objs.high:
             for o2 in objs.low + objs.high:
-                if o1 is not o2:
+                if o1 is not o2 and not o1.dead:
                     if o1.clearance(o2) < 0:
                         o1.hit_by(o2)
-                        o2.hit_by(o1)
+                        #o2.hit_by(o1)
 
         # Check all objects for death
         for l in objs.list:

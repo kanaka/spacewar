@@ -4,64 +4,30 @@ import os
 from pygame.rect import Rect
 from cStringIO import StringIO
 
-version = "0.2"
+version = "0.3"
 
 #various data constants
-ship_fastspeed = 7
-ship_slowspeed = 5
-shot_speed = 3
-
-fire_factor = .15
-
-
 arena = Rect(0, 0, 700, 600)
 
-poweruptime = 1200.0
-powerupspeed = 2.0
-powerupwait = 26.0 #45.0
-asteroidspeed = 1.4
-
-timeleft = 0.0
-timetick = 0.0
-timefactor = 12.2    #how quickly time drops (bigger = slower)
 speedmult = 0
 
 musictime = 1000 * 120 #two minutes
 
 text_length = 80  #frames text is displayed in-game
 
-
 site_url = 'http://joelandrebecca.martintribe.org/spacewar'
-news_url = 'http://joelandrebecca.martintribe.org/spacewar/news.html'
-
+news_url = 'http://joelandrebecca.martintribe.org/spacewar/thenews.html'
 
 
 #number of insults must match num of complements, be careful
 Complements = (
-    'Keep it up!',
-    'Looking Great!',
     'Hotshot',
-    'Too Hot to Handle',
-    'Bring it on',
-    'Beautiful',
-    'Own the Zone',
-    'Too Cool For School',
-    'So Hot Right Now',
-    'Smooth Moves'
+    'Smooth Moves',
 )
 Insults = (
-    'Not so good',
     'Ouch',
-    'Rookie',
     'Sloppy',
-    'Choke Choke',
-    'Not Today',
-    'Hall of Shame',
-    'Wrong way',
-    'Clumsy, Clumsy',
-    'Medic',
 )
-
 
 
 player = None

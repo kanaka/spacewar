@@ -7,7 +7,6 @@ import game, gfx, snd, txt
 import gameplay
 
 
-
 credits = (
     ('Developer', ('Joel Martin',)),
     ('Derived from Solar Wolf:', 
@@ -22,7 +21,6 @@ licenseinfo = ('This program is free software. You are encouraged to',
                'make copies and modify it, subject to the LGPL.',
                'See "lgpl.txt" file for details.')
 
-
 fonts = []
 images = []
 
@@ -34,21 +32,16 @@ def load_game_resources():
     fonts.append((txt.Font(fontname, 25), (50, 120, 100)))
     fonts.append((txt.Font(fontname, 30), (100, 100, 250)))
 
-#    img = gfx.load('oldspacewar.png')
-#    r = img.get_rect()
-#    r.bottomright = gfx.rect.bottomright
-#    images.append((img, r))
-
     img = gfx.load('pygame_powered.gif')
     r = img.get_rect().move(540, 20)
     images.append((img, r))
 
     img = gfx.load('sdlpowered.png')
-    r = img.get_rect().move(630, 150)
+    r = img.get_rect().move(630, 200)
     images.append((img, r))
 
     img = gfx.load('pythonpowered.gif')
-    r = img.get_rect().move(650, 280)
+    r = img.get_rect().move(650, 400)
     images.append((img, r))
 
     img = gfx.load('menu_creds_on.png')
@@ -158,6 +151,4 @@ class GameCreds:
 
     def background(self, area):
         return gfx.surface.fill((0, 0, 0), area)
-
-
 

@@ -19,14 +19,18 @@ bottom = game.arena.bottom
 frames_per_sec = 40
 # these are proportional to frames_per_sec
 fire_delay_frames = frames_per_sec / 2
-compass_dirs = 40
+compass_dirs = frames_per_sec
 death_frames = 3 * frames_per_sec
 spike_rate = frames_per_sec * 25
+fire_life = frames_per_sec * 4
 
 # Game physics settings
 reverse_power = -0.08
 turbo_power = 0.12
 fire_speed = 5.0
+fire_damage = 40
+explosion_damage = 3
+heal_rate = 0.03
 smoke_speed = 5.0
 gravity_const = 20.0
 start_clearance = 25  # distance ships start from other objects
@@ -289,7 +293,7 @@ class Fire(Mass):
         self.imgs = images_fire
         self.phases = len(self.imgs)
         Mass.__init__(self, x, y, vel_x, vel_y, mass=0.0, radius=8)
-        self.ticks_to_live = frames_per_sec * 5
+        self.ticks_to_live = fire_life
         self.owner = owner
         self.dead_by_hit = 0
         
@@ -377,6 +381,7 @@ class Spike(Mass):
             if other_mass.__class__ == Sun or other_mass.__class__ == Spike:
                 self.dead = 1
                 explosion = Explosion(self.x, self.y, self.vel_x, self.vel_y)
+                explosion.mass = self.mass
                 high[0:0] = [explosion]
                 # gameplay.runobjects() will remove spike
 
@@ -402,13 +407,15 @@ class Ship(Mass):
     def __init__(self, player=0, x=50.0, y=50.0, dir=0):
         self.player=player
         self.score = 0
+        self.max_health = 100.0
         self.start(x, y, dir=dir)
 
     def start(self, x=50.0, y=50.0, vel_x=0, vel_y=0, mass=1.0, radius=11, dir=0):
         self.imgs = images_ship[self.player]
         self.phases = len(self.imgs)
         Mass.__init__(self, x, y, vel_x, vel_y, mass, radius, dir)
-       
+      
+        self.health = 100.0
         self.shield = 0
         self.shield_phase = 0.0
         self.shield_phases = len(images_shield)
@@ -419,6 +426,21 @@ class Ship(Mass):
         self.pending_frames = 0
        
     def tick(self, speedadjust):
+        # Ship is dead, waiting to re-appear 
+        if self.pending_frames > 0:
+            if self.pending_frames == frames_per_sec / 2:
+                snd.play('startlife', 1.0, self.rect.centerx)
+            self.pending_frames = self.pending_frames -1
+            self.health = (self.max_health * 
+                          (death_frames - self.pending_frames) / death_frames)
+            # Make the ship appear again
+            if self.pending_frames <= 0:
+                self.dead = 0
+                self.start()
+                self.find_spot()
+            # Since we're dead, no more to do
+            return
+
         if self.thrust:
             # Calculate thrust acceleration
             rads = radians(self.dir*(360/compass_dirs))
@@ -450,20 +472,12 @@ class Ship(Mass):
         # Next phase from animation
         self.phase = (self.phase+1.0)%self.phases
         self.shield_phase = (self.shield_phase+0.2)%self.shield_phases
+        if self.health < self.max_health:
+            self.health = min (self.max_health, self.health + heal_rate)
 
         # Slow down firing rate
         if self.fire_delay > 0:
             self.fire_delay = self.fire_delay -1
-        # Ship is dead, waiting to re-appear 
-        if self.pending_frames > 0:
-            if self.pending_frames == frames_per_sec / 2:
-                snd.play('startlife', 1.0, self.rect.centerx)
-            self.pending_frames = self.pending_frames -1
-            # Make the ship appear again
-            if self.pending_frames <= 0:
-                self.dead = 0
-                self.start()
-                self.find_spot()
 
     def draw(self):
         if self.shield:
@@ -541,15 +555,25 @@ class Ship(Mass):
     def hit_by(self, other_mass):
         global high
         if self.dead: return
-        if other_mass.__class__ == Fire and other_mass.owner is not self:
-            other_mass.owner.score = other_mass.owner.score + 1
-        elif self.score > 0:
-            self.score = self.score - 1
-        self.dead = 1
-        self.pending_frames = death_frames
-        explosion = Explosion(self.x, self.y, self.vel_x, self.vel_y)
-        high[0:0] = [explosion]
-        # gameplay.runobjects() will move ship to pending
+        if other_mass.__class__ == Fire:
+            self.health -= fire_damage
+            if self.health <= 0.0:
+                if other_mass.owner is not self:
+                    other_mass.owner.score = other_mass.owner.score + 1
+        elif other_mass.__class__ == Explosion:
+            self.health -= explosion_damage
+        else:
+            self.health = 0.0
+            if self.score > 0:
+                self.score = self.score - 1
+        if self.health <= 0.0: 
+            self.health = 0.0
+            self.dead = 1
+            self.pending_frames = death_frames
+            explosion = Explosion(self.x, self.y, self.vel_x, self.vel_y)
+            explosion.mass = self.mass
+            high[0:0] = [explosion]
+            # gameplay.runobjects() will move ship to pending
 
 
 ###def main():

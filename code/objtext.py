@@ -10,7 +10,6 @@ availpos_start = availpos
 numtexts = 0
 
 def load_game_resources():
-    #load ship graphics
     global fonts
     fonts = [txt.Font('serif', 24, bold=0)]
 
@@ -38,7 +37,6 @@ class Text:
         if self.dead:
             gfx.dirty(r)
 
-    ###def draw(self, gfx):
     def draw(self):
         r = gfx.surface.blit(self.img, self.rect)
         gfx.dirty(r)

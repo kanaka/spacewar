@@ -74,7 +74,7 @@ class HUD:
            
             # Draw ship scores
             txt = '%d' % self.ship[i].score
-            pos = 10, 160+(i*space_each)
+            pos = 10, 150+(i*space_each)
             txt,pos = gamefont.text((200,200,150), txt, pos, 'topleft')
             r = Rect(pos[0], pos[1], txt.get_width(), txt.get_height())
             redraw = (r[0], r[1], 80, r[3])
@@ -82,9 +82,17 @@ class HUD:
             r1 = dest.blit(txt, pos).move(offset)
             gfx.dirty2(r1,r2)
 
+            # Draw ship health
+            area = 10, 175+(i*space_each), 80, 15
+            r1 = dest.fill((50,50,50,0.1), area).move(offset)
+            width = int(80 * self.ship[i].health / self.ship[i].max_health)
+            area = 10, 175+(i*space_each), width, 15
+            dest.fill((150,50,50,0.1), area).move(offset)
+            gfx.dirty(r1)
+
 
     def draw(self):
         self.ticks +=1
-        if not self.ticks % 10:
+        if not self.ticks % 5:
             self.drawships(game.player_cnt)
         
