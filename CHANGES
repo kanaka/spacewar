@@ -1,9 +1,48 @@
-Spacewar changes
+Spacewar Change Log
+
+Version 0.2
+Integrated original spacewar game into the SolarWolf game framework.
+Now we have sound effects, background music, main menu, credits, 
+setup menu, in game side-bar game with score for each player,
+select 1-4 players from setup menu. The spacewar logo is now much 
+better looking, the "sun" is now a spinning box which fits better 
+with the menu screen and startup. I changed the startup sound to be
+the explosion instead of the howl. The main screen specifies how many
+players is currently selected under the start button.
 
 
 Version 0.1
 Initial release. Two players, fixed key controls, gravity, spiked ball
 in the middle. Animated spiked ball, ships, blaster, explosion.
 Simple scoring. Start up screen logo.
+
+
+
+Changelog from Solarwolf:
+
+SolarWolf 1.5
+January 15, 2004
+Graphics Source
+Eero Tamminen has released his source graphic files for Solarwolf.
+Now you can experiment with the Solarwolf graphics for yourself.
+See the Solarwolf website.
+
+
+SolarWolf 1.4
+January 7, 2004
+For the new 2004 I give you Solarwolf version 1.4.  This release
+adds all new graphics. And of course several new surprise features.
+Be careful out there!
+
+
+Mac OSX Package
+October 1, 2003
+A new package for Mac OSX has been created. This runs just as clean
+and easy as the other packages, get this one out to all your Mac buddies!
+
+
+
+
+
 
 
