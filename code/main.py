@@ -26,7 +26,6 @@ def gamemain(args):
     pygame.init()
     game.clock = pygame.time.Clock()
 
-    ###players.load_players()
     input.load_translations()
     gamepref.load_prefs()
 
@@ -116,7 +115,6 @@ def gamemain(args):
     #game is finished at this point, do any
     #uninitialization needed
     input.save_translations()
-    ###players.save_players()
     gamepref.save_prefs()
     pygame.quit()
 

@@ -115,7 +115,7 @@ Source: ..\spacewar-0.5\dist\spacewar\data\spacewar.pal; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\bigboxes.png; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\boxes.png; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\star.gif; DestDir: {app}\data\
-Source: ..\spacewar-0.5\dist\spacewar\data\levels.txt; DestDir: {app}\data\
+Source: ..\spacewar-0.5\dist\spacewar\data\ai.txt; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\btn-add.gif; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\hud.gif; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\newversion.gif; DestDir: {app}\data\

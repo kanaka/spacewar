@@ -33,8 +33,6 @@ class Text:
         if not numtexts:
             availpos = availpos_start
 
-    ###def erase(self, background):
-    ###    r = background(self.rect)
     def erase(self):
         r = gfx.surface.fill(0, self.rect)
         if self.dead:

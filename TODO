@@ -4,11 +4,21 @@ Spacewar TODO list
 * means done
 
 Short term:
-    - 1 Player is tutorial mode with help messages
-        - Every player's keys work for player 1
-    - Better shield graphics/transparent
-    - Create Windows executable and test
-    - Better insult and complement determination
+    - Create stop gap AI
+	- Change AI to sequence actions
+	- Create a dumb and a docile verison of the AI
+    - Test
+	- Make sure asteroid and spikes are working properly
+	- Tutorial mode AI
+    - Create Windows distro and release to web
+    - Create web site
+    * Ship to ship collisions 
+        * Health + shield strength subtracted
+        * One player survives damaged
+    * Add game time, kills, and deaths global stats
+    * Better shield graphics/transparent
+    * 1 Player is tutorial mode with help messages
+        * Every player's keys work for player 1
     * Add graphics level preference to remove stars and smoke trails.
     * Score preferences (no subtract)
     * Insults and compliments
@@ -30,10 +40,24 @@ Short term:
         * Ships, score
 
 Medium term:
+    - Warps
+    - Spikes and asteroids
+        - Replace spikes with asteroids
+        - Spikes stick to ship and each other.
+        - Stuck spikes make ship less controllable and more affected by gravity
+        - Shooting spikes and asteroids changes their velocity
+        - Spikes and asteroids can be destroyed by enough damage.
+        - Only way to get spikes off is by destroying them with bullets.
     - teleport in ships after death, not just start
         - develop colorless teleport images
-    - Bullet powerup. Last 20 seconds or so. Triple shot?
-    - Better sorting order for preferences
+    - Flash health and shields bars for major changes
+    * Dumb AI players and preferences handled right
+    * Bullet powerup. Last 20 seconds or so
+        * Triple shot or faster more powerful bullets?
+        * Different color?
+    * Add sorting order for preferences
+    * Give on screen help text message if players don't appear to 
+      know the keys
     * Add shields gotten from powerup
     * Better health display
         * Create nice image for health container
@@ -42,15 +66,14 @@ Medium term:
 
 Long term:
     - Make menu spinning box transparent around edges
+    - Better insult and complement determination
     - network play
     - Option for floating health and shield bar above ship
-    - Give on screen help if players don't appear to know the keys
-    - import preferences file instead of parsing it
+    - Allow key controls to be changed
     - possibly scale everything down, pygame.transform.scale
     * Add preferences to change gameplay
         * Add pref.py module with preference settings
         * Add a value to each preference, simplify number of players
         * Winning score level
         * Option for amount of health and recharge rate
-    - Move hud into objs
     * Make objs runable by itself with default values and no stars, etc

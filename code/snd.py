@@ -2,7 +2,6 @@
 
 import pygame, os
 from pygame.locals import *
-###import game, input
 import pref, input
 
 

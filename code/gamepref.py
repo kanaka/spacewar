@@ -9,23 +9,30 @@ import gameplay
 
 # Values must be integers
 Prefs = {
-"music": (("Off", 0), ("Low", 1), ("Normal", 2)),
-"volume": (("Off", 0), ("Low", 1), ("Normal", 2)),
-"display": (("Window", 0), ("Fullscreen", 1)),
-"players": (("1 (Tutorial)", 1), ("2", 2), ("3", 3), ("4", 4)),
-"win_score": (("1", 1), ("5", 5), ("7", 7), ("10", 10), ("21", 21)),
-"scoring": (("Death Subtract", 0), ("Never Subtract", 1)),
-"graphics": (("Minimal", 0), ("Smoke", 1), ("Smoke and Stars", 2)),
-
-"fire_damage": (("Low", 20), ("Medium", 50), ("Normal", 80), ("Super", 120)),
-"spike_rate": (("Infrequent", 60), ("Normal", 30), ("Frequent", 10)),
-"shield_powerup_rate": (("Infrequent", 40), ("Normal", 20), ("Frequent", 12)),
-"sun": (("None", 0), ("Tethered", 1), ("Floating", 2), ("Black Hole", 3)),
-"gravity_const": (("Weak", 10), ("Normal", 20), ("Strong", 40)),
-"heal_rate": (("Slow", 1), ("Normal", 3), ("Fast", 10)),
-"death_time": (("Quick", 3), ("Normal", 5), ("Slow", 10)),
+0: ("game_mode", (("Normal", 1), ("1 Player Tutorial", 2))),
+1: ("player_1", (("Human", 1), ("Computer", 2))),
+2: ("player_2", (("Human", 1), ("Computer", 2), ("Off", 0))),
+3: ("player_3", (("Human", 1), ("Computer", 2), ("Off", 0))),
+4: ("player_4", (("Human", 1), ("Computer", 2), ("Off", 0))),
+5: ("win_score", (("1", 1), ("5", 5), ("7", 7), ("10", 10), ("21", 21))),
+6: ("scoring", (("Death Subtract", 0), ("Never Subtract", 1))),
+7: ("sun", (("None", 0), ("Tethered", 1), ("Floating", 2), ("Black Hole", 3))),
+8: ("fire_damage", (("Low", 20), ("Medium", 50), ("Normal", 80), ("Super", 120))),
+9: ("gravity_const", (("Weak", 10), ("Normal", 20), ("Strong", 40))),
+10: ("spike_rate", (("Infrequent", 60), ("Normal", 30), ("Frequent", 10))),
+11: ("shield_powerup_rate", (("Infrequent", 40), ("Normal", 20), ("Frequent", 12))),
+12: ("bullet_powerup_rate", (("Infrequent", 70), ("Normal", 40), ("Frequent", 20))),
+13: ("heal_rate", (("Slow", 1), ("Normal", 3), ("Fast", 10))),
+14: ("death_time", (("Quick", 3), ("Normal", 5), ("Slow", 10))),
+15: ("graphics", (("Minimal", 0), ("Smoke", 1), ("Smoke and Stars", 2))),
+16: ("display", (("Window", 0), ("Fullscreen", 1))),
+17: ("music", (("Off", 0), ("Low", 1), ("Normal", 2))),
+18: ("volume", (("Off", 0), ("Low", 1), ("Normal", 2))),
 }
 
+linesize = 20
+fontsize1 = 25
+fontsize2 = 22
 
 def load_prefs():
     try:
@@ -42,7 +49,8 @@ def save_prefs():
     try:
         filename = game.make_dataname('prefs')
         f = open(filename, 'w')
-        for p in Prefs.keys():
+        for key in Prefs.keys():
+            p = Prefs[key][0]
             val = getattr(pref, p)
             f.write("%s = %d\n" % (p, int(val)))
         f.close()
@@ -59,14 +67,15 @@ valuefont = None
 def load_game_resources():
     global images, namefont, valuefont
 
-    img = pygame.transform.rotate(gfx.load('ship-mini-boost2.png'), -90)
+    timg = pygame.transform.rotate(gfx.load('ship-mini-boost2.png'), -90)
+    img = pygame.transform.scale(timg, (20, 20))
     images.append((img, img.get_rect()))
 
     img = gfx.load('menu_setup_on.png')
     images.append((img, img.get_rect().move(20, 20)))
 
-    namefont = txt.Font(None, 30)
-    valuefont = txt.Font(None, 25)
+    namefont = txt.Font(None, fontsize1)
+    valuefont = txt.Font(None, fontsize2)
 
     snd.preload('select_choose', 'select_move', 'delete')
 
@@ -77,17 +86,17 @@ class GamePref:
         self.prevhandler = prevhandler
         self.images = images
         self.prefs = []
-        #for n,v in Prefs.items():
         items = Prefs.items()
-        sort = lambda x,y: (x < y and -1) or (x > y and 1) or 0
+        sort = lambda x,y: (x[0] < y[0] and -1) or (x[0] > y[0] and 1) or 0
         items.sort(sort)
-        for n,v in items:
+        for p in items:
+            n = p[1][0]
+            v = p[1][1]
             self.prefs.append((n,v))
         self.prefs.append(("", (("Return To Menu",),)))
 
         self.done = 0
         self.aborted = 0
-        self.linesize = 25
         self.gamelist = []
         self.buildlabels()
         self.buildlist()
@@ -98,7 +107,6 @@ class GamePref:
         step = 0
 
         self.moveto(self.gamelist[0][0][1])
-
 
 
     def starting(self):
@@ -176,7 +184,7 @@ class GamePref:
             p = p.capitalize()
             imgpos = namefont.text(clr, p, (x,y), "midright")
             images.append(imgpos)
-            y += self.linesize
+            y += linesize
 
     def buildlist(self):
         clr = 220, 230, 240
@@ -193,9 +201,12 @@ class GamePref:
             valpos = -1
             if p:
                 realval = getattr(pref, p)
-                for i in range(len(Prefs[p])):
-                    if realval == Prefs[p][i][1]:
-                        valpos = i
+                for pnum in Prefs.keys():
+                    if Prefs[pnum][0] == p:
+                        for i in range(len(Prefs[pnum][1])):
+                            if realval == Prefs[pnum][1][i][1]:
+                                valpos = i
+                        break
             i = 0
             for val in vals:
                 if i == valpos:
@@ -207,7 +218,7 @@ class GamePref:
                 x = imgpos[1].right + 60
                 i += 1
             self.gamelist.append(allvals)
-            offsety += self.linesize
+            offsety += linesize
 
 
     def clearlist(self):

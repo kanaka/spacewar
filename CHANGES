@@ -2,19 +2,26 @@ Spacewar Change Log
 
 
 Version 0.5
-Added preference to change graphics level to remove smoke and/or
-stars. No sun and blackhole "sun" option. 1 Player tutorial mode.
+Preference to change graphics level to remove smoke and/or
+stars. No sun and blackhole "sun" option. Transparent shields.
+1 player tutorial mode. F1 brings up key control list. Overall
+game stats: time, kills, and deaths. The ship with the most shield 
+and health strength now survives in a ship to ship collision.
+Help text referring to F1 help will appear if player hits 
+non-functional keys several times in a row. Moved more object logic
+into the Mass class. Super bullets. Sorted preferences. Simple 
+computer players.
+4548 lines of code.
 
 
 Version 0.4
 Fixed news download bug. Moved most objects processing code from
 gameplay.py to objs.py. Created a stand alone object only test mode 
-(./objs.py). Insults and complements. Added shields and shield bar
-on the HUD. Powerup bobbles now appear which give shield strength. 
-Made a nice background image for health and shield bar. Shield 
-protects against explosion. Fire damage now fades over life of fire. 
-Added win at a certain score. Added a bunch of preferences. Fix 
-rendering bug.
+(./objs.py). Insults and complements. Shields and shield bar on the 
+HUD. Powerup bobbles now appear which give shield strength.  Made a 
+nice background image for health and shield bar. Shield protects 
+against explosion. Fire damage now fades over life of fire.  Win at 
+a certain score. A bunch of new preferences. Fixed rendering bug.
 4320 lines of code.
 
 

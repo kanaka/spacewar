@@ -1,0 +1,27 @@
+# Blank lines and lines starting with '#' are ignored
+
+# Format of data file:
+# Number of DNA's (different AI's)
+#   Number of Genes in DNA
+#     Type of gene
+#     Number of Bases
+#     Base per line (comma seperated list):
+#       comparison,future1,future2,value,operator
+#     Action
+
+1
+
+2
+ship
+2
+dir_dir,5,0,0,>
+dir_num,0,0,0,<
+#fire
+thrust,rthrust
+
+ship
+2
+dir_dir,5,0,0,<
+dir_num,0,0,0,>
+#fire
+thrust,rthrust

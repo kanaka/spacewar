@@ -17,23 +17,6 @@ def load_game_resources():
 
 
 Help = {
-"introduction":"""Spacewar Tutorial Mode
-The objective of Spacwar is to score points by killing your 
-opponents.
--
-The vital stats for each player's ship appear on the heads up 
-display to the right. Below the ship image is the player's 
-score. Below the score is the health of the ship and below that
-is the shield strength if the ship has shield powerup.
--
-You can use this mode to practice the controls for each player.
-Every player's controls are bound to the single ship that is 
-shown.
--
-Press F1 during the tutorial or the game to show the keys that 
-control each player.
-""",
-
 "keys":"""Player Control Keys
 Player 1:
 $
@@ -84,9 +67,27 @@ $
 ....Fire:     Numpad 0
 """,
 
+"introduction":"""Spacewar Tutorial Mode
+The objective of Spacwar is to pilot a ship and score points
+by killing your opponents. Your ship is equipped with a blaster
+and forward and reverse thrusters.
+-
+The vital stats for each player's ship appear on the heads up 
+display to the right. Below the ship image is the player's 
+score. Below the score is the health of the ship and below that
+is the shield strength if the ship has gotten a shield powerup.
+-
+You can use this one player tutorial mode to practice the 
+controls for each player. Every player's controls are bound to 
+the red ship.
+-
+Press F1 during the tutorial or the game to show the keys that 
+control each player.
+""",
+
 "powerups":"""Shield Power Ups
-Shield powerups appear every now and then. If you run into these with 
-your ship, you will receive a charge to your shields.
+Shield powerups appear every now and then. If you run into these 
+with your ship, you will receive a charge to your shields.
 """,
 
 "spikes":"""Spiked Balls
@@ -96,9 +97,11 @@ run into the Sun or into another spiked ball.
 """,
 
 "opponents":"""Your Opponents
-During a real game you will have opponents.  Try and destroy the dummy
-ship that will appear. If you destroy it before it falls into the sun,
-you will score a point.
+During a real game you will have opponents. Try and destroy the 
+dummy ship that will appear. If you destroy it before gravity pulls 
+it into the sun, you will score a point. The dummy opponent ship
+will keep appearing so that you can build accuracy with your
+blaster.
 """,
 }
 
@@ -110,18 +113,7 @@ QuickHelp = {
 
 
 def help(helpname, helppos):
-    ###if not game.player.help.has_key(helpname):
-    ###    game.player.help[helpname] = 1
-    ###    if pref.help == 0:
-    ###        game.handler = GameHelp(game.handler, helpname, helppos)
-    ###    elif hasattr(game.handler, "textobjs"):
-    ###        t = getattr(game.handler, "textobjs")
-    ###        message = QuickHelp.get(helpname, None)
-    ###        if message and pref.comments >= 1:
-    ###            t.append(objtext.Text(message))
-
     game.handler = GameHelp(game.handler, helpname, helppos)
-
 
 
 class GameHelp:

@@ -18,7 +18,6 @@ text_length = 80  #frames text is displayed in-game
 site_url = 'http://joelandrebecca.martintribe.org/spacewar'
 news_url = 'http://joelandrebecca.martintribe.org/spacewar/thenews.html'
 
-
 #number of insults must match num of complements, be careful
 Complements = (
     'Nice',
@@ -37,6 +36,12 @@ Complements = (
     'Ship parts for sale',
     'Walk in the park',
     'Easy as pie',
+    'Candy from a baby',
+
+    'Eat that!',
+    'One down...',
+    'Yes!',
+    'I brake for no one',
 )
 Insults = (
     'Ouch',
@@ -55,12 +60,17 @@ Insults = (
     'Eject!',
     'That\'s no moon!',
     'Not that button!',
+    'Holy hand-grenade, Batman!',
+
+    'Bring out your dead!',
+    'Orange ... no, Blue!',
+    'Luke, pull up!',
+    'Run, the sky\'s falling!',
 )
 
 
 player = None
 name_maxlength = 10     #longest name
-max_players = 5         #most player accounts available
 
 #clock info
 clock = None

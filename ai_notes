@@ -1,0 +1,11 @@
+AI Notes 
+
+- Genetic algorithm to generate computer players
+  - seperate standalone module to run GA generations
+    - Loads generations from a file
+    - Changes draw and erase routines to very low overhead or none
+    - Remove frame rate limiter
+    - Saves generations back to a file
+    - Latches user exit routine and saves back to file
+
+

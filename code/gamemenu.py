@@ -104,8 +104,13 @@ class GameMenu:
                 'Spacewar Version ' + game.version, (10, 580), 'topleft')
 
         fnt = txt.Font(None, 22)
-        self.players = fnt.text((200, 175, 120), 
-                'with %d players' % (pref.players), (65, 490), 'topleft')
+        if pref.game_mode == 2:
+            self.players = fnt.text((200, 175, 120), 
+                '1 player tutorial', (115, 500), 'center')
+        else:
+            players = pref.player_cnt()
+            self.players = fnt.text((200, 175, 120), 
+                'with %d players' % (players), (115, 500), 'center')
 
     def quit(self):
         self.current = len(menu)-1
