@@ -3,7 +3,7 @@
 import pygame, pygame.draw
 from pygame.locals import *
 import sys, threading
-import game, gfx, snd, txt, input
+import var, gfx, snd, txt, input
 
 load_total = 0
 load_current = 0
@@ -24,7 +24,7 @@ def loadresources():
     m = ''
     try:
         for m, f in funcs:
-            if game.threadstop: break
+            if var.threadstop: break
             load_current += 1
             f()
     except:
@@ -33,7 +33,7 @@ def loadresources():
         load_finished_message = str(sys.exc_value)
         load_finished_type = str(sys.exc_type) + ' in module ' + m
         load_finished_status = -1
-    game.thread = None
+    var.thread = None
 
 
 class GameInit:
@@ -56,8 +56,8 @@ class GameInit:
         #self.gatherinfo()
         self.handlederror = 0
         self.thread = threading.Thread(None, loadresources)
-        game.threadstop = 0
-        game.thread = self.thread
+        var.threadstop = 0
+        var.thread = self.thread
         self.thread.start()
 
 
@@ -134,9 +134,9 @@ class GameInit:
             gfx.dirty(self.background(r))
 
         if load_finished_status >= 0:
-            game.handler = gamemenu.GameMenu(self.prevhandler)
+            var.handler = gamemenu.GameMenu(self.prevhandler)
         else:
-            game.handler = self.prevhandler
+            var.handler = self.prevhandler
 
 
     def run(self):

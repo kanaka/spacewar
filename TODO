@@ -4,14 +4,6 @@ Spacewar TODO list
 * means done
 
 Short term:
-    - Create stop gap AI
-	- Change AI to sequence actions
-	- Create a dumb and a docile verison of the AI
-    - Test
-	- Make sure asteroid and spikes are working properly
-	- Tutorial mode AI
-    - Create Windows distro and release to web
-    - Create web site
     * Ship to ship collisions 
         * Health + shield strength subtracted
         * One player survives damaged
@@ -51,6 +43,7 @@ Medium term:
     - teleport in ships after death, not just start
         - develop colorless teleport images
     - Flash health and shields bars for major changes
+    - Create Windows executable and test
     * Dumb AI players and preferences handled right
     * Bullet powerup. Last 20 seconds or so
         * Triple shot or faster more powerful bullets?

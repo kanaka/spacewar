@@ -4,8 +4,7 @@ import math, os, threading, re
 import urllib, tempfile, shutil
 import pygame, pygame.font
 from pygame.locals import *
-import game, pref
-import gfx, snd, txt
+import var, gfx, snd, txt
 import input
 import gameplay
 
@@ -46,14 +45,14 @@ def load_game_resources():
 def downloadfunc(gamenews):
     global news_downloaded
     try:
-        news = urllib.urlopen(game.news_url).readlines()
+        news = urllib.urlopen(var.news_url).readlines()
     except:
         gamenews.downcur = 3
         return
     gamenews.downcur = 0
     try:
         tag = re.compile('<.*>\n*')
-        newsfilename = game.make_dataname('news')
+        newsfilename = var.make_dataname('news')
         f = open(newsfilename, 'w')
         for line in news:
             l = re.sub(tag, '', line)
@@ -105,9 +104,9 @@ class GameNews:
 
     def quit(self):
         if self.tempwindowed:
-            pref.display = 1
+            var.display = 1
             gfx.switchfullscreen()
-        game.handler = self.prevhandler
+        var.handler = self.prevhandler
         self.done = 1
 
 
@@ -125,9 +124,9 @@ class GameNews:
     def loadnews(self):
         self.cleartext()
         self.imgs = []
-        newsfilename = game.make_dataname('news')
+        newsfilename = var.make_dataname('news')
         if not os.path.isfile(newsfilename):
-            newsfilename = game.get_resource('news')
+            newsfilename = var.get_resource('news')
         if os.path.isfile(newsfilename):
             news = open(newsfilename).readlines()
             if not news:
@@ -262,13 +261,13 @@ class GameNews:
             r = gfx.surface.blit(self.shipimage[0], self.shipimage[1])
             gfx.dirty(r)
         else:
-            #game.handler = self.prevhandler
+            #var.handler = self.prevhandler
             self.clearlist()
 
 
     def downimg(self):
         if not self.downcur:
-            if self.newsversion > game.version:
+            if self.newsversion > var.version:
                 img = self.downimgs[3]
                 r = img.get_rect()
                 r.midtop = self.downloadpos
@@ -344,7 +343,7 @@ class GameNews:
 
 
     def pressed(self):
-        pref = Options[self.current]
+        #pref = Options[self.current]
         snd.play('select_choose')
         val = Options[self.current].split()[0].lower()
         getattr(self, "do_"+val)()

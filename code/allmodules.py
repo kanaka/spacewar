@@ -4,8 +4,8 @@
 
 #we'll just parse this string out and import everything in it
 modules_string = """
-game, gameplay, gamemenu, gamehelp, gamepause, gamepref,
-gfx, snd, txt, hud, main, input, objs, objtext, stars
+gameplay, gamemenu, gamehelp, gamepause, gamepref,
+var, gfx, snd, txt, hud, main, input, objs, objtext, stars
 """
 
 def modules_import():

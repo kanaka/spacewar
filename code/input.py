@@ -4,7 +4,7 @@
 import pygame.joystick
 from pygame.locals import *
 import time, sys, os, pickle, tempfile
-import game, snd
+import var, snd
 
 ScreenshotNum = 1
 
@@ -356,7 +356,7 @@ def load_translations():
     translations = {}
     #just sticking to the standard controls for now
     #try:
-    #    filename = game.make_dataname('input')
+    #    filename = var.make_dataname('input')
     #    translations = pickle.load(open(filename, 'rb'))
     #except (IOError, OSError, KeyError):
         #print 'ERROR OPENING CONTROL FILE, loading defaults'
@@ -368,7 +368,7 @@ def save_translations():
     #not gonna save for now
     return
     try:
-        filename = game.make_dataname('input')
+        filename = var.make_dataname('input')
         f = open(filename, 'wb')
         p = pickle.Pickler(f, 1)
         p.dump(translations)

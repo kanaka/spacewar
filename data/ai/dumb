@@ -1,0 +1,58 @@
+# Blank lines and lines starting with '#' are ignored
+
+# Format of data file:
+# Number of DNA's (different AI's)
+#   Number of Genes in DNA
+#     Type of gene
+#     Number of Bases
+#         Base per line (comma seperated list):
+#         comparison,future1,future2,value,operator
+#     Action list
+
+1
+
+    5
+        none
+            rand_num,0,0,2,<
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+        thrust,thrust,thrust,thrust
+
+        none
+            rand_num,0,0,2,>
+            rand_num,0,0,4,<
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+        rthrust,rthrust,rthrust,rthrust
+
+        ship
+            dir_num,0,0,2,<
+            dir_num,0,0,-2,>
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+        fire,right,none,none,fire,left,left,none,fire,right,none,none,none
+
+        ship
+            dir_num,0,0,0,<
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+        right,right,right,right
+
+        ship
+            dir_num,0,0,0,>
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+        left,left,left,left

@@ -2,10 +2,10 @@
 
 import pygame
 from pygame.locals import *
-import game, gfx, txt
+import var, gfx, txt
 
 fonts = []
-availpos = game.arena.centerx, 70
+availpos = var.arena.centerx, 70
 availpos_start = availpos
 numtexts = 0
 
@@ -15,7 +15,7 @@ def load_game_resources():
 
 
 class Text:
-    def __init__(self, message, text_length=game.text_length):
+    def __init__(self, message, text_length=var.text_length):
         global availpos, numtexts
         bgd = 0, 0, 0
         self.img, self.rect = fonts[0].text((128, 255, 255), message, availpos)

@@ -3,7 +3,7 @@
 import math
 import pygame
 from pygame.locals import *
-import game
+import var
 import gfx, snd, txt
 import input
 import gamehelp
@@ -19,8 +19,8 @@ def load_game_resources():
 
 class GamePause(gamehelp.GameHelp):
     def __init__(self, prevhandler):
-        x = game.arena.centerx - 60
-        y = game.arena.centery - 20
+        x = var.arena.centerx - 60
+        y = var.arena.centery - 20
         gamehelp.GameHelp.__init__(self, prevhandler, '', (x, y))
 
 
@@ -33,7 +33,7 @@ class GamePause(gamehelp.GameHelp):
         titleimg, titlepos = fonts[1].text((255, 240, 200), title, (r.width/2, 10))
         self.img.blit(titleimg, titlepos)
         r.topleft = pos
-        r = r.clamp(game.arena)
+        r = r.clamp(var.arena)
         alphaimg = pygame.Surface(self.img.get_size())
         alphaimg.fill((50, 100, 50))
         alphaimg.set_alpha(192)

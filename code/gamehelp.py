@@ -3,7 +3,7 @@
 import math
 import pygame
 from pygame.locals import *
-import game, pref
+import var
 import gfx, snd, txt
 import input
 import gameplay, objtext
@@ -113,7 +113,7 @@ QuickHelp = {
 
 
 def help(helpname, helppos):
-    game.handler = GameHelp(game.handler, helpname, helppos)
+    var.handler = GameHelp(var.handler, helpname, helppos)
 
 
 class GameHelp:
@@ -132,8 +132,8 @@ class GameHelp:
                 snd.music.set_volume(vol * 0.6)
         snd.play('chimein')
 
-        if hasattr(game.handler, 'player'):
-            game.handler.player.cmd_turbo(0)
+        if hasattr(var.handler, 'player'):
+            var.handler.player.cmd_turbo(0)
 
     def quit(self):
         snd.play('chimeout')
@@ -143,7 +143,7 @@ class GameHelp:
             r = self.rect.inflate(2, 2)
             r = self.prevhandler.background(r)
             gfx.dirty(r)
-        game.handler = self.prevhandler
+        var.handler = self.prevhandler
         self.done = 1
 
     def input(self, i):
@@ -174,7 +174,7 @@ class GameHelp:
         titleimg, titlepos = fonts[1].text((255, 240, 200), title, (r.width/2, 10))
         self.img.blit(titleimg, titlepos)
         r.topleft = pos
-        r = r.clamp(game.arena)
+        r = r.clamp(var.arena)
         alphaimg = pygame.Surface(self.img.get_size())
         alphaimg.fill((50, 100, 50))
         alphaimg.set_alpha(192)
@@ -189,7 +189,7 @@ class GameHelp:
             self.needdraw = 0
             self.drawhelp(self.helpname, self.helppos)
 
-        ratio = game.clockticks / 25
+        ratio = var.clockticks / 25
         speedadjust = max(ratio, 1.0)
         self.time += speedadjust
 

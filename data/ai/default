@@ -1,0 +1,23 @@
+# Blank lines and lines starting with '#' are ignored
+
+# Format of data file:
+# Number of DNA's (different AI's)
+#   Number of Genes in DNA
+#     Type of gene
+#     Number of Bases
+#         Base per line (comma seperated list):
+#         comparison,future1,future2,value,operator
+#     Action list
+
+1
+
+    1
+        none
+            rand_num,0,0,4,<
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+            none,0,0,0,==
+        none
+

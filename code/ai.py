@@ -1,4 +1,4 @@
-import game, objs
+import var, objs
 import random, math
 
 # Algorithm for processing AI agent DNA:
@@ -10,8 +10,8 @@ import random, math
 #         If different gene, do first action and break
 
 # AI data structure constants
-types = ['significant', 'hard', 'damage', 'ship', 'sun', 'fire',
-         'spike', 'asteroid', 'shield', 'bullet', 'powerup']
+types = ['none', 'significant', 'hard', 'damage', 'ship', 'sun',
+         'fire', 'spike', 'asteroid', 'shield', 'bullet', 'powerup']
                                                                                 
 actions = ['none', 'fire', 'thrust', 'rthrust', 'left', 'right']
 
@@ -23,12 +23,15 @@ comparisons = [
         'dir_dir',    # <dir * future1> operator <dir * future2 + value>
         'dir_num']    # <dir * future1> operator value
 
-# How many frames into the future for distance and direction
+# future is index into futures array to get frames into the 
+# future for distance and direction
 futures = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
            10,11,12,13,14,15,16,17,18,19,
            20,22,24,26,28,30,32,34,36,38,
            40,45,50,55,60,65,70,75,80,85]
-                                                                                
+
+# Meaning of value is either raw or index into distances 
+# or directions array depending on setting of comparisons
 distances = [ 0,  10, 12, 14, 16,
               18, 20, 22, 24, 26,
               28, 30, 35, 40, 45,
@@ -39,11 +42,9 @@ distances = [ 0,  10, 12, 14, 16,
              450,500,600,700,800]
 
 directions = range(21) + range(-19,0)
-                                                                                
+
 # for distance, == means between previous and next
 operators = ['==', '>', '<']
-
-values = range(21) + range(-19,0)
 
 # Upper half of gauss distribution
 def half_gauss(start, end):
@@ -74,14 +75,16 @@ class Base:
 
     def random(self):
         self.comparison = random.choice(comparisons)
-        self.future1 = futures[int(half_gauss(0,40))]
-        self.future2 = futures[int(half_gauss(0,40))]
+        self.future1 = int(half_gauss(0,40))
+        self.future2 = int(half_gauss(0,40))
         self.value = int(half_gauss(0,40))
         self.operator = random.choice(operators)
 
     def test(self, ship, object):
-        right = objs.arena.right
-        bottom = objs.arena.bottom
+        right = var.arena.right
+        bottom = var.arena.bottom
+        f1 = futures[self.future1]
+        f2 = futures[self.future2]
         ret = 0
         if self.comparison == 'none':
             ret = 1
@@ -92,25 +95,25 @@ class Base:
             if (self.operator == ">")  and (rand > self.value):  ret = 1
             if (self.operator == "==") and (rand == self.value): ret = 1
         elif self.comparison == 'dist_dist':
-            t1.x = (ship.x + ship.vx * self.future1) % right
-            t1.y = (ship.y + ship.vy * self.future1) % bottom
-            t2.x = (object.x + object.vx * self.future1) % right
-            t2.y = (object.y + object.vy * self.future1) % bottom
+            t1.x = (ship.x + ship.vx * f1) % right
+            t1.y = (ship.y + ship.vy * f1) % bottom
+            t2.x = (object.x + object.vx * f1) % right
+            t2.y = (object.y + object.vy * f1) % bottom
             dist1 = float(objs.Mass.distance(t1, t2))
-            t1.x = (ship.x + ship.vx * self.future2) % right
-            t1.y = (ship.y + ship.vy * self.future2) % bottom
-            t2.x = (object.x + object.vx * self.future2) % right
-            t2.y = (object.y + object.vy * self.future2) % bottom
+            t1.x = (ship.x + ship.vx * f2) % right
+            t1.y = (ship.y + ship.vy * f2) % bottom
+            t2.x = (object.x + object.vx * f2) % right
+            t2.y = (object.y + object.vy * f2) % bottom
             dist2 = float(objs.Mass.distance(t1, t2) + distances[self.value])
             if (self.operator == "<")  and (dist1 < dist2): ret = 1
             if (self.operator == ">")  and (dist1 > dist2): ret = 1
             if (self.operator == "=="):
                 if abs((dist1 - dist2)/((dist1+dist2)/2)) < 0.2: ret = 1
         elif self.comparison == 'dist_num':
-            t1.x = (ship.x + ship.vx * self.future1) % right
-            t1.y = (ship.y + ship.vy * self.future1) % bottom
-            t2.x = (object.x + object.vx * self.future1) % right
-            t2.y = (object.y + object.vy * self.future1) % bottom
+            t1.x = (ship.x + ship.vx * f1) % right
+            t1.y = (ship.y + ship.vy * f1) % bottom
+            t2.x = (object.x + object.vx * f1) % right
+            t2.y = (object.y + object.vy * f1) % bottom
             dist1 = float(objs.Mass.distance(t1, t2))
             dist2 = float(distances[self.value])
             if (self.operator == "<")  and (dist1 < dist2): ret = 1
@@ -118,17 +121,17 @@ class Base:
             if (self.operator == "=="):
                 if abs((dist1 - dist2)/((dist1+dist2)/2)) < 0.2: ret = 1
         elif self.comparison == 'dir_dir':
-            t1.x = (ship.x + ship.vx * self.future1) % right
-            t1.y = (ship.y + ship.vy * self.future1) % bottom
+            t1.x = (ship.x + ship.vx * f1) % right
+            t1.y = (ship.y + ship.vy * f1) % bottom
             t1.dir = ship.dir
-            t2.x = (object.x + object.vx * self.future1) % right
-            t2.y = (object.y + object.vy * self.future1) % bottom
+            t2.x = (object.x + object.vx * f1) % right
+            t2.y = (object.y + object.vy * f1) % bottom
             dir1 = float(objs.Mass.rel_direction(t1, t2))
-            t1.x = (ship.x + ship.vx * self.future2) % right
-            t1.y = (ship.y + ship.vy * self.future2) % bottom
+            t1.x = (ship.x + ship.vx * f2) % right
+            t1.y = (ship.y + ship.vy * f2) % bottom
             t1.dir = ship.dir
-            t2.x = (object.x + object.vx * self.future2) % right
-            t2.y = (object.y + object.vy * self.future2) % bottom
+            t2.x = (object.x + object.vx * f2) % right
+            t2.y = (object.y + object.vy * f2) % bottom
             dir2 = float(objs.Mass.rel_direction(t1, t2))
             dir2 = dir2 + directions[self.value] * (math.pi / 20.0)
             if dir2 > math.pi:
@@ -142,11 +145,11 @@ class Base:
             if (self.operator == "=="):
                 if abs(dir1 - dir2) < math.pi/20: ret = 1
         elif self.comparison == 'dir_num':
-            t1.x = (ship.x + ship.vx * self.future1) % right
-            t1.y = (ship.y + ship.vy * self.future1) % bottom
+            t1.x = (ship.x + ship.vx * f1) % right
+            t1.y = (ship.y + ship.vy * f1) % bottom
             t1.dir = ship.dir
-            t2.x = (object.x + object.vx * self.future1) % right
-            t2.y = (object.y + object.vy * self.future1) % bottom
+            t2.x = (object.x + object.vx * f1) % right
+            t2.y = (object.y + object.vy * f1) % bottom
             dir1 = float(objs.Mass.rel_direction(t1, t2))
             dir2 = directions[self.value] * (math.pi / 20.0)
             if (self.operator == "<")  and (dir1 < dir2): ret = 1
@@ -179,7 +182,7 @@ class Gene:
 
     def random(self):
         self.type = random.choice(types)
-        for i in range(random.randint(1,6)):
+        for i in range(6):
             base = Base()
             base.random()
             self.base.append(base)
@@ -223,6 +226,7 @@ null_gene.base.append(Base())
 class DNA:
     def __init__(self):
         self.gene = []
+        self.rating = 0
 
     def random(self):
         for i in range(random.randint(1,10)):
@@ -242,13 +246,23 @@ class DNA:
 
 dna_pool = []
 
-def load_game_resources():
-    load_dna_pool()
-
-def load_dna_pool():
+def load_dna_pool(file="default"):
     global dna_pool
 
-    ai_file = open(game.get_resource("ai.txt"))
+    # Reset the pool
+    dna_pool = []
+
+    file = "ai/" + file
+    try: 
+        ai_file = open(var.get_resource(file))
+    except:
+        # Not found so randomize the pool
+        for i in range(var.population_size):
+            dna = DNA()
+            dna.random()
+            dna_pool.append(dna)
+        return
+        
     lines = []
     for line in ai_file.readlines():
         line = line.strip()
@@ -269,9 +283,7 @@ def load_dna_pool():
             gene.type = lines[cur_line]
             cur_line += 1
             gene.base = []
-            base_count = int(lines[cur_line])
-            cur_line +=1
-            for base_num in range(base_count):
+            for base_num in range(6):
                 base = Base()
                 gene.base.append(base)
                 parts = lines[cur_line].split(',')
@@ -283,6 +295,37 @@ def load_dna_pool():
                 cur_line +=1
             gene.action = lines[cur_line].split(',')
             cur_line +=1
+        #print dna
 
-def save_dna_pool():
+def save_dna_pool(file="new"):
+    global dna_pool
+
+    file = "ai/" + file
+    ai_file = open(var.get_resource(file), 'w')
+
+    ai_file.write("%d\n" % len(dna_pool))
+    for dna in dna_pool:
+        ai_file.write("    %d\n" % len(dna.gene))
+        for gene in dna.gene:
+            ai_file.write("        %s\n" % gene.type)
+            for base in gene.base:
+                ai_file.write("            %s,%d,%d,%d,%s\n" % 
+                (base.comparison, 
+                 base.future1,
+                 base.future2,
+                 base.value,
+                 base.operator))
+            actions = ",".join(gene.action)
+            ai_file.write("        %s\n\n" % actions)
+        ai_file.write("\n")
+
+
+def runga(players):
+    # Create a new dna pool based on previous pool
+
+    # Three options for pro-creation:
+    # 1. Pure cross-breed
+    # 2. Cross-breed with mutation
+    # 3. Pure random DNA
+
     pass

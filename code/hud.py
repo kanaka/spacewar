@@ -2,7 +2,7 @@
 
 import pygame
 from pygame.locals import *
-import game, pref, gfx, txt
+import var, gfx, txt
 
 
 hudimage = None
@@ -43,7 +43,7 @@ class HUD:
 
         gfx.surface.set_clip(0, 0, 800-width, 600)
         if oldwidth > width:
-            r = game.handler.background((800-oldwidth, 0, oldwidth-width, 600))
+            r = var.handler.background((800-oldwidth, 0, oldwidth-width, 600))
             gfx.dirty(r)
 
         self.drawships(self.lastplayer)
@@ -94,7 +94,7 @@ class HUD:
         # Game Time
         redraw = (50, 40, 40, 20)
         r1 = dest.blit(self.imghud, redraw, redraw).move(offset)
-        secs = int(self.ticks / pref.frames_per_sec)
+        secs = int(self.ticks / var.frames_per_sec)
         txt1 = '%d' % secs
         pos = 90, 40
         txt,pos = smallfont.text((150,150,150), txt1, pos, 'topright')
@@ -133,7 +133,7 @@ class HUD:
     def drawships(self, player):
         dest = self.drawsurface
         offset = self.drawoffset
-        players = pref.player_cnt()
+        players = var.player_cnt()
         space_each = (600-140)/players
         self.last_player = player
         for i in range(player):
@@ -175,7 +175,39 @@ class HUD:
         self.ticks +=1
         self.drawtime()
         if not self.ticks % 5:
-            players = pref.player_cnt()
+            players = var.player_cnt()
             self.drawships(players)
             self.drawkills_deaths()
+
+class aiHUD(HUD):
+    def __init__(self):
+        HUD.__init__(self, [])
+
+    # 20 margin at the bottomm and top
+    # 100 at top for game stats
+    # So below each ship is at most 83 pixels
+    def drawstats(self):
+        dest = self.drawsurface
+        offset = self.drawoffset
+        # Game Title
+        txt = 'Spacewar'
+        pos = 50, 20
+        txt,pos = gamefont.text((150,170,200), txt, pos, 'center')
+        r1 = dest.blit(txt, pos).move(offset)
+        gfx.dirty(r1)
+       
+        # Game time title
+        txt = 'Time:'
+        pos = 10, 40
+        txt,pos = smallfont.text((150,150,150), txt, pos, 'topleft')
+        r1 = dest.blit(txt, pos).move(offset)
+        gfx.dirty(r1)
+
+        self.drawtime()
+
+    def drawkills_deaths(self):
+        pass
+
+    def drawships(self, player):
+        pass
 

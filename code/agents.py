@@ -1,7 +1,6 @@
 from pygame import key
 from pygame.locals import *
 import random
-import pref
 import ai
 
 class Agent:
@@ -47,69 +46,15 @@ class HumanAgent(Agent):
         if key.get_pressed()[self.PK_FIRE[keyset]]:
             self.ship.cmd_fire()
 
-
-#class AIAgent(Agent):
-#    def __init__(self, playernum, ship):
-#        Agent.__init__(self, playernum, ship)
-#        self.start()
-#
-#    def start(self):
-#        self.ticks = 0
-#        self.turn_to = -1
-#        self.turbo_for = -1
-#
-#    def do_action(self):
-#        if self.ship.dead:
-#            self.start()
-#            return
-#        self.ticks +=1
-#        if self.turbo_for > -1:
-#            self.turbo_for -=1
-#            if self.turbo_for < 0:
-#                self.ship.cmd_thrust_off()
-#            else:
-#                self.ship.cmd_turbo()
-#        if self.turn_to > -1:
-#            dirdiff = self.ship.dir - self.turn_to
-#            if abs(dirdiff > 20): dirdiff = -dirdiff
-#            if dirdiff == 0:
-#                self.ship.cmd_turn_off()
-#                self.turn_to = -1
-#            elif dirdiff > 0:
-#                self.ship.cmd_right()
-#            else:
-#                self.ship.cmd_left()
-#
-#class AIAgent_Docile(AIAgent):
-#    def do_action(self):
-#        AIAgent.do_action(self)
-#        if self.turbo_for < 0 and random.randint(0, 40) == 0:
-#            self.turbo_for = random.randint(5, pref.frames_per_sec/2)
-#        if self.turn_to < 0 and random.randint(0, 20) == 0:
-#            self.turn_to = random.randint(0, pref.compass_dirs-1)
-#
-#class AIAgent_Dumb(AIAgent):
-#    def do_action(self):
-#        AIAgent.do_action(self)
-#        if self.turbo_for < 0 and random.randint(0, 40) == 0:
-#            self.turbo_for = random.randint(5, pref.frames_per_sec/2)
-#        if self.turn_to < 0 and random.randint(0, 20) == 0:
-#            self.turn_to = random.randint(0, pref.compass_dirs-1)
-#        if random.randint(0, 40) == 0:
-#            self.ship.cmd_fire()
-
 class DNAAgent(Agent):
     def __init__(self, playernum, ship, dna, objs=[]):
         Agent.__init__(self, playernum, ship)
-        ###self.dna = random.choice(ai.dna_pool)
-        ###print "dna_pool: ", ai.dna_pool
-        ###print "dna selected: ", self.dna
         self.dna = dna
         self.obj_list = objs
         self.start()
     
     def start(self):
-        self.last_gene = None
+        self.cur_gene = None
         self.cur_action = 0
 
     def choose_gene(self):
@@ -125,10 +70,10 @@ class DNAAgent(Agent):
         return gene
 
     def do_action(self):
-        gene = self.choose_gene()
-        if gene != self.last_gene:
-            self.last_gene = gene
+        if self.cur_gene == None:
+            self.cur_gene = self.choose_gene()
             self.cur_action = 0
+        gene = self.cur_gene
         if gene.action[self.cur_action] == "left":
             self.ship.cmd_left()
         elif gene.action[self.cur_action] == "right":
@@ -145,3 +90,5 @@ class DNAAgent(Agent):
             self.ship.cmd_fire()
         actions = len(gene.action)
         self.cur_action = (self.cur_action + 1) % actions
+        if self.cur_action == 0:
+            self.cur_gene = None

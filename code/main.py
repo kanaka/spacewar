@@ -1,17 +1,14 @@
 """main module, starts game and main loop"""
 
 import pygame
-import game, pref, gfx, snd, txt, input
+import var, gfx, snd, txt, input
 import allmodules
 import gamepref
-
-#import psyco
+import ai
 
 #at this point, all needed pygame modules should
 #be imported, so they can be initialized at the
 #start of main()
-
-
 
 def main(args):
     try:
@@ -24,20 +21,24 @@ def main(args):
 def gamemain(args):
     #initialize all our code (not load resources)
     pygame.init()
-    game.clock = pygame.time.Clock()
+    var.clock = pygame.time.Clock()
 
     input.load_translations()
     gamepref.load_prefs()
 
+    if '-aitrain' in args:
+        var.ai_train = 1
+
     size = 800, 600
-    full = pref.display
+    full = var.display
     if '-window' in args:
         full = 0
     gfx.initialize(size, full)
     pygame.display.set_caption('Spacewar')
 
     if not '-nosound' in args:
-        snd.initialize()
+        if not var.ai_train:
+            snd.initialize()
     input.init()
 
     if not txt.initialize():
@@ -46,7 +47,7 @@ def gamemain(args):
     #create the starting game handler
     from gameinit import GameInit
     from gamefinish import GameFinish
-    game.handler = GameInit(GameFinish(None))
+    var.handler = GameInit(GameFinish(None))
 
     #set timer to control stars..
     pygame.time.set_timer(pygame.USEREVENT, 1000)
@@ -60,16 +61,16 @@ def gamemain(args):
 
     #main game loop
     lasthandler = None
-    while game.handler:
+    while var.handler:
         numframes += 1
-        handler = game.handler
+        handler = var.handler
         if handler != lasthandler:
             lasthandler = handler
             if hasattr(handler, 'starting'):
                 handler.starting()
         for event in pygame.event.get():
             if event.type == pygame.USEREVENT:
-                fps = game.clock.get_fps()
+                fps = var.clock.get_fps()
                 #print 'FRAMERATE: %f fps' % fps
                 gfx.starobj.recalc_num_stars(fps)
                 continue
@@ -78,15 +79,15 @@ def gamemain(args):
                     #uniconified, lets try to kick the screen
                     pygame.display.update()
                 elif event.state == 2:
-                    if hasattr(game.handler, 'gotfocus'):
+                    if hasattr(var.handler, 'gotfocus'):
                         if event.gain:
-                            game.handler.gotfocus()
+                            var.handler.gotfocus()
                         else:
-                            game.handler.lostfocus()
+                            var.handler.lostfocus()
                 continue
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 if event.mod&pygame.KMOD_ALT:
-                    pref.display = not pref.display
+                    var.display = not var.display
                     gfx.switchfullscreen()
                     continue
             inputevent = input.translate(event)
@@ -94,12 +95,15 @@ def gamemain(args):
                 inputevent = input.exclusive((input.UP, input.DOWN, input.LEFT, input.RIGHT), inputevent)
                 handler.input(inputevent)
             elif event.type == pygame.QUIT:
-                game.handler = None
+                var.handler = None
                 break
             handler.event(event)
         handler.run()
-        game.clockticks = game.clock.tick(40)
-        #print 'ticks=%d  rawticks=%d  fps=%.2f'%(game.clock.get_time(), game.clock.get_rawtime(), game.clock.get_fps())
+        # If in AI training mode then don't slow frame rate
+        if var.ai_train and hasattr(handler,'start_player'):
+            pass
+        else:
+            var.clockticks = var.clock.tick(var.frames_per_sec)
         gfx.update()
         while not pygame.display.get_active():
             pygame.time.wait(100)
@@ -117,6 +121,5 @@ def gamemain(args):
     input.save_translations()
     gamepref.save_prefs()
     pygame.quit()
-
 
 

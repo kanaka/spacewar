@@ -2,7 +2,7 @@
 
 from pygame import transform, font, Rect
 from pygame.locals import *
-import gfx, snd, agents, ai, pref
+import var, gfx, snd, agents, ai
 from math import *
 from random import randint, random 
 
@@ -10,14 +10,12 @@ from random import randint, random
 #       instead of assuming 0,0
 if __name__ != '__main__': 
     # We were imported normally from gameplay.py
-    import game
-    arena = game.arena
+    arena = var.arena
 else:
     # We are running objs.py standalone
     arena = Rect(0, 0, 800, 600)
 
-game_clock = None  # Set in load_game_resources or main()
-fps_list = [30] * pref.frames_per_sec
+fps_list = [30] * var.frames_per_sec
 
 # Object lists:
 #   - vapors for smoke and other "vapors"
@@ -33,12 +31,7 @@ images = {}
 
 # Load all the images
 def load_game_resources():
-    global game_clock
     global images
-
-    if not game_clock:
-        # objs.py is imported, not standalone
-        game_clock = game.clock
 
     # Ship images are 3D arrays [shipnum][phase][direction]
     for name,files in (
@@ -57,7 +50,7 @@ def load_game_resources():
             for p in range(phases):
                 target = images[name]
                 target[ship].append([])
-                for i in range(0, 361, 360/pref.compass_dirs):
+                for i in range(0, 361, 360/var.compass_dirs):
                     target[ship][p].append(transform.rotate(img_anim[p],i))
 
     images['shield']  = []
@@ -142,7 +135,7 @@ class Mass:
         self.vx = vx
         self.vy = vy
         self.mass = mass
-        self.dir = dir*pref.compass_dirs/360
+        self.dir = dir*var.compass_dirs/360
 
         if imgs:
             self.imgs = imgs
@@ -212,7 +205,7 @@ class Mass:
     # Return relative radian direction to other mass
     def rel_direction(self, other_mass):
         abs_rads = Mass.direction(self, other_mass)
-        self_rads = self.dir*2*pi/pref.compass_dirs
+        self_rads = self.dir*2*pi/var.compass_dirs
         rel_rads = (abs_rads-self_rads) % (2*pi)
         if rel_rads > pi: 
             rel_rads -= 2*pi
@@ -226,8 +219,8 @@ class Mass:
         force = other_mass.mass/(dist*dist)
         
         rads = self.direction(other_mass)
-        self.vx = self.vx - sin(rads)*force*pref.gravity_const
-        self.vy = self.vy - cos(rads)*force*pref.gravity_const
+        self.vx = self.vx - sin(rads)*force*var.gravity_const
+        self.vy = self.vy - cos(rads)*force*var.gravity_const
 
     def clearance(self, other_mass):
         # *** TODO: this needs to account for motion
@@ -236,12 +229,12 @@ class Mass:
     def check_spot(self):
         for object in low + high:
             if object is not self:
-                if self.clearance(object) < pref.start_clearance:
+                if self.clearance(object) < var.start_clearance:
                     return 0
         return 1
 
     def find_spot(self):
-        new_dir = randint(0, pref.compass_dirs-1)
+        new_dir = randint(0, var.compass_dirs-1)
         while 1:
             self.x = randint(50, arena.right-50)
             self.y = randint(50, arena.bottom-50)
@@ -249,7 +242,7 @@ class Mass:
             ###found_spot = 1
             ###for object in low + high:
             ###    if object is not self:
-            ###        if self.clearance(object) < pref.start_clearance:
+            ###        if self.clearance(object) < var.start_clearance:
             ###            found_spot = 0
         
     def hit_by(self, other_mass):
@@ -274,11 +267,11 @@ class Fire(Mass):
     taxonomy = ('fire', 'damage', 'significant')
     radius = 8.0
     phase_rate = 0.20
-    damage = pref.fire_damage
+    damage = var.fire_damage
 
     def __init__(self, x, y, vx, vy, owner):
         Mass.__init__(self, x, y, vx, vy, mass=0.0)
-        self.ticks_to_live = pref.fire_life
+        self.ticks_to_live = var.fire_life
         self.owner = owner
         self.dead_by_hit = 0
 
@@ -293,11 +286,11 @@ class SuperFire(Fire):
     taxonomy = ('fire', 'damage', 'significant') 
     radius = 8.0
     phase_rate = 0.3
-    damage = int(pref.fire_damage * 1.5)
+    damage = int(var.fire_damage * 1.5)
 
     def __init__(self, x, y, vx, vy, owner):
         Mass.__init__(self, x, y, vx, vy, mass=0.0)
-        self.ticks_to_live = int(pref.fire_life * 1.5)
+        self.ticks_to_live = int(var.fire_life * 1.5)
         self.owner = owner
         self.dead_by_hit = 0
 
@@ -345,11 +338,11 @@ class Sun(Mass):
         Mass.__init__(self, x, y, vx=0, vy=0, mass=10.0)
 
     def draw(self):
-        if pref.sun != 3:
+        if var.sun != 3:
             Mass.draw(self)
 
     def gravitate(self, other_mass):
-        if pref.sun >= 2:
+        if var.sun >= 2:
             Mass.gravitate(self)
 
 # Spike and Asteroid superclass. Don't instantiate
@@ -361,7 +354,7 @@ class Hard(Mass):
         Mass.tick(self, speedadjust)
 
         if self.pending_frames > 0:
-            if self.pending_frames == pref.frames_per_sec / 2:
+            if self.pending_frames == var.frames_per_sec / 2:
                 if self.snd1: snd.play('flop', 1.0, self.rect.centerx)
             self.pending_frames = self.pending_frames -1
             # Make the spike appear
@@ -400,7 +393,7 @@ class Asteroid(Hard):
     snd2 = ''
 
     def find_spot(self):
-        new_dir = randint(0, pref.compass_dirs-1)
+        new_dir = randint(0, var.compass_dirs-1)
         edge = randint(0, 1) # what edge
         while 1:
             if edge == 0:
@@ -472,7 +465,7 @@ class Ship(Mass):
         self.mycolor = self.BASE_COLOR[shipnum]
         self.max_health = 100.0
         self.max_shield = 100.0
-        self.max_bullet = pref.bbobble_charge
+        self.max_bullet = var.bbobble_charge
         self.start(x, y, dir=dir)
 
     def start(self, x=50.0, y=50.0, vx=0, vy=0, mass=1.0, dir=0):
@@ -495,12 +488,12 @@ class Ship(Mass):
     def tick(self, speedadjust):
         # Ship is dead, waiting to re-appear 
         if self.pending_frames > 0:
-            if self.pending_frames == pref.frames_per_sec / 2:
+            if self.pending_frames == var.frames_per_sec / 2:
                 snd.play('startlife', 1.0, self.rect.centerx)
             self.pending_frames = self.pending_frames -1
             self.health = (self.max_health * 
-                (pref.death_time * pref.frames_per_sec - self.pending_frames) / 
-                (pref.death_time * pref.frames_per_sec))
+                (var.death_time * var.frames_per_sec - self.pending_frames) / 
+                (var.death_time * var.frames_per_sec))
             # Make the ship appear again
             if self.pending_frames <= 0:
                 self.dead = 0
@@ -512,11 +505,13 @@ class Ship(Mass):
 
         if self.thrust:
             # Calculate thrust acceleration
-            rads = radians(self.dir*(360/pref.compass_dirs))
+            rads = radians(self.dir*(360/var.compass_dirs))
             self.vx = self.vx - sin(rads)*self.thrust
             self.vy = self.vy - cos(rads)*self.thrust
             # Smoke trails, don't overload frame rate
-            if pref.graphics > 0 and gfx.surface.get_bytesize()>1:
+            if (not var.ai_train and 
+                    var.graphics > 0 and 
+                    gfx.surface.get_bytesize()>1):
                 if self.thrust > 0: rads = (rads+pi) % (2.0*pi)
                 fps = min(fps_list)
                 if fps > 40.0:
@@ -535,13 +530,13 @@ class Ship(Mass):
                     self.smoke_rate -= 1.0
                     x = (self.x - sin(rads)*(self.radius+5) + randint(-7,7))
                     y = (self.y - cos(rads)*(self.radius+5) + randint(-7,7))
-                    vx = (self.vx - sin(rads)*pref.smoke_speed + random()/3)
-                    vy = (self.vy - cos(rads)*pref.smoke_speed + random()/3)
+                    vx = (self.vx - sin(rads)*var.smoke_speed + random()/3)
+                    vy = (self.vy - cos(rads)*var.smoke_speed + random()/3)
                     vapors.append(Smoke(x, y, vx, vy))
 
         # Perform turns
         if self.turn:
-            self.dir = (self.dir+self.turn)%pref.compass_dirs
+            self.dir = (self.dir+self.turn)%var.compass_dirs
             self.width = self.imgs[0][self.dir].get_width()
             self.height = self.imgs[0][self.dir].get_height()
 
@@ -555,7 +550,7 @@ class Ship(Mass):
             self.bullet -= 1
         if self.health < self.max_health:
             self.health = min (self.max_health, 
-                               self.health + pref.heal_rate/100.0)
+                               self.health + var.heal_rate/100.0)
 
         # Slow down firing rate
         if self.fire_delay > 0:
@@ -590,15 +585,15 @@ class Ship(Mass):
         self.turn = 0
     
     def cmd_reverse(self):
-        if not self.thrust == pref.reverse_power:
-            self.thrust = pref.reverse_power
+        if not self.thrust == var.reverse_power:
+            self.thrust = var.reverse_power
             self.imgs = images['reverse'][self.shipnum]
             self.phases = len(self.imgs)
             self.phase = 0.0
     
     def cmd_turbo(self):
-        if not self.thrust == pref.thrust_power:
-            self.thrust = pref.thrust_power
+        if not self.thrust == var.thrust_power:
+            self.thrust = var.thrust_power
             self.imgs = images['turbo'][self.shipnum]
             self.phases = len(self.imgs)
             self.phase = 0.0
@@ -612,18 +607,18 @@ class Ship(Mass):
 
     def cmd_fire(self):
         if not self.fire_delay and not self.pending_frames:
-            rads = radians(self.dir*(360/pref.compass_dirs))
-            vx = self.vx - sin(rads)*pref.fire_speed
-            vy = self.vy - cos(rads)*pref.fire_speed
+            rads = radians(self.dir*(360/var.compass_dirs))
+            vx = self.vx - sin(rads)*var.fire_speed
+            vy = self.vy - cos(rads)*var.fire_speed
             x = self.x - sin(rads)*(self.radius+Fire.radius+1)
             y = self.y - cos(rads)*(self.radius+Fire.radius+1)
             if self.bullet:
-                self.fire_delay = int(pref.fire_delay_frames * 0.75)
+                self.fire_delay = int(var.fire_delay_frames * 0.75)
                 vx *= 1.2
                 vy *= 1.2
                 fire = SuperFire(x, y, vx, vy, self)
             else:
-                self.fire_delay = pref.fire_delay_frames
+                self.fire_delay = var.fire_delay_frames
                 fire = Fire(x, y, vx, vy, self)
             high.append(fire)
             snd.play('select_choose', 1.0, self.rect.centerx)
@@ -637,7 +632,7 @@ class Ship(Mass):
             self.health = 0.0
             self.dead = 1
             self.player.deaths += 1
-            self.pending_frames = pref.death_time * pref.frames_per_sec
+            self.pending_frames = var.death_time * var.frames_per_sec
             explosion = Explosion(self.x, self.y, self.vx, self.vy)
             explosion.mass = self.mass
             high[0:0] = [explosion]
@@ -651,29 +646,29 @@ class Ship(Mass):
         if self.dead: return
         if other_mass.__class__ in (Fire, SuperFire):
             damage = ((other_mass.damage-10) * 
-                      other_mass.ticks_to_live/pref.fire_life + 10)
+                      other_mass.ticks_to_live/var.fire_life + 10)
             dead = self.damage(damage)
             if dead and other_mass.owner is not self:
                 other_mass.owner.player.score += 1
                 other_mass.owner.player.complement = 1
         elif other_mass.__class__ == Explosion:
             if not self.shield:
-                self.damage(pref.explosion_damage)
+                self.damage(var.explosion_damage)
         elif other_mass.__class__ == Ship:
             my_damage = other_mass.health + other_mass.shield
             other_damage = self.health + self.shield
             self.damage(my_damage)
             other_mass.damage(other_damage)
         elif other_mass.__class__ == ShieldBobble:
-            self.shield = min(self.max_shield, self.shield + pref.sbobble_power)
+            self.shield = min(self.max_shield, self.shield + var.sbobble_power)
             snd.play('chimein', 1.0, other_mass.rect.centerx)
         elif other_mass.__class__ == BulletBobble:
-            self.bullet = min(self.max_bullet, self.bullet+pref.bbobble_charge)
+            self.bullet = min(self.max_bullet, self.bullet+var.bbobble_charge)
             snd.play('chimein', 1.0, other_mass.rect.centerx)
         else:
             dead = self.damage(1000)
             if dead and self.player.score > 0:
-                if pref.scoring == 0:
+                if var.scoring == 0:
                     self.player.score -= 1
                 self.player.insult = 1
 
@@ -718,7 +713,7 @@ class Score:
 
 def fps_update():
     global fps_list
-    fps_list.append(game_clock.get_fps())
+    fps_list.append(var.clock.get_fps())
     fps_list = fps_list[1:]
 
 
@@ -727,31 +722,31 @@ def runobjects(speedadjust):
     fps_update()
 
     # Make spikes appear
-    if randint(0,pref.spike_rate * pref.frames_per_sec) == 1:
+    if randint(0,var.spike_rate * var.frames_per_sec) == 1:
         spike = Spike(0,0,0,0)
         spike.dead = 1
-        spike.pending_frames = pref.frames_per_sec
+        spike.pending_frames = var.frames_per_sec
         pend.append(spike)
 
     # Make asteroids appear
-    if randint(0,pref.spike_rate * pref.frames_per_sec) == 1:
+    if randint(0,var.spike_rate * var.frames_per_sec) == 1:
         asteroid = Asteroid(0,0,0,0)
         asteroid.dead = 1
-        asteroid.pending_frames = pref.frames_per_sec
+        asteroid.pending_frames = var.frames_per_sec
         pend.append(asteroid)
 
     # Make shield powerups appear
-    if randint(0,pref.shield_powerup_rate * pref.frames_per_sec) == 1:
+    if randint(0,var.shield_powerup_rate * var.frames_per_sec) == 1:
         sbobble = ShieldBobble(0,0,0,0)
         sbobble.dead = 1
-        sbobble.pending_frames = pref.frames_per_sec
+        sbobble.pending_frames = var.frames_per_sec
         pend.append(sbobble)
 
     # Make bullet powerups appear
-    if randint(0,pref.bullet_powerup_rate * pref.frames_per_sec) == 1:
+    if randint(0,var.bullet_powerup_rate * var.frames_per_sec) == 1:
         bbobble = BulletBobble(0,0,0,0)
         bbobble.dead = 1
-        bbobble.pending_frames = pref.frames_per_sec
+        bbobble.pending_frames = var.frames_per_sec
         pend.append(bbobble)
 
     # Gravitate
@@ -807,12 +802,11 @@ def runobjects(speedadjust):
 
 
 def main():
-    global game_clock
 
     import pygame, sys
 
     pygame.init()
-    game_clock = pygame.time.Clock()
+    var.clock = pygame.time.Clock()
 
     full=1
     if '-window' in sys.argv:
@@ -824,7 +818,7 @@ def main():
     load_game_resources()
 
     if len(ai.dna_pool) == 0:
-        ai.load_game_resources()
+        ai.load_dna_pool()
 
     if not '-nosound' in sys.argv:
         snd.initialize()
@@ -833,7 +827,7 @@ def main():
     players = []
     ship = Ship(shipnum=0, x=100, y=100)
     ship.shield = 100.0
-    ship.bullet = pref.bbobble_charge
+    ship.bullet = var.bbobble_charge
     low.append(ship)
     players.append(agents.HumanAgent(playernum=0, ship=ship))
     
@@ -869,8 +863,8 @@ def main():
 
         gfx.update()
         
-        game_clock.tick(standalone_frame_rate)  # max frame rate
+        var.clock.tick(standalone_frame_rate)  # max frame rate
 
 if __name__ == '__main__': 
-    standalone_frame_rate = pref.frames_per_sec  
+    standalone_frame_rate = var.frames_per_sec  
     main()

@@ -1,0 +1,1095 @@
+25
+    1
+        hard
+            rand_num,22,13,8,<
+            rand_num,2,0,1,==
+            dir_num,11,5,7,>
+            dir_dir,16,22,5,<
+            dist_num,14,23,31,>
+            dir_num,12,18,5,>
+        left,right,left,left,none,none,thrust
+
+
+    2
+        ship
+            dir_num,3,21,2,==
+            dist_num,10,5,0,==
+            dir_dir,1,1,8,<
+            rand_num,23,3,8,>
+            rand_num,1,7,17,>
+            dir_dir,8,9,14,<
+        left,none,right,rthrust,right,right,rthrust
+
+        ship
+            rand_num,0,5,5,==
+            dist_num,6,16,5,==
+            dir_dir,24,9,5,>
+            dist_num,9,15,7,>
+            dist_dist,6,3,9,==
+            dir_num,6,1,1,<
+        none
+
+
+    1
+        asteroid
+            rand_num,7,2,5,==
+            dir_num,3,9,6,>
+            dist_num,10,0,9,<
+            dist_dist,0,21,5,>
+            none,13,2,11,<
+            dist_num,1,2,6,<
+        fire,thrust,thrust,left,none,none,left,fire,right,right
+
+
+    6
+        damage
+            none,12,8,5,<
+            dist_num,9,0,18,==
+            rand_num,9,8,7,==
+            dist_num,6,10,1,==
+            rand_num,13,6,31,<
+            dir_num,4,3,4,>
+        thrust,rthrust,none,left
+
+        hard
+            dir_dir,26,9,4,==
+            dir_dir,23,7,0,>
+            dir_dir,18,5,34,==
+            dir_dir,25,6,0,==
+            rand_num,23,1,16,==
+            dist_dist,11,17,0,<
+        fire,thrust,rthrust,right,left,fire,thrust,rthrust,right
+
+        significant
+            none,1,1,16,>
+            none,18,21,8,==
+            dir_num,0,6,21,>
+            dir_num,20,1,2,>
+            dir_num,1,7,16,<
+            dir_dir,2,5,14,<
+        rthrust,left
+
+        bullet
+            rand_num,3,14,9,>
+            rand_num,5,21,15,<
+            dist_num,10,21,18,>
+            none,0,24,12,<
+            dir_num,11,13,5,<
+            dir_dir,10,10,5,==
+        left,thrust,thrust,left,thrust,none
+
+        sun
+            dist_num,4,12,14,>
+            dir_dir,16,4,1,>
+            dist_num,19,4,4,<
+            none,27,21,13,>
+            dir_num,13,3,6,<
+            dist_dist,5,6,11,>
+        fire,fire
+
+        ship
+            none,2,22,11,<
+            dist_dist,2,21,18,==
+            dist_num,13,31,15,<
+            dir_dir,14,2,16,==
+            dist_num,9,24,7,>
+            dist_num,11,5,6,<
+        rthrust,right,rthrust,thrust
+
+
+    6
+        spike
+            dist_dist,6,26,8,==
+            dist_num,2,7,18,<
+            dir_num,7,9,13,==
+            dist_dist,1,11,13,>
+            none,14,9,7,<
+            dir_dir,4,8,6,<
+        left,right,none,right,left,thrust,right,none,left,rthrust
+
+        ship
+            dir_dir,9,6,0,<
+            rand_num,0,14,13,==
+            none,4,17,0,<
+            dir_num,10,5,4,<
+            dir_num,22,6,18,==
+            dir_dir,6,0,2,==
+        left,right,left,none,thrust,left,right
+
+        bullet
+            dir_dir,5,19,12,==
+            dir_num,19,20,2,<
+            dist_num,12,20,3,==
+            rand_num,8,1,5,==
+            none,12,16,2,>
+            rand_num,23,24,16,<
+        left,fire,fire,right,none,fire,thrust
+
+        bullet
+            none,19,2,11,==
+            none,0,30,4,==
+            dir_dir,5,0,7,==
+            dist_dist,7,2,28,==
+            none,1,5,21,==
+            dist_dist,9,23,13,>
+        none,fire,rthrust,left
+
+        hard
+            dist_num,1,1,8,==
+            none,35,0,3,==
+            rand_num,33,2,6,==
+            dir_num,2,13,2,>
+            rand_num,8,18,10,>
+            dist_dist,10,6,5,<
+        rthrust,thrust,rthrust,fire,rthrust,thrust,right,rthrust,fire
+
+        sun
+            dist_num,1,6,10,>
+            none,19,5,12,==
+            dir_dir,14,2,8,>
+            none,1,4,8,==
+            none,15,8,25,<
+            dir_num,4,2,26,>
+        rthrust,none
+
+
+    7
+        sun
+            none,12,7,4,<
+            dir_num,6,4,2,<
+            dist_dist,11,6,15,==
+            dist_num,6,0,19,>
+            dir_num,7,3,8,>
+            dir_num,9,35,21,<
+        right,rthrust
+
+        spike
+            dir_num,15,3,11,>
+            dir_num,18,16,13,<
+            dist_num,2,17,5,<
+            none,34,8,3,>
+            dir_dir,13,3,32,==
+            dir_dir,0,7,0,==
+        right,left,rthrust,left,none,rthrust,thrust,rthrust
+
+        shield
+            rand_num,20,13,5,==
+            rand_num,2,8,24,==
+            none,13,4,5,==
+            dir_dir,5,6,9,==
+            dir_dir,18,4,19,==
+            dir_dir,19,10,18,==
+        thrust,none,thrust
+
+        significant
+            dist_dist,8,15,8,<
+            dir_num,5,5,1,<
+            rand_num,6,33,4,<
+            dist_dist,24,1,9,==
+            none,4,19,21,>
+            dir_dir,8,15,13,<
+        right,rthrust,none,none,thrust
+
+        bullet
+            none,15,3,16,>
+            dist_num,10,4,19,==
+            dir_num,29,14,7,<
+            dist_dist,29,13,5,<
+            rand_num,26,9,9,==
+            none,10,16,13,>
+        thrust
+
+        damage
+            dir_dir,2,5,5,>
+            dir_num,2,21,3,==
+            dir_num,7,27,28,<
+            none,3,25,16,==
+            dir_num,6,7,6,<
+            dir_dir,5,6,18,<
+        left,thrust,none,right
+
+        damage
+            dist_num,4,26,5,<
+            dist_num,9,1,4,<
+            dir_dir,1,4,10,==
+            rand_num,12,4,6,<
+            rand_num,0,1,18,>
+            rand_num,3,8,6,<
+        fire,right,rthrust,left,left
+
+
+    9
+        spike
+            dist_num,0,6,11,<
+            dist_dist,17,13,1,==
+            none,16,8,7,==
+            dir_dir,0,4,16,<
+            dir_num,23,1,27,==
+            dist_dist,15,23,2,<
+        fire,right,left,rthrust,none,none,thrust,right,rthrust,left
+
+        powerup
+            dir_num,7,11,21,<
+            dir_dir,0,14,18,>
+            dist_num,16,10,6,==
+            none,4,0,3,<
+            none,7,10,7,<
+            none,4,33,10,<
+        thrust,fire,left
+
+        sun
+            none,8,8,24,>
+            dir_dir,20,5,14,<
+            dist_num,20,1,34,<
+            dir_num,19,2,14,==
+            rand_num,16,7,9,>
+            rand_num,9,6,8,<
+        thrust,right,thrust,left
+
+        powerup
+            dir_dir,2,14,15,<
+            dir_dir,1,9,6,>
+            rand_num,7,12,1,>
+            rand_num,32,1,11,<
+            dir_num,3,3,31,>
+            dir_dir,15,22,15,<
+        fire,thrust
+
+        powerup
+            rand_num,13,6,0,==
+            dir_num,3,22,16,>
+            rand_num,33,27,15,<
+            none,16,2,6,==
+            dist_dist,8,9,10,>
+            dist_num,7,10,20,==
+        fire,thrust,right
+
+        ship
+            dir_num,0,14,6,==
+            rand_num,19,6,7,<
+            dir_dir,10,15,15,==
+            dist_dist,32,9,8,<
+            none,5,17,16,==
+            dir_dir,7,5,8,>
+        thrust
+
+        damage
+            dir_dir,4,21,14,<
+            dist_dist,14,17,0,<
+            rand_num,0,10,15,==
+            dir_num,16,6,17,>
+            dist_num,11,8,18,>
+            dist_dist,8,14,10,<
+        thrust,right
+
+        significant
+            dir_num,6,6,7,<
+            dist_num,0,15,0,<
+            dist_num,18,3,0,>
+            none,3,10,3,<
+            none,20,12,23,<
+            dir_num,2,1,2,==
+        fire,fire,fire,none,right
+
+        bullet
+            dir_num,1,0,16,==
+            dir_num,3,5,10,==
+            dir_num,1,8,23,<
+            dist_num,7,4,4,<
+            rand_num,8,13,7,>
+            dist_dist,14,16,5,>
+        none,rthrust,left,none,left
+
+
+    2
+        none
+            dist_dist,10,6,2,>
+            dist_dist,21,1,1,>
+            rand_num,15,4,13,<
+            rand_num,7,17,2,>
+            dist_num,2,20,5,<
+            dist_dist,10,4,0,>
+        none,thrust,right,left,none,none,fire,left,thrust,rthrust
+
+        ship
+            dir_num,9,4,6,>
+            dir_dir,36,1,19,<
+            dir_dir,30,3,8,<
+            dir_dir,8,9,2,<
+            dir_num,2,24,2,>
+            none,1,6,22,<
+        none
+
+
+    4
+        significant
+            dist_num,2,1,5,==
+            dir_num,2,13,8,==
+            dir_dir,8,6,5,==
+            dist_dist,4,6,4,==
+            dir_dir,12,21,18,==
+            dist_dist,2,17,13,>
+        left,fire,fire,left,left,right,fire,none,left
+
+        spike
+            rand_num,10,6,8,<
+            dist_num,25,12,3,==
+            dir_num,6,16,7,<
+            dir_dir,5,3,5,>
+            dist_num,18,0,7,==
+            dir_dir,1,17,10,<
+        rthrust,rthrust,thrust,left,none,fire,right
+
+        powerup
+            dist_dist,0,10,29,<
+            dist_num,1,6,14,==
+            dist_num,10,0,8,==
+            rand_num,3,1,6,>
+            dist_num,12,10,2,<
+            dist_dist,0,1,4,>
+        thrust,none,thrust,thrust,rthrust,thrust,left,none
+
+        none
+            dist_dist,21,22,3,==
+            dir_dir,10,5,23,>
+            rand_num,18,5,18,>
+            dist_dist,11,21,17,==
+            dir_num,8,5,18,==
+            dist_num,18,9,5,<
+        thrust
+
+
+    3
+        shield
+            dist_num,22,16,5,>
+            rand_num,21,7,4,<
+            dist_num,9,13,4,==
+            none,15,0,19,>
+            rand_num,7,16,7,==
+            dist_num,25,2,8,<
+        none,fire,rthrust,right,thrust,fire,none,none
+
+        powerup
+            dist_dist,11,0,5,>
+            none,9,11,1,==
+            none,7,0,14,==
+            dir_dir,16,2,14,<
+            dist_num,12,5,14,>
+            dist_dist,16,1,10,<
+        none
+
+        sun
+            dir_dir,27,12,10,>
+            none,19,24,2,==
+            none,1,8,20,==
+            dir_num,0,10,6,==
+            dist_num,7,15,21,<
+            dir_dir,23,6,15,<
+        fire,thrust,thrust,none
+
+
+    1
+        hard
+            rand_num,8,6,18,<
+            dist_num,7,2,12,==
+            dir_dir,2,14,8,<
+            dist_num,28,20,3,>
+            dir_dir,6,3,8,==
+            dir_dir,13,17,7,==
+        right,right,thrust,right,none,right,fire
+
+
+    3
+        sun
+            dist_dist,11,20,3,==
+            none,16,0,11,==
+            dir_num,9,8,4,==
+            dir_dir,14,10,10,<
+            none,10,4,34,<
+            rand_num,3,15,10,<
+        fire,rthrust,rthrust,none,none,left,rthrust,right,thrust
+
+        none
+            dir_num,7,5,23,>
+            dist_num,30,10,14,>
+            dir_num,14,7,13,==
+            dist_dist,7,18,25,<
+            dist_dist,3,9,11,>
+            dist_dist,10,0,19,>
+        none
+
+        hard
+            dir_dir,8,37,10,<
+            rand_num,4,0,11,==
+            none,5,6,18,>
+            dist_dist,0,26,17,<
+            none,15,11,5,<
+            dist_num,1,8,26,<
+        right,right,right,left
+
+
+    4
+        shield
+            none,0,9,4,<
+            dist_num,11,16,7,<
+            dir_dir,1,11,6,>
+            dist_dist,18,2,10,>
+            dir_num,20,6,12,>
+            dist_num,14,2,26,==
+        rthrust,fire,left,right,left,rthrust
+
+        bullet
+            dist_num,11,7,8,==
+            none,11,19,7,<
+            dist_num,9,17,5,<
+            rand_num,6,27,7,<
+            dist_num,11,4,4,<
+            rand_num,10,7,24,<
+        none,none,fire,right
+
+        damage
+            dist_dist,23,17,12,==
+            none,11,17,4,>
+            dir_dir,22,1,2,==
+            none,3,9,8,==
+            dir_num,11,11,3,<
+            dist_dist,14,7,5,<
+        fire,left,left,left,right,right,left,none,right,none
+
+        fire
+            dist_num,24,8,20,==
+            dir_num,21,9,27,>
+            dir_num,5,3,5,>
+            rand_num,8,3,6,<
+            dir_num,22,7,0,<
+            dist_num,7,3,37,<
+        fire,thrust,rthrust,rthrust,left,thrust,none
+
+
+    1
+        fire
+            dir_num,2,25,17,<
+            dist_num,0,8,4,==
+            dir_dir,27,0,13,<
+            dist_num,31,1,8,<
+            dir_dir,8,11,21,>
+            dir_dir,9,15,7,<
+        fire
+
+
+    10
+        damage
+            dist_dist,3,1,1,<
+            dir_num,12,0,16,==
+            dir_dir,21,3,13,==
+            none,3,2,3,>
+            dist_dist,20,3,14,==
+            none,14,4,5,<
+        fire,rthrust,thrust,right,thrust,rthrust,fire
+
+        asteroid
+            dir_num,14,23,6,<
+            dist_num,16,4,14,<
+            none,11,5,1,<
+            dir_num,0,15,8,>
+            dir_dir,4,13,2,==
+            none,5,3,12,<
+        left,left,left,rthrust,left,right
+
+        damage
+            dir_dir,21,10,15,==
+            dist_num,6,5,1,==
+            dir_num,10,13,4,==
+            dir_num,13,0,8,>
+            dir_dir,4,17,11,==
+            none,3,7,20,<
+        none,fire,fire,left,right,none
+
+        bullet
+            dist_dist,11,14,0,>
+            dist_num,0,23,17,<
+            rand_num,11,5,5,==
+            dir_num,7,17,25,>
+            dir_num,11,16,2,<
+            dir_dir,18,10,30,==
+        rthrust,none,thrust,left,fire,fire
+
+        powerup
+            dist_dist,13,11,11,==
+            dir_num,2,13,33,<
+            dist_dist,3,14,11,<
+            dist_num,13,1,5,<
+            dir_num,20,23,3,>
+            dist_dist,8,5,4,>
+        none,none,left,none,rthrust,right,none,none,fire,left
+
+        none
+            dir_dir,12,9,24,>
+            rand_num,15,7,6,==
+            none,0,20,12,>
+            rand_num,0,4,4,<
+            dir_dir,3,18,5,>
+            dir_dir,15,5,7,<
+        rthrust,right,none,right,thrust,right,rthrust,none,thrust,thrust
+
+        damage
+            rand_num,9,9,9,==
+            dir_num,20,8,22,>
+            dir_num,3,11,4,==
+            rand_num,14,23,4,<
+            dist_num,3,2,36,<
+            dist_num,11,8,20,<
+        fire,thrust,fire,rthrust,rthrust,none,right,fire,fire,none
+
+        spike
+            dir_dir,4,3,31,>
+            dir_num,14,2,26,>
+            dir_dir,8,1,26,==
+            dir_dir,7,4,4,<
+            dist_dist,7,5,13,==
+            rand_num,3,18,10,<
+        left,thrust,fire
+
+        none
+            dist_dist,5,3,2,==
+            dir_num,2,11,10,<
+            dist_num,24,22,18,<
+            dir_num,15,6,35,>
+            dist_num,5,17,13,>
+            rand_num,7,8,7,<
+        left
+
+        fire
+            dist_num,7,17,1,>
+            rand_num,5,23,5,<
+            none,0,7,7,==
+            dir_dir,17,2,3,<
+            rand_num,15,1,11,>
+            dist_num,21,8,15,>
+        left,fire,right
+
+
+    9
+        none
+            none,3,12,23,>
+            dist_dist,12,4,7,>
+            rand_num,7,20,8,==
+            rand_num,7,13,10,<
+            rand_num,2,3,29,==
+            dist_num,13,20,2,==
+        rthrust,rthrust
+
+        spike
+            dir_dir,2,21,6,==
+            dir_dir,19,9,11,<
+            dir_dir,14,9,4,<
+            dir_dir,18,12,2,==
+            dir_dir,9,21,6,<
+            dir_dir,16,19,1,==
+        none,thrust,left,right,fire,none,fire
+
+        ship
+            rand_num,17,18,5,<
+            rand_num,8,2,16,==
+            none,12,15,7,>
+            dir_num,7,10,13,==
+            dir_num,2,8,14,>
+            none,13,11,24,<
+        left,thrust,fire
+
+        spike
+            dist_num,0,21,16,<
+            rand_num,7,6,28,>
+            dir_dir,21,28,16,>
+            dist_num,5,3,26,>
+            dir_dir,0,8,13,<
+            dist_num,14,7,4,>
+        left,fire,left,left
+
+        fire
+            dir_num,10,0,12,<
+            dir_dir,0,5,2,==
+            dist_dist,16,7,2,==
+            dir_dir,11,10,19,>
+            none,14,0,13,>
+            dist_dist,6,19,11,==
+        right,fire,none,fire,none,rthrust,none
+
+        powerup
+            dist_dist,7,17,21,==
+            rand_num,1,14,12,>
+            none,9,22,12,<
+            dist_num,2,2,16,>
+            dist_dist,9,4,9,>
+            dir_num,2,11,15,<
+        fire,left,fire,none,rthrust,rthrust,fire,none
+
+        damage
+            dist_num,4,8,12,>
+            rand_num,27,0,4,>
+            dist_dist,17,4,0,>
+            dir_num,26,11,35,<
+            dir_num,14,33,13,>
+            dir_dir,1,18,17,<
+        none,left,none,left,fire,thrust,left,thrust
+
+        damage
+            none,14,5,19,<
+            dist_dist,21,12,2,<
+            rand_num,2,15,5,>
+            dir_num,28,8,10,>
+            none,15,8,3,<
+            dist_num,0,14,18,<
+        none
+
+        ship
+            dist_dist,27,2,16,<
+            dir_num,7,1,25,==
+            dist_num,5,9,34,==
+            dist_num,1,17,9,>
+            dir_num,10,11,5,<
+            dist_dist,19,6,1,==
+        rthrust,left,right,left,fire,thrust,right,thrust,right,none
+
+
+    4
+        bullet
+            dir_dir,26,3,7,>
+            rand_num,10,3,15,<
+            dir_num,17,22,13,<
+            dist_num,22,6,5,==
+            dist_num,7,15,13,==
+            dir_dir,8,20,5,==
+        fire,fire,none,none,rthrust,thrust,fire,right
+
+        bullet
+            dist_dist,12,14,7,<
+            none,3,6,8,<
+            dist_num,0,9,14,<
+            dist_dist,15,0,7,==
+            dir_num,28,3,17,<
+            dist_num,16,27,18,<
+        rthrust
+
+        shield
+            rand_num,7,18,5,>
+            dist_dist,19,2,14,>
+            rand_num,3,0,11,>
+            dist_num,7,7,12,==
+            dir_num,6,6,0,<
+            none,7,3,5,<
+        thrust,right,left,rthrust,left,none
+
+        asteroid
+            rand_num,0,22,0,>
+            dist_dist,14,8,9,>
+            rand_num,4,5,6,==
+            dist_num,11,16,1,>
+            none,6,2,0,<
+            none,19,17,2,==
+        rthrust,thrust,right,none,right
+
+
+    7
+        powerup
+            rand_num,8,8,0,<
+            dist_num,18,3,20,>
+            rand_num,0,11,2,==
+            dir_dir,5,0,23,<
+            dist_num,6,4,2,==
+            none,24,12,20,==
+        left,none,right,right
+
+        fire
+            dist_num,13,26,3,<
+            dist_dist,10,25,0,==
+            none,16,4,14,==
+            rand_num,14,28,0,<
+            dir_num,32,10,22,==
+            dist_dist,1,3,23,<
+        thrust,fire,rthrust,rthrust,left,fire,thrust,left,left,fire
+
+        asteroid
+            rand_num,2,1,15,==
+            dist_num,3,9,25,<
+            none,2,5,3,>
+            dist_dist,5,11,3,==
+            rand_num,5,0,8,==
+            dir_dir,17,9,0,<
+        fire,fire,none,fire,rthrust,none,thrust,fire,none,right
+
+        damage
+            none,18,25,4,<
+            none,17,4,10,==
+            dir_dir,4,15,9,<
+            dir_dir,15,8,12,==
+            dist_num,5,1,6,<
+            none,33,14,12,==
+        right,right,thrust,fire,left,none,none,left,fire
+
+        powerup
+            none,2,5,13,==
+            dir_num,2,9,12,==
+            dist_dist,9,0,23,==
+            dist_num,6,8,18,==
+            rand_num,1,13,0,<
+            dir_num,21,0,0,==
+        none,fire,right,right,rthrust,none,thrust,thrust,thrust,left
+
+        significant
+            dist_num,7,0,3,==
+            dist_dist,0,15,9,<
+            dist_dist,18,1,4,<
+            rand_num,5,2,5,<
+            dir_dir,10,7,4,==
+            dir_num,2,0,6,<
+        right,none
+
+        significant
+            dist_dist,13,13,13,>
+            dir_num,6,1,1,==
+            none,3,7,3,<
+            dist_dist,5,1,3,>
+            rand_num,1,4,7,==
+            dir_dir,18,0,0,<
+        thrust,fire,none,rthrust,rthrust,rthrust
+
+
+    1
+        significant
+            dir_num,5,3,11,==
+            dir_dir,8,7,10,<
+            dist_dist,2,15,27,<
+            dir_num,6,4,11,>
+            none,15,5,4,>
+            dist_dist,18,0,6,==
+        thrust,none,rthrust,none,fire,none,thrust,right,none
+
+
+    7
+        asteroid
+            dist_dist,9,4,23,==
+            rand_num,9,12,9,<
+            rand_num,5,0,4,>
+            dist_dist,0,2,11,==
+            rand_num,14,3,2,<
+            dist_num,4,6,6,>
+        none,rthrust,rthrust,none,right,rthrust,right,thrust
+
+        shield
+            dir_dir,21,6,0,==
+            none,14,17,9,==
+            dist_dist,9,16,4,<
+            dir_dir,9,6,6,<
+            dir_dir,0,6,5,==
+            dist_num,18,7,1,>
+        fire,left,right,left
+
+        significant
+            rand_num,14,11,27,>
+            dist_num,17,0,8,<
+            dist_num,13,4,8,<
+            rand_num,2,21,3,==
+            rand_num,23,15,10,<
+            rand_num,3,25,8,<
+        fire,right,fire,right,none,right,none,none,thrust
+
+        sun
+            none,2,1,15,<
+            none,7,24,10,<
+            dir_dir,0,6,8,==
+            dist_num,9,0,20,==
+            dir_num,27,13,4,>
+            dir_dir,6,11,15,==
+        fire,none,fire,thrust,none,fire,rthrust,right,fire
+
+        spike
+            dir_dir,0,2,13,==
+            none,13,6,20,<
+            none,13,0,6,<
+            rand_num,2,0,5,<
+            rand_num,18,27,4,<
+            none,0,13,11,>
+        thrust,thrust,thrust,none,right,left
+
+        none
+            dist_dist,4,0,21,<
+            dir_num,12,15,13,<
+            dir_num,21,21,13,==
+            dist_num,2,11,4,<
+            none,8,4,26,==
+            dir_num,5,7,3,>
+        left,none,right,fire,none,fire,rthrust,left,fire
+
+        fire
+            none,11,2,10,>
+            dir_num,15,28,0,>
+            rand_num,22,1,12,==
+            dist_num,1,12,2,>
+            rand_num,2,4,4,>
+            dir_dir,5,6,0,<
+        fire,right,rthrust,right,rthrust,fire
+
+
+    1
+        sun
+            none,21,4,19,==
+            rand_num,3,11,25,==
+            dir_num,20,9,9,<
+            dist_dist,1,8,19,>
+            none,9,4,0,==
+            rand_num,6,6,18,==
+        right,thrust,rthrust
+
+
+    7
+        none
+            dir_dir,1,4,3,==
+            none,13,21,6,<
+            dir_dir,0,0,17,>
+            dir_num,6,7,4,<
+            none,14,1,1,>
+            dir_num,10,10,11,<
+        thrust,none
+
+        bullet
+            dir_num,10,3,5,<
+            dir_dir,12,19,11,<
+            dir_dir,16,19,11,>
+            dist_num,19,18,10,<
+            rand_num,9,11,2,>
+            dist_num,2,2,18,>
+        none,fire,fire,rthrust,fire,left,rthrust,thrust
+
+        fire
+            dir_num,19,31,22,==
+            dir_num,0,17,14,<
+            dir_dir,7,2,10,<
+            dir_dir,26,1,9,>
+            dist_dist,5,14,9,<
+            none,21,18,7,<
+        rthrust,left
+
+        ship
+            dir_num,13,4,26,<
+            rand_num,10,23,1,==
+            dist_dist,13,2,25,==
+            dir_num,28,22,9,==
+            dir_num,11,4,3,<
+            none,9,7,2,<
+        right,left,thrust,thrust,fire,right
+
+        bullet
+            dir_num,21,19,3,>
+            dir_num,4,5,4,==
+            dist_dist,8,6,8,>
+            none,9,3,2,>
+            dir_dir,18,19,1,==
+            dir_dir,11,7,7,<
+        right,fire,none,left,none,fire,thrust,thrust,none,none
+
+        asteroid
+            rand_num,19,19,9,>
+            dist_num,4,31,10,>
+            none,17,2,3,<
+            dir_num,10,16,19,==
+            dir_num,0,2,8,>
+            rand_num,5,13,20,<
+        none,fire,rthrust,rthrust,rthrust,rthrust,left,none,none,thrust
+
+        significant
+            none,16,6,4,>
+            dir_dir,0,10,4,<
+            dist_dist,23,23,2,<
+            dir_dir,25,6,12,==
+            dir_num,15,5,10,<
+            dist_dist,1,6,18,==
+        thrust,none,thrust,right,thrust,thrust,rthrust
+
+
+    6
+        shield
+            dir_num,10,8,6,==
+            rand_num,22,5,3,>
+            dist_num,12,1,0,>
+            dist_dist,7,12,10,<
+            none,10,5,11,==
+            rand_num,21,16,20,>
+        thrust,fire,left,left,thrust,thrust
+
+        bullet
+            none,9,11,4,==
+            dir_dir,16,28,12,<
+            none,16,22,6,>
+            rand_num,10,1,1,>
+            rand_num,21,0,6,>
+            dir_num,24,4,8,==
+        rthrust,right,none,left,fire,right,thrust
+
+        sun
+            dir_num,13,17,9,==
+            dir_num,19,1,21,>
+            dist_dist,15,2,4,>
+            dist_dist,9,5,36,<
+            dist_dist,6,13,4,>
+            none,6,15,3,<
+        none,fire,right,rthrust,fire,rthrust,rthrust,fire
+
+        asteroid
+            dir_dir,10,15,13,==
+            dist_dist,22,11,7,==
+            none,24,5,12,==
+            dist_num,0,6,9,<
+            none,20,10,33,<
+            dir_dir,0,2,6,==
+        left,none,fire,thrust,rthrust
+
+        bullet
+            none,11,4,4,==
+            dist_dist,4,6,4,<
+            dir_dir,0,29,8,==
+            dir_num,0,0,6,>
+            rand_num,12,1,4,>
+            rand_num,1,23,6,==
+        rthrust,rthrust,thrust,thrust,none,thrust,rthrust,fire
+
+        ship
+            rand_num,11,2,0,<
+            none,29,28,3,==
+            dist_dist,3,4,20,<
+            none,6,1,4,<
+            rand_num,11,5,5,>
+            dist_num,2,4,23,==
+        right,thrust,left,rthrust
+
+
+    8
+        shield
+            dist_num,9,13,18,<
+            dir_num,26,14,13,<
+            rand_num,1,8,0,>
+            none,18,4,3,>
+            dir_num,6,38,9,>
+            dir_num,7,17,9,<
+        right
+
+        powerup
+            rand_num,29,7,10,<
+            dist_num,13,7,0,>
+            none,7,1,6,==
+            rand_num,1,19,6,==
+            rand_num,5,22,19,<
+            dist_num,3,10,18,==
+        fire,fire,left
+
+        sun
+            dist_dist,2,9,8,==
+            dir_num,14,15,14,>
+            none,3,6,3,==
+            none,8,14,14,==
+            dist_dist,32,7,3,==
+            dir_dir,0,8,7,<
+        none,fire,rthrust,fire
+
+        none
+            dir_num,3,1,5,==
+            dist_dist,14,0,2,<
+            dist_dist,16,19,4,==
+            dir_dir,2,13,1,==
+            dir_dir,9,7,7,>
+            rand_num,18,3,21,<
+        right,left,thrust,left,rthrust,left,left
+
+        powerup
+            rand_num,20,38,4,>
+            none,14,4,3,==
+            dist_dist,0,6,4,<
+            dir_num,9,28,24,==
+            dist_num,2,15,19,<
+            dist_dist,5,1,23,>
+        right,thrust,fire,none
+
+        significant
+            none,6,11,7,<
+            rand_num,4,3,14,<
+            dir_num,31,3,12,==
+            dir_num,27,15,9,<
+            rand_num,14,6,12,<
+            rand_num,10,11,14,<
+        none,thrust,fire,thrust,none,left
+
+        powerup
+            rand_num,4,13,4,==
+            rand_num,10,19,18,<
+            dist_num,1,17,19,==
+            rand_num,0,11,6,==
+            dist_dist,5,12,1,>
+            dist_num,8,5,6,<
+        none,left,fire,fire
+
+        asteroid
+            none,23,18,6,==
+            dir_dir,3,2,6,>
+            none,15,13,2,<
+            dir_dir,10,9,13,<
+            none,5,8,10,<
+            dir_num,13,4,8,==
+        thrust,none,rthrust,left,thrust,right,none,right,none
+
+
+    6
+        sun
+            dir_dir,19,4,24,<
+            dist_dist,21,13,12,==
+            dir_dir,4,3,23,>
+            none,1,11,18,==
+            none,8,15,29,>
+            dir_num,1,5,6,<
+        fire,right,thrust,left,rthrust,fire,left
+
+        spike
+            dist_num,1,14,0,>
+            dir_dir,7,3,16,>
+            dir_dir,0,17,18,<
+            none,0,2,3,>
+            dist_dist,14,14,14,<
+            rand_num,1,4,11,==
+        fire,right,rthrust,none,right,none
+
+        none
+            dir_dir,1,28,14,>
+            dir_num,3,20,3,<
+            dist_dist,9,2,1,>
+            dist_num,1,10,15,==
+            rand_num,10,5,1,==
+            dir_num,16,10,0,==
+        fire,right,right,thrust
+
+        asteroid
+            dist_num,17,20,9,<
+            dir_dir,1,11,27,<
+            dist_dist,33,17,3,==
+            dist_dist,11,8,17,<
+            dist_dist,0,9,26,==
+            dist_dist,8,4,20,<
+        fire
+
+        bullet
+            dist_num,2,6,2,>
+            rand_num,26,35,18,==
+            rand_num,7,9,0,==
+            dist_num,0,10,3,>
+            dist_dist,17,12,7,<
+            dist_dist,0,0,7,<
+        thrust,none,rthrust,thrust,rthrust,none,rthrust,rthrust,left,right
+
+        damage
+            dir_dir,16,5,2,<
+            dist_dist,5,11,29,<
+            dir_num,24,7,23,==
+            dir_num,9,9,20,>
+            dist_num,3,24,10,<
+            dir_dir,11,7,11,>
+        left,none
+
+

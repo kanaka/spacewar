@@ -1,11 +1,44 @@
 AI Notes 
 
 - Genetic algorithm to generate computer players
-  - seperate standalone module to run GA generations
+  - separate standalone module to run GA generations
     - Loads generations from a file
     - Changes draw and erase routines to very low overhead or none
     - Remove frame rate limiter
     - Saves generations back to a file
     - Latches user exit routine and saves back to file
 
+
+- DNA structure
+    - Base - a condition with 5 components
+        .comparison: none,rand_num,dist_dist,dist_num,dir_dir,dir_num
+        .future1: 40 items (0-85)
+        .future2: 40 items (0-85)
+        .value: 0-40 (distances 0 -> 800, and directions 21 -> -19
+        .operator: '==', '>', '<'
+    - Gene - a stimulus->response entry
+        .type: significant, hard, damage, ship, sun, fire, spike, 
+                asteroid, shield, bullet, powerup
+        .base: (6 bases)
+        .action: none, fire, thrust, rthrust, left, right
+    - DNA - list of genes in priority order
+        .gene: (list of genes in priority order)
+
+
+Meaning of future1,future2,value, and operator for each comparison
+        none      : Nothing
+        rand_num  : <rand> operator value
+        dist_dist : <dist * future1> operator <dist * future2 + value>
+        dist_num  : <dist * future1> operator value
+        dir_dir   : <dir * future1> operator <dir * future2 + value>
+        dir_num   : <dir * future1> operator value
+
+ Format of data file:
+         Number of DNA's (different AI's)
+           Number of Genes in DNA
+             Type of gene
+             Number of Bases
+             Base per line (comma seperated list):
+               comparison,future1,future2,value,operator
+             Action
 

@@ -2,7 +2,7 @@
 
 import pygame
 from pygame.locals import *
-import game, gfx, math
+import var, gfx, math
 from random import randint
 import gameinit
 
@@ -25,7 +25,7 @@ class Stars:
 
 
     def recalc_num_stars(self, fps):
-        if isinstance(game.handler, gameinit.GameInit):
+        if isinstance(var.handler, gameinit.GameInit):
             #don't change stars while loading resources
             return
         change = int((fps - 35.0) * 1.8)

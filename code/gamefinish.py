@@ -1,7 +1,7 @@
 "gamefinish handler. just lets our stars trickle"
 
 import pygame
-import gfx, game, snd
+import gfx, var, snd
 
 
 class GameFinish:
@@ -22,13 +22,13 @@ class GameFinish:
         if not self.started:
             self.started = 1
             if snd.music:
-                snd.music.fadeout(15*game.clockticks)
+                snd.music.fadeout(15*var.clockticks)
 
         if not self.ticks:
             gfx.surface.fill(0)
             pygame.display.update()
             #pygame.time.delay(200)
-            game.handler = self.prevhandler
+            var.handler = self.prevhandler
 
     def background(self, area):
         return gfx.surface.fill((0, 0, 0), area)

@@ -3,7 +3,7 @@
 import math, os
 import pygame, pygame.draw
 from pygame.locals import *
-import game, pref
+import var
 import gfx, snd, txt
 import input
 import gamecreds, gamenews, gamepref, gameplay
@@ -28,28 +28,9 @@ class MenuItem:
         self.smallrect.center = self.rect.center
 
 
-menu = [
-    MenuItem('start', gameplay.GamePlay),
-    MenuItem('news', gamenews.GameNews),
-    MenuItem('creds', gamecreds.GameCreds),
-    MenuItem('setup', gamepref.GamePref),
-    MenuItem('quit', None),
-]
-
-
 def load_game_resources():
-    global menu, images, boximages, fame
+    global images, boximages, fame
     images = []
-    pos = [20, 380] #[100, 420]
-    odd = 0
-    for m in menu:
-        m.init(pos)
-        pos[0] += 150
-        odd = (odd+1)%2
-        if odd:
-            pos[1] += 20
-        else:
-            pos[1] -= 20
     images.append(gfx.load('menu_on_bgd.png'))
     images[0].set_colorkey(0)
     images.append(gfx.load('logo.png'))
@@ -91,6 +72,31 @@ class GameMenu:
         self.bigship = images[2]
         self.bigshiprect = self.bigship.get_rect().move(450, 250)
 
+        if var.ai_train:
+            print "ai_train"
+            Player = gameplay.AIPlay
+        else:
+            print "not ai_train"
+            Player = gameplay.GamePlay
+
+        self.menu = [
+            MenuItem('start', Player),
+            MenuItem('news', gamenews.GameNews),
+            MenuItem('creds', gamecreds.GameCreds),
+            MenuItem('setup', gamepref.GamePref),
+            MenuItem('quit', None),
+        ]
+
+        pos = [20, 380] #[100, 420]
+        odd = 0
+        for m in self.menu:
+            m.init(pos)
+            pos[0] += 150
+            odd = (odd+1)%2
+            if odd:
+                pos[1] += 20
+            else:
+                pos[1] -= 20
 
 
     def starting(self):
@@ -101,24 +107,28 @@ class GameMenu:
 
         fnt = txt.Font(None, 18)
         self.version = fnt.text((200, 120, 100), 
-                'Spacewar Version ' + game.version, (10, 580), 'topleft')
+                'Spacewar Version ' + var.version, (10, 580), 'topleft')
 
         fnt = txt.Font(None, 22)
-        if pref.game_mode == 2:
+        if var.ai_train:
             self.players = fnt.text((200, 175, 120), 
-                '1 player tutorial', (115, 500), 'center')
+                'AI Training', (115, 500), 'center')
         else:
-            players = pref.player_cnt()
-            self.players = fnt.text((200, 175, 120), 
-                'with %d players' % (players), (115, 500), 'center')
+                if var.game_mode == 2:
+                    self.players = fnt.text((200, 175, 120), 
+                        '1 player tutorial', (115, 500), 'center')
+                else:
+                    players = var.player_cnt()
+                    self.players = fnt.text((200, 175, 120), 
+                        'with %d players' % (players), (115, 500), 'center')
 
     def quit(self):
-        self.current = len(menu)-1
+        self.current = len(self.menu)-1
         self.workbutton()
 
 
     def workbutton(self):
-        button = menu[self.current]
+        button = self.menu[self.current]
         if not button.handler:
             self.switchhandler = self.prevhandler
         else:
@@ -134,6 +144,7 @@ class GameMenu:
 
     def setalphas(self, alpha, extras=[]):
         imgs = []
+        menu = self.menu
         selected = menu[self.current]
         imgs.extend([x.img_off for x in menu if x is not selected])
         imgs.extend(extras)
@@ -171,10 +182,10 @@ class GameMenu:
         if self.switchclock:
             return
         if i.translated == input.LEFT:
-            self.current = (self.current - 1)%len(menu)
+            self.current = (self.current - 1)%len(self.menu)
             snd.play('select_move')
         elif i.translated == input.RIGHT:
-            self.current = (self.current + 1)%len(menu)
+            self.current = (self.current + 1)%len(self.menu)
             snd.play('select_move')
         elif i.translated == input.PRESS:
             self.workbutton()
@@ -188,6 +199,7 @@ class GameMenu:
 
 
     def run(self):
+        menu = self.menu
         self.glow += .35
         self.boxtick = (self.boxtick + 1)%15
         boximg = self.boximages[self.boxtick]
@@ -227,9 +239,9 @@ class GameMenu:
             for m in menu:
                 gfx.dirty(m.rect)
             if self.switchhandler == self.prevhandler:
-                game.handler = self.prevhandler
+                var.handler = self.prevhandler
             else:
-                game.handler = self.switchhandler(self)
+                var.handler = self.switchhandler(self)
                 self.switchclock = 0
                 self.switchhandler = None
                 self.startclock = 5

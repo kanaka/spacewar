@@ -3,7 +3,7 @@
 import sys, pygame, pygame.image
 from pygame.locals import *
 
-import game, pref, stars
+import var, stars
 
 #the accessable screen surface and size
 surface = None
@@ -39,7 +39,7 @@ def initialize(size, fullscreen):
 
 def switchfullscreen():
     oldfull = surface.get_flags() & FULLSCREEN == FULLSCREEN
-    newfull = pref.display == 1
+    newfull = var.display == 1
     if newfull == oldfull:
         return
     global wantscreentoggle
@@ -74,14 +74,14 @@ def update():
     global wantscreentoggle
     if wantscreentoggle:
         wantscreentoggle = 0
-        if game.handler:
-            starobj.eraseall(game.handler.background, sys.modules[__name__])
+        if var.handler:
+            starobj.eraseall(var.handler.background, sys.modules[__name__])
         screencapture = pygame.Surface(surface.get_size())
         screencapture.blit(surface, (0,0))
         clipcapture = surface.get_clip()
-        initialize(surface.get_size(), pref.display)
-#        if game.handler:
-#            game.handler.background(rect)
+        initialize(surface.get_size(), var.display)
+#        if var.handler:
+#            var.handler.background(rect)
         surface.blit(screencapture, (0,0))
 
         pygame.display.update()
@@ -108,13 +108,13 @@ def load(name):
     return optimize(img)
 
 def load_raw(name):
-    file = game.get_resource(name)
+    file = var.get_resource(name)
     img = pygame.image.load(file)
     return img
 
 
 def loadpalette():
-    file = open(game.get_resource('spacewar.pal'))
+    file = open(var.get_resource('spacewar.pal'))
     pal = []
     for line in file.readlines()[3:]:
         vals = [int(x) for x in line.split()]

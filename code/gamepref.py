@@ -2,33 +2,9 @@
 import string, math
 import pygame
 from pygame.locals import *
-import game, pref
+import var
 import gfx, snd, txt
 import input
-import gameplay
-
-# Values must be integers
-Prefs = {
-0: ("game_mode", (("Normal", 1), ("1 Player Tutorial", 2))),
-1: ("player_1", (("Human", 1), ("Computer", 2))),
-2: ("player_2", (("Human", 1), ("Computer", 2), ("Off", 0))),
-3: ("player_3", (("Human", 1), ("Computer", 2), ("Off", 0))),
-4: ("player_4", (("Human", 1), ("Computer", 2), ("Off", 0))),
-5: ("win_score", (("1", 1), ("5", 5), ("7", 7), ("10", 10), ("21", 21))),
-6: ("scoring", (("Death Subtract", 0), ("Never Subtract", 1))),
-7: ("sun", (("None", 0), ("Tethered", 1), ("Floating", 2), ("Black Hole", 3))),
-8: ("fire_damage", (("Low", 20), ("Medium", 50), ("Normal", 80), ("Super", 120))),
-9: ("gravity_const", (("Weak", 10), ("Normal", 20), ("Strong", 40))),
-10: ("spike_rate", (("Infrequent", 60), ("Normal", 30), ("Frequent", 10))),
-11: ("shield_powerup_rate", (("Infrequent", 40), ("Normal", 20), ("Frequent", 12))),
-12: ("bullet_powerup_rate", (("Infrequent", 70), ("Normal", 40), ("Frequent", 20))),
-13: ("heal_rate", (("Slow", 1), ("Normal", 3), ("Fast", 10))),
-14: ("death_time", (("Quick", 3), ("Normal", 5), ("Slow", 10))),
-15: ("graphics", (("Minimal", 0), ("Smoke", 1), ("Smoke and Stars", 2))),
-16: ("display", (("Window", 0), ("Fullscreen", 1))),
-17: ("music", (("Off", 0), ("Low", 1), ("Normal", 2))),
-18: ("volume", (("Off", 0), ("Low", 1), ("Normal", 2))),
-}
 
 linesize = 20
 fontsize1 = 25
@@ -36,10 +12,10 @@ fontsize2 = 22
 
 def load_prefs():
     try:
-        filename = game.make_dataname('prefs')
+        filename = var.make_dataname('prefs')
         for line in open(filename).readlines():
             name, val = [s.strip() for s in line.split('=')]
-            setattr(pref, name, int(val))
+            setattr(var, name, int(val))
     except (IOError, OSError, KeyError):
         #print 'ERROR OPENING PREFS FILE'
         pass
@@ -47,11 +23,11 @@ def load_prefs():
 
 def save_prefs():
     try:
-        filename = game.make_dataname('prefs')
+        filename = var.make_dataname('prefs')
         f = open(filename, 'w')
-        for key in Prefs.keys():
-            p = Prefs[key][0]
-            val = getattr(pref, p)
+        for key in var.Prefs.keys():
+            p = var.Prefs[key][0]
+            val = getattr(var, p)
             f.write("%s = %d\n" % (p, int(val)))
         f.close()
     except (IOError, OSError), msg:
@@ -86,7 +62,7 @@ class GamePref:
         self.prevhandler = prevhandler
         self.images = images
         self.prefs = []
-        items = Prefs.items()
+        items = var.Prefs.items()
         sort = lambda x,y: (x[0] < y[0] and -1) or (x[0] > y[0] and 1) or 0
         items.sort(sort)
         for p in items:
@@ -165,7 +141,7 @@ class GamePref:
                 r = gfx.surface.blit(img[0], img[1])
                 gfx.dirty(r)
         else:
-            game.handler = self.prevhandler
+            var.handler = self.prevhandler
             self.clearlist()
             for img in self.images[1:]:
                 r = self.background(img[1])
@@ -200,11 +176,11 @@ class GamePref:
             allvals = []
             valpos = -1
             if p:
-                realval = getattr(pref, p)
-                for pnum in Prefs.keys():
-                    if Prefs[pnum][0] == p:
-                        for i in range(len(Prefs[pnum][1])):
-                            if realval == Prefs[pnum][1][i][1]:
+                realval = getattr(var, p)
+                for pnum in var.Prefs.keys():
+                    if var.Prefs[pnum][0] == p:
+                        for i in range(len(var.Prefs[pnum][1])):
+                            if realval == var.Prefs[pnum][1][i][1]:
                                 valpos = i
                         break
             i = 0
@@ -263,10 +239,10 @@ class GamePref:
             self.done = 1
         else:
             val = vals[self.current[1]][1]
-            oldval = getattr(pref, p)
+            oldval = getattr(var, p)
             if oldval == val:
                 return
-            setattr(pref, p, val)
+            setattr(var, p, val)
             self.buildlist()
             #some of these need callbacks, music/volume/display
             if hasattr(self, "do_" + p):

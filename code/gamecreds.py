@@ -3,7 +3,7 @@
 import math, os
 import pygame
 from pygame.locals import *
-import game, gfx, snd, txt
+import var, gfx, snd, txt
 import gameplay
 
 
@@ -91,7 +91,7 @@ class GameCreds:
 
     def quit(self):
         gfx.dirty(self.background(gfx.rect))
-        game.handler = self.prevhandler
+        var.handler = self.prevhandler
         self.done = 1
         snd.play('select_choose')
 
@@ -107,7 +107,7 @@ class GameCreds:
         if self.first:
             gfx.dirty(gfx.rect)
             self.first = 0
-        ratio = game.clockticks / 25
+        ratio = var.clockticks / 25
         speedadjust = max(ratio, 1.0)
 
         self.offset += speedadjust * 1.0
