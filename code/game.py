@@ -4,7 +4,7 @@ import os
 from pygame.rect import Rect
 from cStringIO import StringIO
 
-version = "0.4"
+version = "0.5"
 
 #various data constants
 arena = Rect(0, 0, 700, 600)
@@ -21,22 +21,40 @@ news_url = 'http://joelandrebecca.martintribe.org/spacewar/thenews.html'
 
 #number of insults must match num of complements, be careful
 Complements = (
-    'Hotshot',
-    'Smooth Moves',
+    'Nice',
+    'Smooth',
     'Deck',
     'Last Starfighter',
-    'Oh yeah!',
+    'Oh yeah',
+
     'Rocket Scientist',
-    'Go, go, go!',
+    'King of the Well',
+    'Bring the smack',
+    'Own a PDP-1?',
+    'Boom!',
+
+    'There is no spoon',
+    'Ship parts for sale',
+    'Walk in the park',
+    'Easy as pie',
 )
 Insults = (
     'Ouch',
     'Sloppy',
     'What was that?',
-    '...your ship on drugs',
+    'This is your ship on drugs',
     'Flying by braile',
+
     'Flying blind',
-    'Look ma, no ...',
+    'Look ma, no ha...',
+    'Get the clue stick',
+    'Thrusters on, nobody home',
+    'Watch the event horizon',
+    
+    'Mayday, mayday',
+    'Eject!',
+    'That\'s no moon!',
+    'Not that button!',
 )
 
 

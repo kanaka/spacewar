@@ -17,20 +17,89 @@ def load_game_resources():
 
 
 Help = {
-"player":"""Spacewar Help
-You pilot the mighty Spacewar fleet of ships.
+"introduction":"""Spacewar Tutorial Mode
+The objective of Spacwar is to score points by killing your 
+opponents.
 -
-Take advantage of the Hyper Jets by holding the space
-bar or joystick button.
+The vital stats for each player's ship appear on the heads up 
+display to the right. Below the ship image is the player's 
+score. Below the score is the health of the ship and below that
+is the shield strength if the ship has shield powerup.
 -
-Collect all the Power Cubes on each level to advance.""",
+You can use this mode to practice the controls for each player.
+Every player's controls are bound to the single ship that is 
+shown.
+-
+Press F1 during the tutorial or the game to show the keys that 
+control each player.
+""",
 
-"powerup":"""Power Ups
-When the green Power Ups appear be sure to grab them. They
-will grant you with special abilities and bonuses.
+"keys":"""Player Control Keys
+Player 1:
+$
+....Left:     Left Arrow
+$
+....Right:    Right Arrow
+$
+....Thrust:   Up Arrow
+$
+....R-Thrust: Down Arrow
+$
+....Fire:     Right-Ctrl
 -
-As you reach harder levels the power ups will
-have better effects.""",
+Player 2:
+$
+....Left:     a
+$
+....Right:    d
+$
+....Thrust:   w
+$
+....R-Thrust: s
+$
+....Fire:     Tab
+-
+Player 3:
+$
+....Left:     j
+$
+....Right:    l
+$
+....Thrust:   i
+$
+....R-Thrust: k
+$
+....Fire:     Space
+-
+Player 4:
+$
+....Left:     Numpad 2
+$
+....Right:    Numpad 8
+$
+....Thrust:   Numpad 4
+$
+....R-Thrust: Numpad 5
+$
+....Fire:     Numpad 0
+""",
+
+"powerups":"""Shield Power Ups
+Shield powerups appear every now and then. If you run into these with 
+your ship, you will receive a charge to your shields.
+""",
+
+"spikes":"""Spiked Balls
+Spiked balls appear every now and then. If you run into these with 
+your ship, you will die. Spiked balls are only destroyed when they
+run into the Sun or into another spiked ball.
+""",
+
+"opponents":"""Your Opponents
+During a real game you will have opponents.  Try and destroy the dummy
+ship that will appear. If you destroy it before it falls into the sun,
+you will score a point.
+""",
 }
 
 
@@ -41,15 +110,17 @@ QuickHelp = {
 
 
 def help(helpname, helppos):
-    if not game.player.help.has_key(helpname):
-        game.player.help[helpname] = 1
-        if pref.help == 0:
-            game.handler = GameHelp(game.handler, helpname, helppos)
-        elif hasattr(game.handler, "textobjs"):
-            t = getattr(game.handler, "textobjs")
-            message = QuickHelp.get(helpname, None)
-            if message and pref.comments >= 1:
-                t.append(objtext.Text(message))
+    ###if not game.player.help.has_key(helpname):
+    ###    game.player.help[helpname] = 1
+    ###    if pref.help == 0:
+    ###        game.handler = GameHelp(game.handler, helpname, helppos)
+    ###    elif hasattr(game.handler, "textobjs"):
+    ###        t = getattr(game.handler, "textobjs")
+    ###        message = QuickHelp.get(helpname, None)
+    ###        if message and pref.comments >= 1:
+    ###            t.append(objtext.Text(message))
+
+    game.handler = GameHelp(game.handler, helpname, helppos)
 
 
 
@@ -96,6 +167,8 @@ class GameHelp:
             text = Help[name]
             lines = text.splitlines()
             for x in range(1, len(lines)):
+                if lines[x] == '$':
+                    lines[x] = "\n"
                 if lines[x] == '-':
                     lines[x] = "\n\n"
             title = lines[0]

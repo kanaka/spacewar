@@ -12,18 +12,18 @@ Prefs = {
 "music": (("Off", 0), ("Low", 1), ("Normal", 2)),
 "volume": (("Off", 0), ("Low", 1), ("Normal", 2)),
 "display": (("Window", 0), ("Fullscreen", 1)),
-"players": (("1", 1), ("2", 2), ("3", 3), ("4", 4)),
+"players": (("1 (Tutorial)", 1), ("2", 2), ("3", 3), ("4", 4)),
 "win_score": (("1", 1), ("5", 5), ("7", 7), ("10", 10), ("21", 21)),
+"scoring": (("Death Subtract", 0), ("Never Subtract", 1)),
+"graphics": (("Minimal", 0), ("Smoke", 1), ("Smoke and Stars", 2)),
+
 "fire_damage": (("Low", 20), ("Medium", 50), ("Normal", 80), ("Super", 120)),
 "spike_rate": (("Infrequent", 60), ("Normal", 30), ("Frequent", 10)),
 "shield_powerup_rate": (("Infrequent", 40), ("Normal", 20), ("Frequent", 12)),
-"sun": (("Tethered", 1), ("Free Floating", 0)),
+"sun": (("None", 0), ("Tethered", 1), ("Floating", 2), ("Black Hole", 3)),
 "gravity_const": (("Weak", 10), ("Normal", 20), ("Strong", 40)),
 "heal_rate": (("Slow", 1), ("Normal", 3), ("Fast", 10)),
 "death_time": (("Quick", 3), ("Normal", 5), ("Slow", 10)),
-"scoring": (("Death Subtract", 0), ("Never Subtract", 1)),
-#"help": ("Full Screens", "Quick Comments"),
-#"thruster": ("Normal", "Inverted"),
 }
 
 
@@ -59,7 +59,7 @@ valuefont = None
 def load_game_resources():
     global images, namefont, valuefont
 
-    img = pygame.transform.rotate(gfx.load('ship-up.png'), -90)
+    img = pygame.transform.rotate(gfx.load('ship-mini-boost2.png'), -90)
     images.append((img, img.get_rect()))
 
     img = gfx.load('menu_setup_on.png')
@@ -77,13 +77,17 @@ class GamePref:
         self.prevhandler = prevhandler
         self.images = images
         self.prefs = []
-        for n,v in Prefs.items():
+        #for n,v in Prefs.items():
+        items = Prefs.items()
+        sort = lambda x,y: (x < y and -1) or (x > y and 1) or 0
+        items.sort(sort)
+        for n,v in items:
             self.prefs.append((n,v))
         self.prefs.append(("", (("Return To Menu",),)))
 
         self.done = 0
         self.aborted = 0
-        self.linesize = 30
+        self.linesize = 25
         self.gamelist = []
         self.buildlabels()
         self.buildlist()
@@ -166,7 +170,7 @@ class GamePref:
 
     def buildlabels(self):
         clr = 160, 200, 250
-        x, y = 245, 150
+        x, y = 245, 140
         for p, vals in self.prefs:
             p = p.replace("_", " ")
             p = p.capitalize()
@@ -177,7 +181,7 @@ class GamePref:
     def buildlist(self):
         clr = 220, 230, 240
         clr2 = 140, 150, 160
-        offsetx, offsety = 290, 150
+        offsetx, offsety = 290, 140
         self.clearlist()
         self.gamelist = []
         for p, vals in self.prefs:

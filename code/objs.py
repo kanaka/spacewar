@@ -356,9 +356,13 @@ class Sun(Mass):
         Mass.__init__(self, x, y, vel_x=0, vel_y=0, mass=10.0, radius=10)
 
     def tick(self, speedadjust):
-        if not pref.sun: 
+        if pref.sun >= 2: 
             Mass.tick(self, speedadjust)
         self.phase = (self.phase+0.4)%self.phases
+
+    def draw(self):
+        if pref.sun != 3:
+            Mass.draw(self)
 
 class Spike(Mass):
     def __init__(self, x, y, vel_x, vel_y):
@@ -493,7 +497,7 @@ class Ship(Mass):
             self.vel_x = self.vel_x - sin(rads)*self.thrust
             self.vel_y = self.vel_y - cos(rads)*self.thrust
             # Smoke trails, don't overload frame rate
-            if gfx.surface.get_bytesize()>1:
+            if pref.graphics > 0 and gfx.surface.get_bytesize()>1:
                 if self.thrust > 0: rads = (rads+pi) % (2.0*pi)
                 fps = min(fps_list)
                 if fps > 40.0:
@@ -545,8 +549,9 @@ class Ship(Mass):
             cy = int(self.y)-(imgs.get_rect()[3] /2)
             gfx.surface.blit(imgs, (cx, cy))
 
-    def do_input(self):
-        player = self.player
+    def do_input(self, player=None):
+        if not player:
+            player = self.player
         if self.dead: 
             self.cmd_turn_off()
             self.cmd_thrust_off()

@@ -1,19 +1,56 @@
 Spacewar TODO list
 
+- means still to do
+* means done
+
 Short term:
+    - 1 Player is tutorial mode with help messages
+        - Every player's keys work for player 1
     - Better shield graphics/transparent
     - Create Windows executable and test
     - Better insult and complement determination
+    * Add graphics level preference to remove stars and smoke trails.
+    * Score preferences (no subtract)
+    * Insults and compliments
+    * Move runobjects into objs
+    * Make smoke more dependant on fps
+    * Add health
+        * Health bar below score
+    * Update changes file
+    * Change credits back to full names and shrink font
+    * Make ships and score appear one at a time at startup
+    * Fix score display bug
+    * Make number of players configurable in prefs and show on menu
+      screen.
+    * Startup sounds (change to something other than howl)
+    * Change title logo
+    * Move fast_input into objs
+    * Color ships differently
+    * Make hud relevant
+        * Ships, score
 
 Medium term:
     - teleport in ships after death, not just start
         - develop colorless teleport images
+    - Bullet powerup. Last 20 seconds or so. Triple shot?
     - Better sorting order for preferences
-    - Give on screen help if players don't appear to know the keys
+    * Add shields gotten from powerup
+    * Better health display
+        * Create nice image for health container
+    * Winning score: 10
+    * Get news download working
 
 Long term:
     - Make menu spinning box transparent around edges
     - network play
     - Option for floating health and shield bar above ship
+    - Give on screen help if players don't appear to know the keys
     - import preferences file instead of parsing it
     - possibly scale everything down, pygame.transform.scale
+    * Add preferences to change gameplay
+        * Add pref.py module with preference settings
+        * Add a value to each preference, simplify number of players
+        * Winning score level
+        * Option for amount of health and recharge rate
+    - Move hud into objs
+    * Make objs runable by itself with default values and no stars, etc

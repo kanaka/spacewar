@@ -1,0 +1,14 @@
+
+
+- Create .tar archive and copy to windows system, and untar
+- Windows system needs following installed:
+    - python 2.3.X
+    - pygame
+    - py2exe 0.3.1 installed
+    - Inno Setup
+- Run in untar'd folder:
+    \python23\python dist\space2exe.py py2exe
+
+- In dist\spacewar\ dir, delete all tk and tcl related files and dirs.
+
+- 

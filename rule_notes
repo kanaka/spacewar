@@ -1,0 +1,77 @@
+Spacewar Ideas
+
+Basic Rules:
+
+    Two ships on a looping "toroid" plane. Each ship has a thruster
+    that accelerates the ship in the direction it is facing. Each ship
+    can rotate. Each ship also has a blaster that fires bullets at
+    a limited rate that live for a limited amount of time. Bullets
+    move at their default velocity adjusted by the velocity of the
+    ship when fired. There is also a sun in the center of the plane
+    that constantly accelerates the ships towards itself. Ships are
+    destroyed if they collide with a bullet, the sun, or another ship.
+    Game is time limited and players score a point when other player
+    dies.
+
+
+Alternate rules:
+    Space plane
+    - Normal: Toroid looping of ships and bullets
+    - Border instead of looping. Collision with border is death.
+    - Alternate looping models: opposite edge, random, etc.
+
+    Sun/Blackhole
+    - Multiple suns.
+    - Alternate positioning of sun(s)/blackhole(s).
+    - Repulsion instead of atraction.
+    * Without or without a sun.
+    * Varying amounts of gravity for the sun
+    * Blackhole(s) instead of sun. Invisible, but with same affect.
+    * Suns or blackholes are not fixed location and have a starting
+      velocity and or are affected by other gravitational objects.
+
+    Ships
+    - Ships have ability to warp. No limit on warps or warps accumulate
+      at a certain rate with a cap.
+    - AI controlled ships with varying intelligence.
+    - Ships have varying amount of gravitational pull/repulsion.
+    - Amount of effect that thrusters apply.
+    - Varying size ship compared to size of plane.
+    - Ships may have different properties for each player chosen at
+      the beginning. Chosing ship properties is a trade off with other
+      properties (blaster rate, thruster power, warp cap, warp
+      accumulation rate, shield strenth, shield accumulation rate).
+    * Ships have shields. Events that normally cause death would
+      decrease shield strength. Shields could restore at a certain
+      rate. Shields strength would have a cap. Different "death"
+      events could have different effect on shields.
+    * Likewise, ships might have health.
+    * 2 to 4 ships. With more than 2 ships, score is for killing
+      another ship.  "Suicide" death results in score subtraction.
+
+    Weapons
+    - Affected or not by gravity.
+    - Varying default velocity.
+    - Varying amount of time that bullets stay alive.
+    - Different types of "bullets". Different amount of damage, rate
+      of fire, ability to loop, affect by gravity, affect on
+      shields/health.
+      * Blaster: medium velocity, medium but equal affect on
+        health/shields, low affect by gravity.
+      - Phaser: high velocity, low affect on shields, high on health,
+        not affected by gravity, does not wrap.
+        Plasma: medium-high velocity, high affect on shields, low on
+        health, does not wrap.
+      - Bomb: slow or no velocity, high damage to shields and health,
+        highly affected by gravity.
+    * Limits: firing rate limit, limit on number that ship can have
+      active simultaneously.
+
+    Objects
+    - Good objects. 
+      - Health and shield powerups
+      - Boost health cap. Ammunition. Warps. Automatic warp.
+    - Bad objects. 
+      * Spiked balls.
+      - Asteroids that can be collided with.
+

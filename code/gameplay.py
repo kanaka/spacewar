@@ -100,12 +100,26 @@ class GamePlay:
         elif game.speedmult: #if true must be 1
             self.speedadjust *= 0.75
 
-        for ship in self.ships:
-            ship.do_input() # Do input for each player/ship
+        if pref.players > 1:
+            # Normal: do input for each player
+            for ship in self.ships:
+                ship.do_input() # Do input for each player/ship
+        else:
+            # Tutorial: everything controls player 1
+            player = 0
+            for i in range(4):
+                if (pygame.key.get_pressed()[objs.Ship.PK_LEFT[i]] or
+                    pygame.key.get_pressed()[objs.Ship.PK_RIGHT[i]] or
+                    pygame.key.get_pressed()[objs.Ship.PK_REVERSE[i]] or
+                    pygame.key.get_pressed()[objs.Ship.PK_THRUST[i]] or
+                    pygame.key.get_pressed()[objs.Ship.PK_FIRE[i]]):
+                    player = i
+            self.ships[0].do_input(player=player)
 
         self.statetick()
 
-        gfx.updatestars(self.background, gfx)
+        if pref.graphics == 2:
+            gfx.updatestars(self.background, gfx)
         
         objs.runobjects(self.speedadjust)
         
@@ -124,8 +138,36 @@ class GamePlay:
 
 
 #normal play
+    def normal_start(self):
+        if pref.players == 1:
+            gamehelp.help("introduction", (250, 100))
+
     def normal_tick(self):
         self.clocks += 1
+
+        # Check for tutorial stuff
+        if pref.players == 1 and pygame.key.get_pressed()[K_F1]:
+            gamehelp.help("keys", (250, 100))
+        if pref.players == 1 and self.clocks == objs.frames_per_sec*7:
+            gamehelp.help("powerups", (250, 100))
+            bobble = objs.Bobble(0,0,0,0)
+            bobble.dead = 1
+            bobble.pending_frames = objs.frames_per_sec
+            objs.pend.append(bobble)
+        if pref.players == 1 and self.clocks == objs.frames_per_sec*15:
+            gamehelp.help("spikes", (250, 100))
+            spike = objs.Spike(0,0,0,0)
+            spike.dead = 1
+            spike.pending_frames = objs.frames_per_sec
+            objs.pend.append(spike)
+        if pref.players == 1 and self.clocks == objs.frames_per_sec*3:
+            gamehelp.help("opponents", (250, 100))
+            ship = objs.Ship(x=game.arena.right-50, 
+                                       y=game.arena.top+50, player=2)
+            self.ships.append(ship)
+            objs.low.append(ship)
+
+
         # Check for winner, complements and insults
         for ship in self.ships:
             if ship.score >= pref.win_score:
@@ -149,14 +191,15 @@ class GamePlay:
             objs.virtual.append(teleport)
         self.lastteleport = teleport
 
-        objs.low.append(objs.Sun())
+        if pref.sun:
+            objs.low.append(objs.Sun())
 
     def appear_tick(self):
         #when animations done
         if self.lastteleport.dead:
             self.changestate('normal')
             for ship in self.ships:
-                objs.high.append(ship)
+                objs.low.append(ship)
 
     def appear_end(self):
         input.resetexclusive()

@@ -1,0 +1,85 @@
+spacewar.py : 
+    - main()
+        - Sets up data and code dirs
+        - Sets up error handling and cross-platform error display
+        - Sets up debug mode
+        - Runs main.main()
+
+main.py : 
+    - main()
+        - Wraps keyboard interrupt check
+        - Calls gamemain()
+
+    - gamemain()
+        - Initialize code
+            - players.load_players()
+            - input.load_translations()
+            - gamepref.load_prefs()
+            - gfx.initialize(size, full)
+            - snd.initialize()
+            - input.init()
+            - txt.initialize()
+        - Starting game handler
+            - gameinit.GameInit(gamefinish.GameFinish(None))
+        - Main game loop (1 iteration per frame)
+            - execute handler.starting()
+            - process pygame.event.get() events
+              - input: game.handler.input(inputevent)
+              - other: game.handler.event(event)
+            - handler.run()
+            - gfk.update()
+        - Uninitialization
+            - input.save_translations()
+            - players.save_players()
+            - gamepref.save_prefs()
+            - pygame.quit()
+
+
+gameplay.py
+    - changestate (self, state)
+        - Runs state+'_end'
+        - Set self.state = state
+        - Runs state+'_start'
+        - Sets self.statetick = state+'_tick'
+    - run() 
+        - ship[i].do_input()
+        - executes self.statetick
+        - runobjects()
+        - hud.draw()
+    - Most gameplay spent in normal_tick()
+
+    - State transitions
+        - GamePlay.__init__()
+         - gamestart
+          - appear
+           - normal
+
+        - userquit()
+          - gameover
+
+
+- Ship color pallete changes:
+       - color indexes to change for ship-up.png: 36, 40, 45, 61, 66,
+         67, 68, 80, 82, 88, 89, 94, 99, 110, 112, 114, 122, 135, 136,
+         144, 147, 162, 163, 164 , 172, 192, 199, 200, 206, 209, 212,
+         234, 236, 239
+       - color indexes to change to ship-up-boost1.png: 28, 34, 51,
+         57, 63, 66, 67, 82, 94, 114, 116, 118, 126, 143, 144, 153,
+         155, 160, 163, 169, 193, 198, 200, 223, 224, 
+       - color indexes to change to ship-up-boost2.png: 4, 5, 17, 21,
+         22, 25, 26, 55, 56, 57, 65 (->58), 72, 73, 80, 81 (->88), 93
+         (->78), 96 (->88), 101 (->88), 107 (->88), 117 (->88), 122
+         (->88), 132 (->88), 154, 
+
+- Health and shield on the hud
+  - edge width = 4
+  - health width = 80
+  - health height = 15
+  - full health width = 88
+  - full health height = 23  
+  - shield width = 80
+  - shield height = 8
+  - full shield width = 88
+  - full shield height = 16
+
+  - full shield and health height = 39 (16+23)
