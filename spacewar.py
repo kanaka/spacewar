@@ -9,7 +9,7 @@ import sys, os
 # These dirs used if can't find them locally
 if sys.platform == "win32":
     DATADIR = "C:\\Program Files\\Spacewar"
-    CODEDIR = "C:\\Program Files\\Spacewar\\code"
+    CODEDIR = "C:\\Program Files\\Spacewar\\python"
 else:
     DATADIR = "/usr/share/games/spacewar"
     CODEDIR = "/usr/lib/games/spacewar"
@@ -23,7 +23,7 @@ def main():
     else:
         localpath = os.path.split(os.path.abspath(sys.argv[0]))[0]
     testdata = localpath
-    testcode = os.path.join(localpath, 'code')
+    testcode = os.path.join(localpath, 'python')
     if os.path.isdir(os.path.join(testdata, 'data')):
         DATADIR = testdata
     if os.path.isdir(testcode):

@@ -1,11 +1,20 @@
-## Spacewar
-
 Spacewar is an arcade game in the rich tradition of creating knockoffs
 of the original [Spacewar!](http://en.wikipedia.org/wiki/Spacewar!)
-(considered one of the first computer games). Spacewar is written in
-python and uses the pygame library which adds interactive game
-functionality to the [SDL](http://www.libsdl.org/) library. Spacewar
-is licensed under the LGPL (see LICENSE.LGPL-2.1).
+(considered one of the first computer games). Spacewar is licensed
+under the LGPL (see LICENSE.LGPL-2.1).
+
+### Background 
+
+Building something real is always a good way to force yourself to
+learn a program. It so happened that at the end of 2004 I wanted to
+learn python (for various reasons) and this game was the result.
+
+In June 2011 I discovered that the basic pygame library that the
+python version of the game is built on had been ported to Javascript
+in the form of [gamejs](http://gamejs.org) so I decided to dig up
+original, push the sources to github and work on a Javascript version
+of the game.
+
 
 ### Game Play
 
@@ -53,6 +62,7 @@ The controls for each player are as follows:
 ### Acknowlegements
 
 Some of the graphics, music/sfx, and original initialization code in
-Spacewar were derived from the
+Spacewar were derived from
 [Solar Wolf](http://pygame.org/shredwheat/solarwolf) by Pete Shinners.
+
 
