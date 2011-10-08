@@ -9,12 +9,6 @@ Building something real is always a good way to force yourself to
 learn a program. It so happened that at the end of 2004 I wanted to
 learn python (for various reasons) and this game was the result.
 
-In June 2011 I discovered that the basic pygame library that the
-python version of the game is built on had been ported to Javascript
-in the form of [gamejs](http://gamejs.org) so I decided to dig up
-original, push the sources to github and work on a Javascript version
-of the game.
-
 
 ### Screenshots
 
