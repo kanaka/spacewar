@@ -18,7 +18,14 @@ of the game.
 
 ### Screenshots
 
-<img src="http://kanaka.github.com/spacewar/spacewar1.png" width=400>&nbsp;<img src="http://kanaka.github.com/spacewar/spacewar2.png" width=400>
+The game menu:
+
+<img src="http://kanaka.github.com/spacewar/spacewar1.png">
+
+
+1 human player against 3 AI players:
+
+<img src="http://kanaka.github.com/spacewar/spacewar2.png">
 
 
 ### Game Play
