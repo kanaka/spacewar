@@ -16,6 +16,11 @@ original, push the sources to github and work on a Javascript version
 of the game.
 
 
+### Screenshots
+
+<img src="http://kanaka.github.com/spacewar/spacewar1.png" width=400>&nbsp;<img src="http://kanaka.github.com/spacewar/spacewar2.png" width=400>
+
+
 ### Game Play
 
 Spacewar is a multi-player game. Each person controls a ship on
