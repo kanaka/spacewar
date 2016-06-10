@@ -83,7 +83,6 @@ Source: ..\spacewar-0.5\dist\spacewar\data\news; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\fire.png; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\menu_on_bgd.png; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\downerror.gif; DestDir: {app}\data\
-Source: ..\spacewar-0.5\dist\spacewar\data\hud2.gif; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\popshot.png; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\popbox.png; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\powereffects.png; DestDir: {app}\data\
@@ -117,9 +116,7 @@ Source: ..\spacewar-0.5\dist\spacewar\data\boxes.png; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\star.gif; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\ai.txt; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\btn-add.gif; DestDir: {app}\data\
-Source: ..\spacewar-0.5\dist\spacewar\data\hud.gif; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\newversion.gif; DestDir: {app}\data\
-Source: ..\spacewar-0.5\dist\spacewar\data\oldspacewar.png; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\btn-delete.gif; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\menu_quit_off.png; DestDir: {app}\data\
 Source: ..\spacewar-0.5\dist\spacewar\data\menu_quit_on.png; DestDir: {app}\data\
