@@ -1,0 +1,82 @@
+[
+  { "version": "0.6",
+    "date": "June 18, 2016",
+    "summary": "JavaScript port using Phaser",
+    "details": [
+      ]
+  },
+
+  { "version": "0.5",
+    "date": "March 22, 2005",
+    "summary": "Polished game play, AI players, tutorial mode, help text",
+    "details": [
+      "AI computer players",
+      "Genetic algorithm training for the AI",
+      "1 player tutorial mode",
+      "F1 brings up key control list",
+      "No sun and blackhole \"sun\" option",
+      "Ship with the most shield and health survives in a ship to ship collision",
+      "Transparent shields",
+      "Overall game stats: time, kills, and deaths",
+      "Preference to change graphics level to remove smoke and/or stars",
+      "Help text appears if non-functional keys pressed several times in a row",
+      "Moved more object logic into the Mass class",
+      "Super bullets",
+      "Sorted preferences"]
+  },
+      
+  { "version": "0.4",
+    "date": "December 10, 2004",
+    "summary": "Shields, insults/complements, more preferences",
+    "details": [
+      "Insults and complements",
+      "Shields and shield bar on the HUD",
+      "Powerup bobbles now appear which give shield strength",
+      "Made a nice background image for health and shield bar",
+      "Shield protects against explosion",
+      "Fire damage now fades over life of fire",
+      "Win at a certain score",
+      "Nine more settings/preferences",
+      "Moved most objects processing code from gameplay.py to objs.py",
+      "Created a stand alone object only test mode (./objs.py)",
+      "Fixed news download bug",
+      "Fixed rendering bug"]
+  },
+
+  { "version": "0.3",
+    "date": "December 06, 2004",
+    "summary": "Integrated SolarWolf game framework/modes game, ship health",
+    "details": [
+      "Health bar",
+      "Health bar gradually recharges",
+      "Health bar re-charge shows how much time until re-appearance",
+      "Fire/bullets and explosions drain health instead of instant death"]
+  },
+
+  { "version": "0.2",
+    "date": "December 04, 2004",
+    "summary": "Initial integration of SolarWolf game framework/modes",
+    "details": [
+      "Development version, not playable",
+      "Integrated original SolarWolf game framework/modes",
+      "Sound effects, background music, main menu, credits, setup menu",
+      "In game side-bar game with score for each player",
+      "Select 1-4 players from setup menu",
+      "Improved Spacewar logo.",
+      "Change \"sun\" to a spinning box to better match startup screens",
+      "Changed the startup sound to explosion instead of the howl",
+      "Main menu shows selected number of players"]
+  },
+
+  { "version": "0.1",
+    "date": "November 22, 2004",
+    "summary": "Basic features: two player mode, gravity, bullets, explosions",
+    "details": [
+      "Initial release",
+      "Two players, fixed key controls, gravity, spiked ball in the middle",
+      "Animated spiked ball, ships, blaster, explosion",
+      "Simple scoring",
+      "Start up screen logo"]
+  }
+]
+

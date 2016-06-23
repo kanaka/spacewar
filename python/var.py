@@ -6,7 +6,7 @@ global game state, variables, constants, and settings
 import os
 from pygame.rect import Rect
 
-version = "0.5"
+version = "0.6"
 
 #various data constants
 arena = Rect(0, 0, 700, 600)
