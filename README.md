@@ -7,7 +7,9 @@ under the LGPL (see LICENSE.LGPL-2.1).
 
 Building something real is always a good way to force yourself to
 learn a program. It so happened that at the end of 2004 I wanted to
-learn python (for various reasons) and this game was the result.
+learn python (for various reasons) and this game was the result. In
+2016 I ported the game to the web using the Phaser game framework.
+<a href="https://kanaka.github.io/spacewar">Play it online</a>.
 
 
 ### Screenshots
@@ -30,9 +32,9 @@ accelerates the ship forward or backward, and has has a blaster weapon.
 There is also a sun in the center of the screen.  All game objects exert
 gravitational force on all other objects. The sun is much more massive
 (but not larger) than other objects. Ships take damage if if they
-collide with a bullet, the sun, or another ship.  The game is timed
-and players score a point when they kill another player. If a player
-dies "accidentally", they lose a point.
+collide with a bullet, the sun, or another ship. Players score a point
+when they kill another player. If a player dies "accidentally", they
+lose a point.
 
 The controls for each player are as follows:
 
@@ -69,6 +71,6 @@ The controls for each player are as follows:
 
 Some of the graphics, music/sfx, and original initialization code in
 Spacewar were derived from
-[Solar Wolf](http://pygame.org/shredwheat/solarwolf) by Pete Shinners.
+[SolarWolf](http://pygame.org/shredwheat/solarwolf) by Pete Shinners.
 
 

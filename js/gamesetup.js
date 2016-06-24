@@ -8,7 +8,18 @@ function label(txt) {
     return capitalize(txt.replace(/_/g, " "))
 }
 
-var GameSetup = function(game) {}
+var GameSetup = function(game) {
+    this.user_vars = {}
+
+    var raw = localStorage.getItem("vars")
+    console.log("GameSetup user vars:", raw)
+    if (raw) {
+        this.user_vars = JSON.parse(raw)
+        for (var k in this.user_vars) {
+            vars[k] = this.user_vars[k]
+        }
+    }
+}
 
 GameSetup.prototype.init = function () {
     this.linesize = 20
@@ -64,7 +75,8 @@ GameSetup.prototype.create = function () {
     for (var p of this.prefs.concat.apply(this.prefs, this.options)) {
         if (p.name) {
             var color = p.color
-            if ('value' in p && (p.value === vars[p.key])) {
+            if ('value' in p && p.key &&
+                (p.value.toFixed(8) === vars[p.key].toFixed(8))) {
                 color = p.color_on
             }
             p.text = game.add.text(p.x, p.y, p.name,
@@ -113,7 +125,6 @@ GameSetup.prototype.create = function () {
             game.state.start('Menu');
             return
         }
-        vars[opt.key] = opt.value
         for (var o of self.options[self.oy]) {
             if (o === opt) {
                 o.text.style.fill = rgba.apply(null, o.color_on)
@@ -123,23 +134,11 @@ GameSetup.prototype.create = function () {
             o.text.setStyle(o.text.style)
         }
 
-        // TODO: save/update using cookies
+        vars[opt.key] = opt.value
+        self.user_vars[opt.key] = opt.value
+        localStorage.setItem("vars", JSON.stringify(self.user_vars))
 
-        // Adjust music volume if needed
-        if (!game.music.menu.volume !== vars.music) {
-            game.music.menu.volume = vars.music
-            for (var m of game.music.play) {
-                m.volume = vars.music
-            }
-        }
-
-        // Adjust sound-effects volume if needed
-        if (!game.sounds.startlife.volume !== vars.sound) {
-            for (var i in game.sounds) {
-                var s = game.sounds[i]
-                s.volume = vars.sounds
-            }
-        }
+        vars.applyVars(game)
     }
 
     k.addKey(Phaser.Keyboard.ENTER).onDown.add(select, this)

@@ -9,7 +9,7 @@ import gameplay
 
 credits = (
     ('Developer', ('Joel Martin',)),
-    ('Derived from Solar Wolf:', 
+    ('Derived from SolarWolf:', 
         ('Developer: Pete "ShredWheat" Shinners',
          'Graphics: Eero Tamminen',
          'Music: "theGREENzebra"',

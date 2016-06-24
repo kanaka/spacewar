@@ -12,25 +12,25 @@ import random, math
 # AI data structure constants
 types = ['none', 'significant', 'hard', 'damage', 'ship', 'sun',
          'fire', 'spike', 'asteroid', 'shield', 'bullet', 'powerup']
-                                                                                
+
 actions = ['none', 'fire', 'thrust', 'rthrust', 'left', 'right']
 
 comparisons = [
-        'none', 
+        'none',
         'rand_num',   # <rand> operator value
         'dist_dist',  # <dist * future1> operator <dist * future2 + value>
         'dist_num',   # <dist * future1> operator value
         'dir_dir',    # <dir * future1> operator <dir * future2 + value>
         'dir_num']    # <dir * future1> operator value
 
-# future is index into futures array to get frames into the 
+# future is index into futures array to get frames into the
 # future for distance and direction
 futures = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
            10,11,12,13,14,15,16,17,18,19,
            20,22,24,26,28,30,32,34,36,38,
            40,45,50,55,60,65,70,75,80,85]
 
-# Meaning of value is either raw or index into distances 
+# Meaning of value is either raw or index into distances
 # or directions array depending on setting of comparisons
 distances = [ 0,  10, 12, 14, 16,
               18, 20, 22, 24, 26,
@@ -161,7 +161,7 @@ class Base:
         return ret
 
     def mutate(self):
-        pass 
+        pass
 
     def __repr__(self):
         #repr = "      base\n"
@@ -188,7 +188,7 @@ class Gene:
             self.base.append(base)
         for i in range(random.randint(1,10)):
             self.action.append(random.choice(actions))
-    
+
     def test(self, ship, object):
         match = 0
         if (self.type in object.taxonomy):
@@ -198,7 +198,7 @@ class Gene:
                     match = 0
                     break
         return match
-        
+
     def mutate(self):
         pass
 
@@ -253,7 +253,7 @@ def load_dna_pool(file="default"):
     dna_pool = []
 
     file = "ai/" + file
-    try: 
+    try:
         ai_file = open(var.get_resource(file))
     except:
         # Not found so randomize the pool
@@ -262,7 +262,7 @@ def load_dna_pool(file="default"):
             dna.random()
             dna_pool.append(dna)
         return
-        
+
     lines = []
     for line in ai_file.readlines():
         line = line.strip()
@@ -298,27 +298,53 @@ def load_dna_pool(file="default"):
         #print dna
 
 def save_dna_pool(file="new"):
+    save_dna_formatted(file=file, format="raw")
+
+
+def save_dna_formatted(file="new.json", format="json"):
+    import json, yaml
     global dna_pool
 
     file = "ai/" + file
     ai_file = open(var.get_resource(file), 'w')
 
-    ai_file.write("%d\n" % len(dna_pool))
-    for dna in dna_pool:
-        ai_file.write("    %d\n" % len(dna.gene))
-        for gene in dna.gene:
-            ai_file.write("        %s\n" % gene.type)
-            for base in gene.base:
-                ai_file.write("            %s,%d,%d,%d,%s\n" % 
-                (base.comparison, 
-                 base.future1,
-                 base.future2,
-                 base.value,
-                 base.operator))
-            actions = ",".join(gene.action)
-            ai_file.write("        %s\n\n" % actions)
-        ai_file.write("\n")
+    raw = []
 
+    for dna in dna_pool:
+        raw.append([])
+        for gene in dna.gene:
+            raw[-1].append({"type": gene.type,
+                            "bases": [],
+                            "actions": gene.action})
+            for base in gene.base:
+                raw[-1][-1]["bases"].append({"comparison": base.comparison,
+                                             "future1": base.future1,
+                                             "future2": base.future2,
+                                             "value":   base.value,
+                                             "operator": base.operator})
+
+    if format == "json":
+        ai_file.write(json.dumps(raw, indent=2))
+    elif format == "yaml":
+        ai_file.write(yaml.dump(raw))
+    elif format == "raw":
+        ai_file.write("%d\n" % len(raw))
+        for dna in raw:
+            ai_file.write("    %d\n" % len(dna))
+            for gene in dna:
+                ai_file.write("        %s\n" % gene['type'])
+                for base in gene['bases']:
+                    ai_file.write("            %s,%d,%d,%d,%s\n" %
+                    (base['comparison'],
+                     base['future1'],
+                     base['future2'],
+                     base['value'],
+                     base['operator']))
+                actions = ",".join(gene['actions'])
+                ai_file.write("        %s\n\n" % actions)
+            ai_file.write("\n")
+    else:
+        raise Exception("unknown format %s" % format)
 
 def runga(players):
     # Create a new dna pool based on previous pool

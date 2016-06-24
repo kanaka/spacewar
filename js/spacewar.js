@@ -23,7 +23,18 @@ var Preload = function (game) {
 
 Preload.prototype = {
     init: function () {
+        this.game.time.advancedTiming = true;
         this.add.sprite(100, 25, 'logo')
+
+        // Set default graphics mode based on device type
+        // Unfortunately, this can't go in GameSetup because during
+        // the constructor this value isn't initialized yet, but we
+        // need it for the preload screen for star rendering.
+        if (this.game.device.desktop) {
+            vars.graphics = 2
+        } else {
+            vars.graphics = 0
+        }
     },
 
     preload: function () {
@@ -95,8 +106,22 @@ Preload.prototype = {
         this.load.spritesheet('shield',    'data/bonus-shield.png', 32, 32)
         this.load.spritesheet('bullet',    'data/bonus-bullet.png', 32, 32)
 
+        this.load.spritesheet('debris1',    'data/debris1.png', 10, 10)
+        this.load.spritesheet('debris2',    'data/debris2.png', 10, 10)
+        this.load.spritesheet('debris3',    'data/debris3.png', 10, 10)
+        this.load.spritesheet('debris4',    'data/debris4.png', 10, 10)
+        this.load.spritesheet('debris-base',   'data/debris-base.png', 28, 28)
+        this.load.spritesheet('debris-bubble', 'data/debris-bubble.png', 12, 12)
+        this.load.spritesheet('debris-motor',  'data/debris-motor.png', 10, 10)
+
         // Load news/CHANGES.json file
         this.load.json('news', 'CHANGES.json')
+
+        // Load the AI DNA
+        //this.load.json('dna_dumb',       'data/ai/dumb.json')
+        //this.load.json('dna_generation', 'data/ai/generation.json')
+        this.load.json('dna_main', 'data/ai/main.json')
+
     },
 
     create: function () {
@@ -129,6 +154,16 @@ Preload.prototype = {
             menu_choose:  this.add.audio('menu-choose'),
         }
 
+        // Allow multiple instances of same sound to be playing
+        // simultaneously
+        //game.sounds.explode.allowMultiple = true
+        //game.sounds.fire.allowMultiple = true
+        //game.sounds.pop.allowMultiple = true
+        //game.sounds.flop.allowMultiple = true
+        //game.sounds.chimein.allowMultiple = true
+        //game.sounds.chimeout.allowMultiple = true
+        //game.sounds.boxhit.allowMultiple = true
+
         // Create star bitmaps
         game.starBitmap = []
         for (var layer = 0; layer < 4; layer++) {
@@ -143,6 +178,8 @@ Preload.prototype = {
 
         game.groups = {stars:      starGroup(game)}
 
+        // Change state to match vars settings
+        vars.applyVars(game)
     },
 
     update: function () {
@@ -153,7 +190,8 @@ Preload.prototype = {
                 this.cache.isSoundDecoded('soundtrack-menu')) {
                 this.ready = true
                 // Play the initial start sound
-                this.game.sounds.explode.play('', 0, 0.25)
+                this.game.sounds.explode.play('', 0,
+                        this.game.sounds.explode.volume / 4)
                 // Switch to the menu
                 this.state.start('Menu')
             }

@@ -1,3 +1,5 @@
+"use strict";
+
 //
 // Star object
 //
@@ -42,9 +44,16 @@ function starGroup(game) {
             var s = starCache.pop()
             grp.add(new Star(game, s.x, s.y, s.vx, s.vy, s.bitmap))
         }
-    } else {
+    }
+
+    updateStars(game, grp)
+    return grp
+}
+
+function updateStars(game, grp) {
+    if (vars.graphics >= 2 && grp.children.length < vars.num_stars) {
         // Add new stars
-        for (var i = 0; i < vars.num_stars; i++) {
+        for (var i = grp.children.length; i < vars.num_stars; i++) {
             var x = parseInt(Math.random() * game.arena.right),
                 y = parseInt(Math.random() * game.arena.bottom),
                 layer = parseInt(Math.random() * 4),
@@ -55,5 +64,4 @@ function starGroup(game) {
         }
     }
 
-    return grp
 }

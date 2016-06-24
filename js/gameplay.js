@@ -3,7 +3,6 @@
 var GamePlay = function(game) {}
 
 GamePlay.prototype.init = function() {
-    this.game.time.advancedTiming = true;
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
 }
 
@@ -37,14 +36,24 @@ GamePlay.prototype.create = function () {
 
     // Add the ships/players
     this.players = []
-    var pdata = [[0, vars.player_1, arena.right-50, arena.bottom-50],
+    var all_dna = game.cache.getJSON('dna_main'),
+        pdata = [[0, vars.player_1, arena.right-50, arena.bottom-50],
                  [1, vars.player_2, arena.left +50, arena.top   +50],
                  [2, vars.player_3, arena.right-50, arena.top   +50],
                  [3, vars.player_4, arena.left +50, arena.bottom-50]]
     for (var d of pdata) {
+        // TODO: only for game_mode === 2
         if (d[1] === CONST_PLAYER_HUMAN) {
             var ship = new Ship(game, d[0], d[2], d[3])
             this.players.push(new HumanAgent(game, d[0], ship))
+            game.groups.low.add(ship)
+        } else if (d[1] === CONST_PLAYER_COMPUTER) {
+            var ship = new Ship(game, d[0], d[2], d[3]),
+                idx = parseInt(Math.random() * all_dna.length),
+                dna = all_dna[idx]
+            console.log("using DNA index:", idx)
+            this.players.push(new DNAAgent(game, d[0], ship,
+                                           dna, game.groups))
             game.groups.low.add(ship)
         }
     }
@@ -64,8 +73,7 @@ GamePlay.prototype.create = function () {
         Phaser.Keyboard.SPACE])
 
     game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(function() {
-        for (var m of game.music.play) { m.stop() }
-        self.state.start('Menu');
+        self.gameover()
     })
 }
 
@@ -80,6 +88,7 @@ GamePlay.prototype.update = function () {
             console.log("switching soundtrack from", music.play_index, "to", new_index)
             music.play[music.play_index].fadeTo(1000, 0)
             music.play_index = new_index
+            music.play[music.play_index].restart('', 0, 0)
             music.play[music.play_index].fadeTo(1000, vars.music)
         }
     }
@@ -96,6 +105,18 @@ GamePlay.prototype.update = function () {
 
 GamePlay.prototype.render = function () {
     var game = this.game
-    game.debug.text("fps: " + (game.time.fps || '--'), 20, 440, "#00ff00")
-    game.debug.soundInfo(game.music.play[1], 20, 460)
+    //game.debug.soundInfo(game.music.play[1], 20, 440)
+    game.debug.text("fps: " + (game.time.fps || '--'), 20, 560, "#00ff00")
+}
+
+GamePlay.prototype.gameover = function () {
+    var self = this
+    for (var player of this.players) {
+        player.ship.explode(true)
+        player.ship.pending_frames = 3600 // No re-appear
+    }
+    setTimeout(function () {
+        for (var m of self.game.music.play) { m.stop() }
+        self.state.start('Menu');
+    }, 1000)
 }

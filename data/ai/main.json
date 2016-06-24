@@ -1,0 +1,360 @@
+[
+  [
+    {
+      "bases": [
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        }
+      ],
+      "type": "none",
+      "actions": [
+        "none"
+      ]
+    }
+  ],
+  [
+    {
+      "bases": [
+        {
+          "operator": "<",
+          "comparison": "rand_num",
+          "future2": 0,
+          "value": 5,
+          "future1": 0
+        }
+      ],
+      "type": "significant",
+      "actions": [
+        "right",
+        "right"
+      ]
+    },
+    {
+      "bases": [
+        {
+          "operator": "<",
+          "comparison": "rand_num",
+          "future2": 0,
+          "value": 5,
+          "future1": 0
+        }
+      ],
+      "type": "significant",
+      "actions": [
+        "left",
+        "left"
+      ]
+    },
+    {
+      "bases": [
+        {
+          "operator": "<",
+          "comparison": "rand_num",
+          "future2": 0,
+          "value": 2,
+          "future1": 0
+        }
+      ],
+      "type": "significant",
+      "actions": [
+        "fire"
+      ]
+    },
+    {
+      "bases": [
+        {
+          "operator": "<",
+          "comparison": "rand_num",
+          "future2": 0,
+          "value": 5,
+          "future1": 0
+        }
+      ],
+      "type": "significant",
+      "actions": [
+        "thrust",
+        "thrust"
+      ]
+    }
+  ],
+  [
+    {
+      "bases": [
+        {
+          "operator": "<",
+          "comparison": "rand_num",
+          "future2": 0,
+          "value": 2,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        }
+      ],
+      "type": "none",
+      "actions": [
+        "thrust",
+        "thrust",
+        "thrust",
+        "thrust"
+      ]
+    },
+    {
+      "bases": [
+        {
+          "operator": ">",
+          "comparison": "rand_num",
+          "future2": 0,
+          "value": 2,
+          "future1": 0
+        },
+        {
+          "operator": "<",
+          "comparison": "rand_num",
+          "future2": 0,
+          "value": 4,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        }
+      ],
+      "type": "none",
+      "actions": [
+        "rthrust",
+        "rthrust",
+        "rthrust",
+        "rthrust"
+      ]
+    },
+    {
+      "bases": [
+        {
+          "operator": "<",
+          "comparison": "dir_num",
+          "future2": 0,
+          "value": 2,
+          "future1": 0
+        },
+        {
+          "operator": ">",
+          "comparison": "dir_num",
+          "future2": 0,
+          "value": -2,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        }
+      ],
+      "type": "ship",
+      "actions": [
+        "fire",
+        "right",
+        "none",
+        "none",
+        "fire",
+        "left",
+        "left",
+        "none",
+        "fire",
+        "right",
+        "none",
+        "none",
+        "none"
+      ]
+    },
+    {
+      "bases": [
+        {
+          "operator": "<",
+          "comparison": "dir_num",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        }
+      ],
+      "type": "ship",
+      "actions": [
+        "right",
+        "right",
+        "right",
+        "right"
+      ]
+    },
+    {
+      "bases": [
+        {
+          "operator": ">",
+          "comparison": "dir_num",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        },
+        {
+          "operator": "==",
+          "comparison": "none",
+          "future2": 0,
+          "value": 0,
+          "future1": 0
+        }
+      ],
+      "type": "ship",
+      "actions": [
+        "left",
+        "left",
+        "left",
+        "left"
+      ]
+    }
+  ]
+]

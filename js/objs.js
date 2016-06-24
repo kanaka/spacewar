@@ -5,7 +5,6 @@
 //
 var Mass = function (game, key, x, y, vx, vy, mass, rotation) {
     Phaser.Sprite.call(this, game, x, y, key)
-    //console.log('Mass: ', game, key, x, y, vx, vy, mass, rotation)
     game.physics.arcade.enable(this)
     this.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST
     this.anchor.set(0.5, 0.5)
@@ -22,6 +21,7 @@ Mass.prototype = Object.create(Phaser.Sprite.prototype)
 Mass.prototype.constructor = Mass
 
 Mass.prototype.Radius = 0.0
+Mass.prototype.Taxonomy = {}
 
 Mass.prototype.update = function() {
     if (this.x > this.game.arena.right)  { this.x = this.game.arena.left   }
@@ -123,6 +123,9 @@ Fire.prototype = Object.create(Mass.prototype)
 Fire.prototype.constructor = Fire
 
 Fire.prototype.Radius = 8.0
+Fire.prototype.Taxonomy = {fire: true,
+                           damage: true,
+                           significant: true}
 
 Fire.prototype.hit_by = function(other_mass) {
     if (!this.dead) {
@@ -159,15 +162,15 @@ Ephemeral.prototype.PhaseRate = 0.0
 Ephemeral.prototype.update = function() {
     Mass.prototype.update.call(this)
 
-    var phases = this.animations.frameTotal
+    this.phases = this.animations.frameTotal
 
     this.phase += this.PhaseRate
 
-    if (!this.dead && this.phase >= phases) {
+    if (!this.dead && this.phase >= this.phases) {
         this.dead = true
     }
 
-    this.frame = Math.min(parseInt(this.phase), phases-1)
+    this.frame = Math.min(parseInt(this.phase), this.phases-1)
 }
 
 Ephemeral.prototype.gravitate = function(other_mass) {
@@ -187,14 +190,96 @@ Pop.prototype.PhaseRate = 0.2
 
 var Explosion = function(game, x, y, vx, vy) {
     Ephemeral.call(this, game, 'explosion', x, y, vx, vy, 0.0, 0)
-
-    this.game.sounds.explode.play()
 }
 Explosion.prototype = Object.create(Ephemeral.prototype)
 Explosion.prototype.constructor = Ephemeral
 
 Explosion.prototype.Radius = 18.0
 Explosion.prototype.PhaseRate = 0.5
+Explosion.prototype.Taxonomy = {explosion: true,
+                                damage: true,
+                                significant: true}
+
+var Debris = function(game, key, x, y, vx, vy) {
+    vx = parseInt(vx + Math.random()*100-50)
+    vy = parseInt(vy + Math.random()*100-50)
+    Ephemeral.call(this, game, key, x, y, vx, vy, 0.0, 0)
+    this.dead_by_hit = false
+}
+Debris.prototype = Object.create(Ephemeral.prototype)
+Debris.prototype.constructor = Ephemeral
+Debris.prototype.Taxonomy = {debris: true, damage: true, significant: true}
+
+Debris.prototype.PhaseRate = 0.2
+
+Debris.prototype.hit_by = function(other_mass) {
+    if (!this.dead && !other_mass.dead) {
+        if (other_mass instanceof Ephemeral) {
+            return
+        }
+        if (other_mass instanceof Sun || this.phase < this.phases / 2) {
+            // Allow debris to pass through on initial collision with
+            // Sun
+            return
+        }
+        this.dead = true
+        this.dead_by_hit = true
+    }
+}
+
+
+var Debris1 = function(game, x, y, vx, vy) {
+    Debris.call(this, game, 'debris1', x, y, vx, vy, 0.0, 0)
+}
+Debris1.prototype = Object.create(Debris.prototype)
+Debris1.prototype.constructor = Debris
+Debris1.prototype.Radius = 6.0
+
+var Debris2 = function(game, x, y, vx, vy) {
+    Debris.call(this, game, 'debris2', x, y, vx, vy, 0.0, 0)
+}
+Debris2.prototype = Object.create(Debris.prototype)
+Debris2.prototype.constructor = Debris
+Debris2.prototype.Radius = 6.0
+
+var Debris3 = function(game, x, y, vx, vy) {
+    Debris.call(this, game, 'debris3', x, y, vx, vy, 0.0, 0)
+}
+Debris3.prototype = Object.create(Debris.prototype)
+Debris3.prototype.constructor = Debris
+Debris3.prototype.Radius = 6.0
+
+var Debris4 = function(game, x, y, vx, vy) {
+    Debris.call(this, game, 'debris4', x, y, vx, vy, 0.0, 0)
+}
+Debris4.prototype = Object.create(Debris.prototype)
+Debris4.prototype.constructor = Debris
+Debris4.prototype.Radius = 6.0
+
+var DebrisBase = function(game, x, y, vx, vy) {
+    Debris.call(this, game, 'debris-base', x, y, vx, vy, 0.0, 0)
+}
+DebrisBase.prototype = Object.create(Debris.prototype)
+DebrisBase.prototype.constructor = Debris
+DebrisBase.prototype.Radius = 18.0
+DebrisBase.prototype.PhaseRate = 0.07
+
+var DebrisBubble = function(game, x, y, vx, vy) {
+    Debris.call(this, game, 'debris-bubble', x, y, vx, vy, 0.0, 0)
+}
+DebrisBubble.prototype = Object.create(Debris.prototype)
+DebrisBubble.prototype.constructor = Debris
+DebrisBubble.prototype.Radius = 8.0
+DebrisBubble.prototype.PhaseRate = 0.1
+
+var DebrisMotor = function(game, x, y, vx, vy) {
+    Debris.call(this, game, 'debris-motor', x, y, vx, vy, 0.0, 0)
+}
+DebrisMotor.prototype = Object.create(Debris.prototype)
+DebrisMotor.prototype.constructor = Debris
+DebrisMotor.prototype.Radius = 6.0
+DebrisMotor.prototype.PhaseRate = 0.1
+
 
 
 //
@@ -213,6 +298,9 @@ Sun.prototype = Object.create(Mass.prototype)
 Sun.prototype.constructor = Sun
 
 Sun.prototype.Radius = 10.0
+Sun.prototype.Taxonomy = {sun: true,
+                          hard: true,
+                          significant: true}
 
 Sun.prototype.gravitate = function(other_mass) {
     // Floating and black holes move around
@@ -256,6 +344,7 @@ Hard.prototype.hit_by = function(other_mass) {
         other_mass instanceof Hard) {
         this.dead = true
         var vx = this.body.velocity.x, vy = this.body.velocity.y
+        this.game.sounds.explode.play()
         var explosion = new Explosion(this.game, this.x, this.y, vx, vy)
         explosion.mass = this.mass
         this.game.groups.high.add(explosion)
@@ -279,6 +368,9 @@ Spike.prototype.constructor = Hard
 
 Spike.prototype.Radius = 10.0
 Spike.prototype.PhaseRate = 0.6
+Spike.prototype.Taxonomy = {spike: true,
+                            hard: true,
+                            significant: true}
 
 // Asteroids
 var Asteroid = function(game) {
@@ -297,6 +389,9 @@ Asteroid.prototype.constructor = Hard
 
 Asteroid.prototype.Radius = 15.0
 Asteroid.prototype.PhaseRate = 0.4
+Asteroid.prototype.Taxonomy = {asteroid: true,
+                               hard: true,
+                               significant: true}
 
 Asteroid.prototype.find_spot = function() {
     var new_rotation = Math.random() * Math.PI * 2 - Math.PI,
@@ -364,6 +459,9 @@ ShieldBobble.prototype.constructor = Bobble
 
 ShieldBobble.prototype.Radius = 10.0
 ShieldBobble.prototype.PhaseRate = 0.2
+ShieldBobble.prototype.Taxonomy = {shield: true,
+                                   powerup: true,
+                                   significant: true}
 
 
 var BulletBobble = function(game) {
@@ -374,6 +472,9 @@ BulletBobble.prototype.constructor = Bobble
 
 BulletBobble.prototype.Radius = 10.0
 BulletBobble.prototype.PhaseRate = 0.1
+BulletBobble.prototype.Taxonomy = {bullet: true,
+                                   powerup: true,
+                                   significant: true}
 
 
 //
@@ -424,6 +525,9 @@ Ship.prototype = Object.create(Mass.prototype)
 Ship.prototype.constructor = Ship
 
 Ship.prototype.Radius = 11.0
+Ship.prototype.Taxonomy = {ship: true,
+                           damage: true,
+                           significant: true}
 
 Ship.prototype.start = function(x, y, vx, vy, mass, rotation) {
     if (typeof mass === 'undefined') { mass = 1.0 }
@@ -642,6 +746,38 @@ Ship.prototype.cmd_fire = function() {
     }
 }
 
+Ship.prototype.explode = function(without_fire) {
+    if (this.dead) { return }
+    this.health = 0.0
+    this.dead = true
+    this.visible = false
+
+    this.shield_sprite.visible = false
+    this.shield_sprite.animations.stop()
+    this.bullet_sprite.visible = false
+    this.bullet_sprite.animations.stop()
+    this.game.sounds.explode.play()
+    if (vars.graphics > 0) {
+        // debris
+        for (var D of [Debris1, Debris2, Debris3, Debris4,
+                       DebrisBase, DebrisBubble, DebrisMotor]) {
+            var vx = this.body.velocity.x,
+                vy = this.body.velocity.y
+            var debris = new D(this.game, this.x, this.y, vx, vy)
+            debris.mass = this.mass / 14
+            this.game.groups.low.add(debris)
+        }
+    }
+    if (typeof without_fire === 'undefined' || !without_fire) {
+        // explosion
+        var vx = this.body.velocity.x,
+            vy = this.body.velocity.y
+        var explosion = new Explosion(this.game, this.x, this.y, vx, vy)
+        explosion.mass = this.mass / 2
+        this.game.groups.high.add(explosion)
+    }
+}
+
 Ship.prototype.damage = function(damage) {
     this.shield -= damage
     if (this.shield < 0.0) {
@@ -649,21 +785,10 @@ Ship.prototype.damage = function(damage) {
         this.shield = 0.0
     }
     if (this.health <= 0.0) {
-        this.health = 0.0
-        this.dead = true
-        this.visible = false
         this.player.deaths += 1
         this.pending_frames = vars.death_time * vars.frames_per_sec
 
-        this.shield_sprite.visible = false
-        this.shield_sprite.animations.stop()
-        this.bullet_sprite.visible = false
-        this.bullet_sprite.animations.stop()
-        var vx = this.body.velocity.x,
-            vy = this.body.velocity.y
-        var explosion = new Explosion(this.game, this.x, this.y, vx, vy)
-        explosion.mass = this.mass
-        this.game.groups.high.add(explosion)
+        this.explode()
         return true // dead
     } else {
         return false // still alive
@@ -681,6 +806,8 @@ Ship.prototype.hit_by = function(other_mass) {
             other_mass.owner.player.score += 1
             other_mass.owner.player.complement = 1
         }
+    } else if (other_mass instanceof Debris) {
+        this.damage(vars.debris_damage)
     } else if (other_mass instanceof Explosion) {
         if (!this.shield) {
             this.damage(vars.explosion_damage)
@@ -789,6 +916,17 @@ function runobjects(game) {
                     }
                     grp.remove(o, true)
                     groups.vapors.add(new Pop(game, x, y, vx, vy))
+                } else if (o instanceof Debris) {
+                    var x = o.x, y = o.y,
+                        vx = o.body.velocity.x,
+                        vy = o.body.velocity.y
+                    if (o.dead_by_hit) {
+                        vx = vx / 5
+                        vy = vy / 5
+                        game.sounds.pop.play()
+                        groups.vapors.add(new Pop(game, x, y, vx, vy))
+                    }
+                    grp.remove(o, true)
                 } else {
                     grp.remove(o, true)
                 }

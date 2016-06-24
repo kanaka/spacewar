@@ -34,19 +34,20 @@ var vars = {
     reverse_power: -2.70,
     fire_speed: 200.0,
     explosion_damage: 3,
+    debris_damage: 10,
     smoke_speed: 250.0,
     sbobble_power: 50.0,
     bbobble_charge: 120.0, // frames_per_sec * 20
-
-    graphics: 2, // 0 = no stars/smoke, 1 = smoke, 2 = smoke+stars
 
     //
     // Settings menu configurable items
     //
     player_1:            CONST_PLAYER_HUMAN,
-    player_2:            CONST_PLAYER_HUMAN,
+    player_2:            CONST_PLAYER_COMPUTER,
     player_3:            CONST_PLAYER_OFF,
     player_4:            CONST_PLAYER_OFF,
+
+    graphics:            2, // 0 = no stars/smoke, 1 = smoke, 2 = smoke+stars
 
     win_score:           10,
     death_score:         -1,
@@ -79,7 +80,7 @@ var prefs = [
                   ["Off", CONST_PLAYER_OFF]]],
 
 //    ["game_mode", [["Normal", 1], ["1 Player Tutorial", 2]]],
-//    ["graphics", [["Minimal", 0], ["Smoke", 1], ["Smoke and Stars", 2]]],
+    ["graphics", [["Minimal", 0], ["Smoke", 1], ["Smoke and Stars", 2]]],
 //    ["display", [["Window", 0], ["Fullscreen", 1]]],
 //    ["win_score", [["3", 3], ["7", 7], ["11", 11], ["21", 21]]],
     ["death_score", [["-2", -2], ["-1", -1], ["0", 0]]],
@@ -90,13 +91,17 @@ var prefs = [
     ["fire_damage", [["Low", 20], ["Medium", 50], ["Normal", 80], ["Super", 120]]],
     ["gravity_const", [["Weak", 200], ["Normal", 480], ["Strong", 1500]]],
     ["spike_rate",    [["Infrequent", 1.0 / (CONST_FPS * 90)],
-                       ["Normal",     1.0 / (CONST_FPS * 40)],
+                       ["Moderate",   1.0 / (CONST_FPS * 40)],
                        ["Frequent",   1.0 / (CONST_FPS * 20)]]],
     ["asteroid_rate", [["Infrequent", 1.0 / (CONST_FPS * 90)],
-                       ["Normal",     1.0 / (CONST_FPS * 40)],
+                       ["Moderate",   1.0 / (CONST_FPS * 40)],
                        ["Frequent",   1.0 / (CONST_FPS * 20)]]],
-    ["shield_powerup_rate", [["Infrequent", 40], ["Normal", 20], ["Frequent", 12]]],
-    ["bullet_powerup_rate", [["Infrequent", 70], ["Normal", 40], ["Frequent", 20]]],
+    ["shield_powerup_rate", [["Infrequent", 1.0 / (CONST_FPS * 40)],
+                             ["Moderate", 1.0 / (CONST_FPS * 20)],
+                             ["Frequent", 1.0 / (CONST_FPS * 12)]]],
+    ["bullet_powerup_rate", [["Infrequent", 1.0 / (CONST_FPS * 70)],
+                             ["Moderate", 1.0 / (CONST_FPS * 40)],
+                             ["Frequent", 1.0 / (CONST_FPS * 20)]]],
     ["heal_rate", [["Slow", 1], ["Normal", 3], ["Fast", 10]]],
     ["death_time", [["Quick", 3], ["Normal", 5], ["Slow", 10]]],
 ]
@@ -104,7 +109,7 @@ var prefs = [
 var creds = ['Spacewar',
              '    Developer: Joel Martin (@bus_kanaka)',
              '',
-             'Sound/Graphics from Solar Wolf',
+             'Sound/Graphics from SolarWolf',
              '    Developer: Pete "ShredWheat" Shinners',
              '    Graphics: Eero Tamminen',
              '    Music: "theGREENzebra"',
@@ -119,3 +124,26 @@ vars.player_cnt = function() {
     }
     return cnt
 }
+
+vars.applyVars = function(game) {
+    // Adjust music volume if needed
+    if (!game.music.menu.volume !== vars.music) {
+        game.music.menu.volume = vars.music
+        for (var m of game.music.play) {
+            m.volume = vars.music
+        }
+    }
+
+    // Adjust sound-effects volume if needed
+    if (!game.sounds.startlife.volume !== vars.sound) {
+        for (var k in game.sounds) {
+            var s = game.sounds[k]
+            s.volume = vars.sounds
+        }
+        // Adjust other sounds
+        game.sounds.fire.volume = vars.sounds / 2
+    }
+
+    // TODO: Enable/disable stars
+}
+
