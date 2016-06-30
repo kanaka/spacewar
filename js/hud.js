@@ -71,6 +71,7 @@ var HUD = function (game, players) {
 
         // Player icon/ship image
         var p = stats.create(50, 120+(i*space_each), 'ship'+i)
+        p.frameName = 'main'
         p.anchor.set(0.5, 0)
 
         // Player scores

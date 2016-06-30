@@ -70,10 +70,8 @@ function half_gauss(start, end) {
 }
 */
 
-var _distanceBetween = Phaser.Physics.Arcade.prototype.distanceBetween
-var _angleBetween = Phaser.Physics.Arcade.prototype.angleBetween
 function _relativeDirection(obj1, obj2) {
-    var rad = _angleBetween(obj1, obj2) - obj1.rotation
+    var rad = angleBetween(obj1, obj2) - obj1.rotation
     // Adjust for Phaser 0 radians being due east
     rad = rad + Math.PI/2
     if (rad > Math.PI) {
@@ -91,12 +89,12 @@ function test_base(base, ship, obj) {
         bottom = vars.arena.bottom,
         sx = ship.x,
         sy = ship.y,
-        svx = ship.body.velocity.x / CONST_FPS,
-        svy = ship.body.velocity.y / CONST_FPS,
+        svx = ship.vx / CONST_FPS,
+        svy = ship.vy / CONST_FPS,
         ox = obj.x,
         oy = obj.y,
-        ovx = obj.body.velocity.x / CONST_FPS,
-        ovy = obj.body.velocity.y / CONST_FPS,
+        ovx = obj.vx / CONST_FPS,
+        ovy = obj.vy / CONST_FPS,
         f1 = futures[base.future1],
         f2 = futures[base.future2],
         t1 = {x: 0, y: 0, rotation: 0},
@@ -119,14 +117,14 @@ function test_base(base, ship, obj) {
         t1.y = (sy + svy * f1) % bottom
         t2.x = (ox + ovx * f1) % right
         t2.y = (oy + ovy * f1) % bottom
-        dist1 = _distanceBetween(t1, t2)
+        dist1 = distanceBetween(t1, t2)
         t1.x = (sx + svx * f2) % right
         t1.y = (sy + svy * f2) % bottom
         t2.x = (ox + ovx * f2) % right
         t2.y = (oy + ovy * f2) % bottom
         distIdx = base.value
         if (base.value < 0) { distIdx += distances.length }
-        dist2 = _distanceBetween(t1, t2) + distances[distIdx]
+        dist2 = distanceBetween(t1, t2) + distances[distIdx]
         if ((base.operator === "<") && (dist1 < dist2)) { return true }
         if ((base.operator === ">") && (dist1 > dist2)) { return true }
         if (base.operator === "==") {
@@ -140,7 +138,7 @@ function test_base(base, ship, obj) {
         t1.y = (sy + svy * f1) % bottom
         t2.x = (ox + ovx * f1) % right
         t2.y = (oy + ovy * f1) % bottom
-        dist1 = _distanceBetween(t1, t2)
+        dist1 = distanceBetween(t1, t2)
         distIdx = base.value
         if (base.value < 0) { distIdx += distances.length }
         dist2 = distances[distIdx]

@@ -30,11 +30,11 @@ Preload.prototype = {
         // Unfortunately, this can't go in GameSetup because during
         // the constructor this value isn't initialized yet, but we
         // need it for the preload screen for star rendering.
-        if (this.game.device.desktop) {
-            vars.graphics = 2
-        } else {
-            vars.graphics = 0
-        }
+        //if (this.game.device.desktop) {
+        //    vars.graphics = 2
+        //} else {
+        //    vars.graphics = 0
+        //}
     },
 
     preload: function () {
@@ -80,31 +80,19 @@ Preload.prototype = {
         this.load.image('menu-ship',       'data/menu_ship.png')
 
         // Game object sprites/sheets
-        for (var i=1; i<=4; i++) {
-            this.load.image('ship'+(i-1),
-                            'data/ship'+i+'-up.png')
-            this.load.spritesheet('ship'+(i-1)+'-thrust',
-                                  'data/ship'+i+'-up-boost2.png',
-                                  32, 32)
-            this.load.spritesheet('ship'+(i-1)+'-reverse',
-                                  'data/ship'+i+'-up-boost1.png',
-                                  32, 32)
+        for (var s of ['ship0', 'ship1', 'ship2', 'ship3']) {
+            this.load.atlas(s, 'data/sheet-'+s+'.png',
+                               'data/sheet-'+s+'.json',
+                               Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
         }
 
         this.load.image(      'hud',       'data/hud.png')
         this.load.image(      'imghealth', 'data/health_back.png')
-        this.load.spritesheet('appear',    'data/ship-teleport.png', 32, 32)
-        this.load.spritesheet('boxes',     'data/boxes.png', 26, 26)
+        this.load.spritesheet('smoke',     'data/smoke.png', 16, 16)
         this.load.spritesheet('fire',      'data/fire.png', 24, 24)
-        this.load.spritesheet('fire2',     'data/fire2.png', 24, 24)
+        this.load.spritesheet('superfire', 'data/fire2.png', 24, 24)
         this.load.spritesheet('pop',       'data/popshot.png', 18, 22)
         this.load.spritesheet('explosion', 'data/explosion.png', 48, 48)
-        this.load.spritesheet('smoke',     'data/smoke.png', 16, 16)
-        this.load.spritesheet('spike',     'data/spikeball.png', 24, 24)
-        this.load.spritesheet('asteroid',  'data/asteroid.png', 40, 40)
-        this.load.spritesheet('bobble',    'data/powerup.png', 25, 25)
-        this.load.spritesheet('shield',    'data/bonus-shield.png', 32, 32)
-        this.load.spritesheet('bullet',    'data/bonus-bullet.png', 32, 32)
 
         this.load.spritesheet('debris1',    'data/debris1.png', 10, 10)
         this.load.spritesheet('debris2',    'data/debris2.png', 10, 10)
@@ -113,6 +101,13 @@ Preload.prototype = {
         this.load.spritesheet('debris-base',   'data/debris-base.png', 28, 28)
         this.load.spritesheet('debris-bubble', 'data/debris-bubble.png', 12, 12)
         this.load.spritesheet('debris-motor',  'data/debris-motor.png', 10, 10)
+
+        this.load.spritesheet('boxes',     'data/boxes.png', 26, 26)
+        this.load.spritesheet('spike',     'data/spikeball.png', 24, 24)
+        this.load.spritesheet('asteroid',  'data/asteroid.png', 40, 40)
+        this.load.spritesheet('bobble',    'data/powerup.png', 25, 25)
+        this.load.spritesheet('shield',    'data/bonus-shield.png', 32, 32)
+        this.load.spritesheet('bullet',    'data/bonus-bullet.png', 32, 32)
 
         // Load news/CHANGES.json file
         this.load.json('news', 'CHANGES.json')
@@ -164,19 +159,8 @@ Preload.prototype = {
         //game.sounds.chimeout.allowMultiple = true
         //game.sounds.boxhit.allowMultiple = true
 
-        // Create star bitmaps
-        game.starBitmap = []
-        for (var layer = 0; layer < 4; layer++) {
-            var color = [layer*40+110, layer*35+100, layer*22+150],
-                s = game.add.bitmapData(1,1)
-                s.ctx.beginPath()
-                s.ctx.rect(0,0,1,1)
-                s.ctx.fillStyle = rgba.apply(null, color)
-                s.ctx.fill()
-            game.starBitmap[layer] = s
-        }
-
-        game.groups = {stars:      starGroup(game)}
+        // Create parallax star layers
+//        game.groups = {stars:      starLayerGroup(game)}
 
         // Change state to match vars settings
         vars.applyVars(game)
@@ -200,7 +184,7 @@ Preload.prototype = {
 }
 
 
-//var thegame = new Phaser.Game(800, 600, Phaser.CANVAS, '')
+//var thegame = new Phaser.Game(800, 600, Phaser.CANVAS, 'spacewar')
 var thegame = new Phaser.Game(800, 600, Phaser.AUTO, 'spacewar')
 
 // Setup game modes

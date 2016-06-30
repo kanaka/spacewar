@@ -7,15 +7,16 @@ var VERSION               = 0.6,
     CONST_PLAYER_OFF      = 0,
     CONST_PLAYER_HUMAN    = 1,
     CONST_PLAYER_COMPUTER = 2,
-    CONST_HEALTH_COLORS = [[75, 0, 0], [0, 75, 0], [0, 0, 75], [75, 75, 0]],
-    CONST_FPS = 60
+    CONST_HEALTH_COLORS   = [[75, 0, 0], [0, 75, 0], [0, 0, 75], [75, 75, 0]],
+    CONST_FPS             = 60,
+    CONST_STAR_LAYERS     = 4
 
 //
 // Game settings
 //
 var vars = {
     frames_per_sec: CONST_FPS,  // TODO: depends on Phaser goal
-    num_stars: 500,
+    num_stars: 1000,
     fire_life: 4 * CONST_FPS,
 
     start_clearance: 30, // distance ships start from other objects

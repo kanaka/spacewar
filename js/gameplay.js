@@ -3,7 +3,7 @@
 var GamePlay = function(game) {}
 
 GamePlay.prototype.init = function() {
-    this.game.physics.startSystem(Phaser.Physics.ARCADE);
+    //this.game.physics.startSystem(Phaser.Physics.ARCADE);
 }
 
 GamePlay.prototype.create = function () {
@@ -16,7 +16,7 @@ GamePlay.prototype.create = function () {
     game.music.play[game.music.play_index].play()
 
     // Define groups/layers
-    game.groups = {stars:   starGroup(game),
+    game.groups = {stars:   starLayerGroup(game),
                    powerup: game.add.group(),
                    vapors:  game.add.group(),
                    low:     game.add.group(),
@@ -27,6 +27,7 @@ GamePlay.prototype.create = function () {
     // Add Sun
     if (vars.sun > 0) {
         var sun = new Sun(game)
+        sun.start()
         game.groups.low.add(sun)
         if (vars.sun === 3) {
             // Invisible black-hole
@@ -42,20 +43,22 @@ GamePlay.prototype.create = function () {
                  [2, vars.player_3, arena.right-50, arena.top   +50],
                  [3, vars.player_4, arena.left +50, arena.bottom-50]]
     for (var d of pdata) {
+        var ship, agent
+        if (d[1] === CONST_PLAYER_OFF) { continue }
         // TODO: only for game_mode === 2
         if (d[1] === CONST_PLAYER_HUMAN) {
-            var ship = new Ship(game, d[0], d[2], d[3])
-            this.players.push(new HumanAgent(game, d[0], ship))
-            game.groups.low.add(ship)
+            ship = new Ship(game, d[0])
+            agent = new HumanAgent(game, d[0], ship)
         } else if (d[1] === CONST_PLAYER_COMPUTER) {
             var ship = new Ship(game, d[0], d[2], d[3]),
                 idx = parseInt(Math.random() * all_dna.length),
                 dna = all_dna[idx]
             console.log("using DNA index:", idx)
-            this.players.push(new DNAAgent(game, d[0], ship,
-                                           dna, game.groups))
-            game.groups.low.add(ship)
+            agent = new DNAAgent(game, d[0], ship, dna, game.groups)
         }
+        ship.start(d[2], d[3])
+        game.groups.low.add(ship)
+        this.players.push(agent)
     }
 
     // Add HUD image
@@ -105,18 +108,22 @@ GamePlay.prototype.update = function () {
 
 GamePlay.prototype.render = function () {
     var game = this.game
+
     //game.debug.soundInfo(game.music.play[1], 20, 440)
-    game.debug.text("fps: " + (game.time.fps || '--'), 20, 560, "#00ff00")
+    game.debug.text("fps(" + rendererName(game) + "): " +
+                    (game.time.fps || '--'), 20, 560, "#00ff00")
 }
 
 GamePlay.prototype.gameover = function () {
-    var self = this
+    var self = this,
+        game = this.game
     for (var player of this.players) {
         player.ship.explode(true)
         player.ship.pending_frames = 3600 // No re-appear
     }
     setTimeout(function () {
-        for (var m of self.game.music.play) { m.stop() }
+        for (var m of game.music.play) { m.stop() }
+        saveStarLayers(game.groups.stars)
         self.state.start('Menu');
     }, 1000)
 }

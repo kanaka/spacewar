@@ -65,8 +65,8 @@ GameSetup.prototype.create = function () {
     var self = this,
         game = this.game
 
-    game.groups = {stars:      starGroup(game),
-                   main:       game.add.group()}
+    game.groups = {stars:   starLayerGroup(game),
+                   main:    game.add.group()}
 
     // Menu header
     game.groups.main.create(20,20, 'menu-setup-on')
@@ -96,6 +96,7 @@ GameSetup.prototype.create = function () {
     // Add keyboard interaction
     var k = game.input.keyboard
     k.addKey(Phaser.Keyboard.ESC).onDown.add(function () {
+        saveStarLayers(game.groups.stars)
         game.state.start('Menu');
     }, this)
 
@@ -122,6 +123,7 @@ GameSetup.prototype.create = function () {
         var opt = self.options[self.oy][self.ox]
         game.sounds.menu_choose.play()
         if (opt.value === null) { 
+            saveStarLayers(game.groups.stars)
             game.state.start('Menu');
             return
         }

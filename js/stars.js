@@ -1,67 +1,69 @@
 "use strict";
 
+var starLayerCache = []
+
 //
 // Star object
 //
-var Star = function(game, x, y, vx, vy, bitmap) {
-    Mass.call(this, game, bitmap, x, y, vx, vy, 0.0, 0)
-    this.bitmap = bitmap
-}
-Star.prototype = Object.create(Mass.prototype)
-Star.prototype.constructor = Star
+var StarLayer = function(game, layer, x, y, vx, vy, cnt, bitmap) {
+    var color = [layer*40+110, layer*35+100, layer*22+150],
+        bm
+    if (typeof bitmap === 'undefined') {
+        bm = game.add.bitmapData(800,800)
+        for (var i = 0; i < cnt; i++) {
+            var px = parseInt(Math.random()*800),
+                py = parseInt(Math.random()*800)
+            bm.rect(px, py, 1, 1, rgba.apply(null, color))
+        }
+    } else {
+        bm = bitmap
+    }
 
-Star.prototype.update = function() {
-    // Skip Mass.update
-    if (this.x > this.game.world.width) { this.x = 0 }
-    if (this.x < 0) { this.x = this.game.world.width }
-    if (this.y > this.game.world.height) { this.y = 0 }
-    if (this.y < 0) { this.y = this.game.world.height }
+    Phaser.TileSprite.call(this, game, 0, 0, 800, 800, bm)
+
+    this.layer = layer
+    this.tilePosition.x = x
+    this.tilePosition.y = y
+    this.vx = vx
+    this.vy = vy
+    this.bitmap = bm
+
+    starLayerCache.push(this)
+}
+StarLayer.prototype = Object.create(Phaser.TileSprite.prototype)
+StarLayer.prototype.constructor = StarLayer
+
+StarLayer.prototype.update = function() {
+    this.tilePosition.x += this.vx
+    this.tilePosition.y += this.vy
 }
 
-var starCache = []
+function saveStarLayers(grp) {
+    for (var sl of starLayerCache) {
+        grp.remove(sl, false)
+    }
+}
 
 // create/recreate star sprite batch
-function starGroup(game) {
-    var grp = new Phaser.SpriteBatch(game, null)
-    grp.destroy = function() {
-        // Save the positions of the stars to keep them consistent
-        // when moving between game states
-        for (var s of this.children) {
-            starCache.push({x: s.x,
-                            y: s.y,
-                            vx: s.body.velocity.x,
-                            vy: s.body.velocity.y,
-                            bitmap: s.bitmap})
-        }
-        Phaser.SpriteBatch.prototype.destroy.call(this) 
-    }
+function starLayerGroup(game) {
+    var grp = game.add.group()
+
     grp.visible = true
 
-    // TODO: dynamically adjust number of stars based on target FPS
-    if (starCache.length > 0) {
-        // Recreate star sprites maintaining location and velocity
-        while (starCache.length > 0) {
-            var s = starCache.pop()
-            grp.add(new Star(game, s.x, s.y, s.vx, s.vy, s.bitmap))
+    // Reuse star layers to maintain location and velocity
+    if (starLayerCache.length === 0) {
+        // Restore stars layers from cache
+        for (var layer = 0; layer < CONST_STAR_LAYERS; layer++) {
+            var vx = -0.2 * layer, vy = 0.19 * layer
+            grp.add(new StarLayer(game, layer,
+                                  0, 0, vx, vy,
+                                  vars.num_stars / CONST_STAR_LAYERS))
+        }
+    } else if (vars.graphics >= 2) {
+        // Create new stars layers
+        for (var sl of starLayerCache) {
+            grp.add(sl)
         }
     }
-
-    updateStars(game, grp)
     return grp
-}
-
-function updateStars(game, grp) {
-    if (vars.graphics >= 2 && grp.children.length < vars.num_stars) {
-        // Add new stars
-        for (var i = grp.children.length; i < vars.num_stars; i++) {
-            var x = parseInt(Math.random() * game.arena.right),
-                y = parseInt(Math.random() * game.arena.bottom),
-                layer = parseInt(Math.random() * 4),
-                vx = - layer * 10,
-                vy = layer * 10,
-                bm = game.starBitmap[layer]
-            grp.add(new Star(game, x, y, vx, vy, bm))
-        }
-    }
-
 }

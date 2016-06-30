@@ -18,7 +18,7 @@ var MenuItem = function (game, name, state) {
     this.active = false
 }
 MenuItem.prototype = Object.create(Phaser.Sprite.prototype)
-MenuItem.prototype.constructor = Mass
+MenuItem.prototype.constructor = MenuItem
 
 MenuItem.prototype.init = function(x, y) {
     this.x = x
@@ -66,10 +66,7 @@ GameMenu.prototype.create = function () {
         game.music.menu.play()
     }
 
-    //'menu-bgd'
-
-    // Define star group
-    game.groups = {stars:      starGroup(game),
+    game.groups = {stars:      starLayerGroup(game), // Parallax star layers
                    background: game.add.group(),
                    menu:       game.add.group()}
 
@@ -144,6 +141,7 @@ GameMenu.prototype.create = function () {
             game.music.menu.stop()
         }
         game.sounds.menu_choose.play()
+        saveStarLayers(game.groups.stars)
         self.state.start(self.menu[self.current].state);
     }
 

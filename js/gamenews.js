@@ -9,8 +9,8 @@ GameNews.prototype.create = function () {
     var self = this,
         game = this.game
 
-    game.groups = {stars:      starGroup(game),
-                   main:       game.add.group()}
+    game.groups = {stars:   starLayerGroup(game),
+                   main:    game.add.group()}
 
     game.groups.main.create(20, 20, 'menu-news-on')
 
@@ -48,6 +48,7 @@ GameNews.prototype.create = function () {
     var k = game.input.keyboard
     function finish() {
         game.sounds.menu_choose.play()
+        saveStarLayers(game.groups.stars)
         game.state.start('Menu')
     }
     k.addKey(Phaser.Keyboard.ENTER   ).onDown.add(finish)
