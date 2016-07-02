@@ -1,6 +1,6 @@
 "use strict";
 
-var GameCreds = function(game) {}
+function GameCreds(game) {}
 
 GameCreds.prototype.init = function () {
 }

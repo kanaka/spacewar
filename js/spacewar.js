@@ -1,6 +1,6 @@
 "use strict";
 
-var Start = function (game) { }
+function Start(game) { }
 
 Start.prototype = {
     preload: function () {
@@ -14,7 +14,7 @@ Start.prototype = {
     }
 }
 
-var Preload = function (game) {
+function Preload(game) {
     this.logo = null
     this.preloadBar = null
     this.ready = false
@@ -62,6 +62,7 @@ Preload.prototype = {
         this.load.audio('chimein',      'data/audio/chimein.wav')
         this.load.audio('chimeout',     'data/audio/chimeout.wav')
         this.load.audio('boxhit',       'data/audio/boxhit.wav')
+        this.load.audio('gameover',     'data/audio/gameover.wav')
         this.load.audio('menu-move',    'data/audio/select_move.wav')
         this.load.audio('menu-choose',  'data/audio/select_choose.wav')
 
@@ -145,6 +146,7 @@ Preload.prototype = {
             chimein:      this.add.audio('chimein'),
             chimeout:     this.add.audio('chimeout'),
             boxhit:       this.add.audio('boxhit'),
+            gameover:     this.add.audio('gameover'),
             menu_move:    this.add.audio('menu-move'),
             menu_choose:  this.add.audio('menu-choose'),
         }

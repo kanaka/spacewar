@@ -49,7 +49,7 @@ function massCounts() {
 //
 // Mass abstract object
 //
-var Mass = function (game, key) {
+function Mass(game, key) {
     Phaser.Sprite.call(this, game, 20, 20, key)
     this.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST
     this.anchor.set(0.5, 0.5)
@@ -77,6 +77,8 @@ Mass.prototype.start = function(x, y, vx, vy) {
 }
 
 Mass.prototype.update = function() {
+    if (this.game.pausePlay) { return }
+
     this.x += this.vx * this.game.time.physicsElapsed
     this.y += this.vy * this.game.time.physicsElapsed
 
@@ -143,7 +145,7 @@ Mass.prototype.hit_by = function(other_mass) {
 //
 // Smoke "object"
 //
-var Smoke = function(game) {
+function Smoke(game) {
     Mass.call(this, game, 'smoke')
 
     this.alpha = Math.random() * 0.25
@@ -164,7 +166,7 @@ Smoke.prototype.start = function(x, y, vx, vy) {
 //
 // Fire objects
 //
-var Fire = function(game, key) {
+function Fire(game, key) {
     Mass.call(this, game, key || 'fire')
 
     this.animations.add('anim', [0,1,2,3], 10, true)
@@ -198,7 +200,7 @@ Fire.prototype.hit_by = function(other_mass) {
     }
 }
 
-var SuperFire = function(game) {
+function SuperFire(game) {
     Fire.call(this, game, 'superfire')
 
     this.damage = parseInt(vars.fire_damage * 1.5)
@@ -217,7 +219,7 @@ SuperFire.prototype.start = function(x, y, vx, vy) {
 //
 
 // An object that phases through the animations frames and then dies
-var Ephemeral = function(game, key) {
+function Ephemeral(game, key) {
     Mass.call(this, game, key)
     this.phases = []
 }
@@ -233,6 +235,8 @@ Ephemeral.prototype.start = function(x, y, vx, vy) {
 }
 
 Ephemeral.prototype.update = function() {
+    if (this.game.pausePlay) { return }
+
     Mass.prototype.update.call(this)
 
     this.phase += this.PhaseRate
@@ -249,7 +253,7 @@ Ephemeral.prototype.gravitate = function(other_mass) {
 }
 
 
-var Pop = function(game) {
+function Pop(game) {
     Ephemeral.call(this, game, 'pop')
     this.phases = [0,1,2,3]
 }
@@ -260,7 +264,7 @@ Pop.prototype.Radius = 8.0
 Pop.prototype.PhaseRate = 0.2
 
 
-var Explosion = function(game) {
+function Explosion(game) {
     Ephemeral.call(this, game, 'explosion')
     this.phases = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 }
@@ -273,7 +277,7 @@ Explosion.prototype.Taxonomy = {explosion: true,
                                 damage: true,
                                 significant: true}
 
-var Debris = function(game, key) {
+function Debris(game, key) {
     Ephemeral.call(this, game, key)
 }
 Debris.prototype = Object.create(Ephemeral.prototype)
@@ -305,7 +309,7 @@ Debris.prototype.hit_by = function(other_mass) {
 }
 
 
-var Debris1 = function(game) {
+function Debris1(game) {
     Debris.call(this, game, 'debris1')
     this.phases = [0,1,2,3,4,5,6,7]
 }
@@ -313,7 +317,7 @@ Debris1.prototype = Object.create(Debris.prototype)
 Debris1.prototype.constructor = Debris1
 Debris1.prototype.Radius = 6.0
 
-var Debris2 = function(game) {
+function Debris2(game) {
     Debris.call(this, game, 'debris2')
     this.phases = [0,1,2,3,4,5,6,7]
 }
@@ -321,7 +325,7 @@ Debris2.prototype = Object.create(Debris.prototype)
 Debris2.prototype.constructor = Debris2
 Debris2.prototype.Radius = 6.0
 
-var Debris3 = function(game) {
+function Debris3(game) {
     Debris.call(this, game, 'debris3')
     this.phases = [0,1,2,3,4,5,6,7]
 }
@@ -329,7 +333,7 @@ Debris3.prototype = Object.create(Debris.prototype)
 Debris3.prototype.constructor = Debris3
 Debris3.prototype.Radius = 6.0
 
-var Debris4 = function(game) {
+function Debris4(game) {
     Debris.call(this, game, 'debris4')
     this.phases = [0,1,2,3,4,5,6,7]
 }
@@ -337,7 +341,7 @@ Debris4.prototype = Object.create(Debris.prototype)
 Debris4.prototype.constructor = Debris4
 Debris4.prototype.Radius = 6.0
 
-var DebrisBase = function(game) {
+function DebrisBase(game) {
     Debris.call(this, game, 'debris-base')
     this.phases = [0,1,2,3,4,5,6,7]
 }
@@ -346,7 +350,7 @@ DebrisBase.prototype.constructor = DebrisBase
 DebrisBase.prototype.Radius = 18.0
 DebrisBase.prototype.PhaseRate = 0.07
 
-var DebrisBubble = function(game) {
+function DebrisBubble(game) {
     Debris.call(this, game, 'debris-bubble')
     this.phases = [0,1,2,3,4,5,6,7]
 }
@@ -355,7 +359,7 @@ DebrisBubble.prototype.constructor = DebrisBubble
 DebrisBubble.prototype.Radius = 8.0
 DebrisBubble.prototype.PhaseRate = 0.1
 
-var DebrisMotor = function(game) {
+function DebrisMotor(game) {
     Debris.call(this, game, 'debris-motor')
     this.phases = [0,1,2,3,4,5,6,7]
 }
@@ -369,7 +373,7 @@ DebrisMotor.prototype.PhaseRate = 0.1
 //
 // Sun object
 //
-var Sun = function(game) {
+function Sun(game) {
     Mass.call(this, game, 'boxes')
     this.mass = 10.0
 
@@ -400,13 +404,15 @@ Sun.prototype.gravitate = function(other_mass) {
 //
 // Hard objects
 //
-var Hard = function(game, key) {
+function Hard(game, key) {
     Mass.call(this, game, key)
 }
 Hard.prototype = Object.create(Mass.prototype)
 Hard.prototype.constructor = Hard
 
 Hard.prototype.update = function() {
+    if (this.game.pausePlay) { return }
+
     if (this.pending_frames > 0) {
         if (this.pending_frames === vars.frames_per_sec / 2) {
             if (this.snd1) { this.snd1.play() }
@@ -440,7 +446,7 @@ Hard.prototype.hit_by = function(other_mass) {
 
 
 // Spikes
-var Spike = function(game) {
+function Spike(game) {
     Hard.call(this, game, 'spike')
     this.mass = 4.0
 
@@ -460,7 +466,7 @@ Spike.prototype.Taxonomy = {spike: true,
                             significant: true}
 
 // Asteroids
-var Asteroid = function(game) {
+function Asteroid(game) {
     Hard.call(this, game, 'asteroid')
     this.mass = 4.0
 
@@ -500,7 +506,7 @@ Asteroid.prototype.find_spot = function() {
 //
 // Bobble objects
 //
-var Bobble = function(game, key) {
+function Bobble(game, key) {
     Mass.call(this, game, key)
     this.mass = 0.5
 
@@ -511,6 +517,8 @@ Bobble.prototype = Object.create(Mass.prototype)
 Bobble.prototype.constructor = Bobble
 
 Bobble.prototype.update = function() {
+    if (this.game.pausePlay) { return }
+
     if (this.pending_frames > 0) {
         this.pending_frames -= 1
         if (this.pending_frames <= 0) {
@@ -538,7 +546,7 @@ Bobble.prototype.hit_by = function(other_mass) {
     }
 }
 
-var ShieldBobble = function(game) {
+function ShieldBobble(game) {
     Bobble.call(this, game, 'bobble')
 }
 ShieldBobble.prototype = Object.create(Bobble.prototype)
@@ -551,7 +559,7 @@ ShieldBobble.prototype.Taxonomy = {shield: true,
                                    significant: true}
 
 
-var BulletBobble = function(game) {
+function BulletBobble(game) {
     Bobble.call(this, game, 'bobble')
 }
 BulletBobble.prototype = Object.create(Bobble.prototype)
@@ -567,7 +575,7 @@ BulletBobble.prototype.Taxonomy = {bullet: true,
 //
 // Ship object
 //
-var Ship = function(game, shipnum) {
+function Ship(game, shipnum) {
     Mass.call(this, game, 'ship'+shipnum)
     this.mass = 1.0
 
@@ -578,6 +586,8 @@ var Ship = function(game, shipnum) {
     this.max_bullet = vars.bbobble_charge
     this.max_appear_frames = 45
     this.appear_frames = this.max_appear_frames
+    this.max_warp_frames = 60
+    this.warp_frames = 0
     this.visible = true
 
     this.frameName = 'main'
@@ -590,6 +600,7 @@ var Ship = function(game, shipnum) {
             15, true)
 
     this.appearPhases = Phaser.Animation.generateFrameNames('teleport', 0, 23)
+    this.warpPhases = Phaser.Animation.generateFrameNames('warp', 0, 11)
 
     // Add sprites for powerups
 
@@ -646,7 +657,24 @@ Ship.prototype.activate = function(x, y, vx, vy, mass, rotation) {
     this.pending_frames = 0
 }
 
+Ship.prototype.deactivate = function() {
+    if (this.dead) { return }
+    this.dead = true
+    this.health = 0.0
+    this.shield = 0.0
+    this.bullet = 0.0
+
+    this.visible = false
+    this.shield_sprite.visible = false
+    this.shield_sprite.animations.stop()
+    this.bullet_sprite.visible = false
+    this.bullet_sprite.animations.stop()
+}
+
 Ship.prototype.update = function() {
+    if (this.game.pausePlay) { return }
+
+    // Handle special modes
     if (this.appear_frames > 0) {
         var frameCnt = this.appearPhases.length,
             ratio = 1 - this.appear_frames / this.max_appear_frames
@@ -657,9 +685,18 @@ Ship.prototype.update = function() {
         } else {
             return
         }
-    }
-
-    if (this.pending_frames > 0) {
+    } else if (this.warp_frames > 0) {
+        var frameCnt = this.warpPhases.length,
+            ratio = 1 - this.warp_frames / this.max_warp_frames
+        this.frameName = this.warpPhases[parseInt(frameCnt * ratio)]
+        this.warp_frames -= 1
+        if (this.warp_frames <= 0) {
+            this.pending_frames = 3600 // No re-appear
+            this.deactivate()
+        } else {
+            return
+        }
+    } else if (this.pending_frames > 0) {
         if (this.pending_frames === vars.frames_per_sec / 2) {
             this.game.sounds.startlife.play()
         }
@@ -812,14 +849,8 @@ Ship.prototype.cmd_fire = function() {
 
 Ship.prototype.explode = function(without_fire) {
     if (this.dead) { return }
-    this.health = 0.0
-    this.dead = true
-    this.visible = false
+    this.deactivate()
 
-    this.shield_sprite.visible = false
-    this.shield_sprite.animations.stop()
-    this.bullet_sprite.visible = false
-    this.bullet_sprite.animations.stop()
     this.game.sounds.explode.play()
     if (vars.graphics > 0) {
         // debris
@@ -834,6 +865,16 @@ Ship.prototype.explode = function(without_fire) {
         mass(this.game, Explosion, 'high', this.x, this.y, this.vx, this.vy,
              {mass: this.mass / 2})
     }
+}
+
+Ship.prototype.warp = function() {
+    this.shield_sprite.visible = false
+    this.shield_sprite.animations.stop()
+    this.bullet_sprite.visible = false
+    this.bullet_sprite.animations.stop()
+    this.game.sounds.gameover.play()
+    this.warp_frames = this.max_warp_frames
+    this.animations.stop()
 }
 
 Ship.prototype.damage = function(damage) {
@@ -854,7 +895,7 @@ Ship.prototype.damage = function(damage) {
 }
 
 Ship.prototype.hit_by = function(other_mass) {
-    var dead = false
+    var dead = false, other_dead = false
     if (this.dead) { return }
     if (other_mass instanceof Fire) {
         var damage = ((other_mass.damage-10) *
@@ -862,7 +903,7 @@ Ship.prototype.hit_by = function(other_mass) {
         dead = this.damage(other_mass.damage)
         if (dead && other_mass.owner !== this) {
             other_mass.owner.player.score += 1
-            other_mass.owner.player.complement = 1
+            other_mass.owner.player.compliment = true
         }
     } else if (other_mass instanceof Debris) {
         this.damage(vars.debris_damage)
@@ -873,8 +914,9 @@ Ship.prototype.hit_by = function(other_mass) {
     } else if (other_mass instanceof Ship) {
         var my_damage = other_mass.health + other_mass.shield,
             other_damage = this.health + this.shield
-        this.damage(my_damage)
-        other_mass.damage(other_damage)
+        dead = this.damage(my_damage)
+        other_dead = other_mass.damage(other_damage)
+        other_mass.player.insult = other_dead
     } else if (other_mass instanceof ShieldBobble) {
         this.shield = Math.min(this.max_shield,
                                this.shield + vars.sbobble_power)
@@ -887,8 +929,11 @@ Ship.prototype.hit_by = function(other_mass) {
         dead = this.damage(1000)
         if (dead && this.player.score > 0) {
             this.player.score += vars.death_score
-            this.player.insult = 1
         }
+    }
+    // Insult/compliment depending on outcome
+    if (dead && !(other_mass instanceof Fire)) {
+        this.player.insult = true
     }
 }
 
@@ -901,11 +946,9 @@ function runobjects(game) {
         vapors  = groups.vapors.children,
         low     = groups.low.children,
         high    = groups.high.children,
-        virtual = groups.virtual.children,
         pend    = groups.pend.children,
         solids  = low.concat(high),
-        real    = vapors.concat(solids),
-        all     = real.concat(virtual)
+        real    = vapors.concat(solids)
 
     // Make objects (Spikes, Asteroids, Bobble/powerups) appear
     for (var d of [[Spike,        vars.spike_rate],
@@ -952,10 +995,7 @@ function runobjects(game) {
     }
 
     // Check all objects for death
-    for (var grp of [groups.vapors,
-                     groups.low,
-                     groups.high,
-                     groups.virtual]) {
+    for (var grp of [groups.vapors, groups.low, groups.high]) {
         for (var o of grp.children) {
             if (o.dead) {
                 if (o instanceof Ship) {
@@ -966,8 +1006,10 @@ function runobjects(game) {
                 if (o instanceof Fire) {
                     if (o.dead_by_hit) {
                         game.sounds.pop.play()
+                        mass(game, Pop, 'vapors', o.x, o.y, o.vx/5, o.vy/5)
+                    } else {
+                        mass(game, Pop, 'vapors', o.x, o.y, o.vx, o.vy)
                     }
-                    mass(game, Pop, 'vapors', o.x, o.y, o.vx/5, o.vy/5)
                 } else if (o instanceof Debris) {
                     if (o.dead_by_hit) {
                         game.sounds.pop.play()

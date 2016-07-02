@@ -3,11 +3,13 @@
 //
 // HUD object
 //
-var HUD = function (game, players) {
+function HUD(game, players) {
     Phaser.Group.call(this, game)
     this.visible = true
-    this.max_pending_frames = 20
-    this.pending_frames = this.max_pending_frames
+    this.max_appear_frames = 20
+    this.appear_frames = this.max_appear_frames
+    this.max_disappear_frames = 20
+    this.disappear_frames = 0
     this.start_x = 800
     this.end_x = 700
     this.x = this.start_x
@@ -107,19 +109,31 @@ var HUD = function (game, players) {
 HUD.prototype = Object.create(Phaser.Group.prototype)
 HUD.prototype.constructor = HUD
 
+HUD.prototype.disappear = function() {
+    this.disappear_frames = this.max_disappear_frames
+}
+
 HUD.prototype.update = function() {
+    if (this.game.pausePlay) { return }
+
     var total_deaths = 0,
         total_kills = 0
     this.ticks += 1
 
-    if (this.pending_frames > 0) {
-        this.pending_frames -= 1
-        var ratio = (this.max_pending_frames - this.pending_frames)
-                    / this.max_pending_frames,
+    if (this.appear_frames > 0) {
+        this.appear_frames -= 1
+        var ratio = (this.max_appear_frames - this.appear_frames)
+                    / this.max_appear_frames,
             shift = (this.end_x - this.start_x) * ratio
         this.x = this.start_x + shift
+    } else if (this.disappear_frames > 0) {
+        this.disappear_frames -= 1
+        var ratio = (this.max_disappear_frames - this.disappear_frames)
+                    / this.max_disappear_frames,
+            shift = (this.end_x - this.start_x) * ratio
+        this.x = this.end_x - shift
     } else if (this.show_player < this.players.length) {
-        if (this.ticks > this.max_pending_frames + 30 + this.show_player * 45) {
+        if (this.ticks > this.max_appear_frames + 30 + this.show_player * 45) {
             this.stats[this.show_player].visible = true
             this.game.sounds.pop.play()
             this.show_player += 1

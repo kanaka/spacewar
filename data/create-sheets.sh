@@ -38,8 +38,8 @@ for s in $(seq 0 3); do
     y=$(( y+32 ))
 
     # Warp
-    for i in $(seq 0 18); do
-        obj warp${i} $(( i*32 )) ${y} 32 32
+    for i in $(seq 0 11); do
+        obj warp${i} $(( i*48 )) ${y} 48 32
     done
     y=$(( y+32 ))
 

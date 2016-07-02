@@ -1,14 +1,17 @@
 "use strict";
 
-var GamePlay = function(game) {}
+function GamePlay(game) {}
 
 GamePlay.prototype.init = function() {
     //this.game.physics.startSystem(Phaser.Physics.ARCADE);
+    this.ticks = 0
+    this.gameover = false
+    this.showWelcome = !localStorage.getItem("welcome_already_shown")
+    this.showingHelp = null
 }
 
 GamePlay.prototype.create = function () {
-    var self = this,
-        game = this.game,
+    var game = this.game,
         arena = this.game.arena
 
     // Start the in-game soundtrack
@@ -21,7 +24,9 @@ GamePlay.prototype.create = function () {
                    vapors:  game.add.group(),
                    low:     game.add.group(),
                    high:    game.add.group(),
-                   virtual: game.add.group(),
+                   hud:     game.add.group(),
+                   message: game.add.group(),
+                   help:    game.add.group(),
                    pend:    new Phaser.Group(game, null)}
 
     // Add Sun
@@ -62,7 +67,7 @@ GamePlay.prototype.create = function () {
     }
 
     // Add HUD image
-    game.groups.virtual.add(new HUD(game, this.players))
+    game.groups.hud.add(new HUD(game, this.players))
 
     // Disable default input behaviors
     game.input.touch.preventDefault = false
@@ -73,15 +78,23 @@ GamePlay.prototype.create = function () {
         Phaser.Keyboard.DOWN,
         Phaser.Keyboard.TAB,
         Phaser.Keyboard.CONTROL,
-        Phaser.Keyboard.SPACE])
+        Phaser.Keyboard.SPACE,
+        Phaser.Keyboard.ESC,
+        Phaser.Keyboard.F1])
 
     game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(function() {
-        self.gameover()
-    })
+        // Ignore if paused, update loop will cancel from help
+        if (!this.showingHelp) {
+            this.startGameover()
+        }
+    }.bind(this))
 }
 
 GamePlay.prototype.update = function () {
-    var music = this.game.music
+    var game = this.game,
+        music = game.music
+
+    this.ticks += 1
 
     // Switch soundtracks
     if (music.play[music.play_index].currentTime >
@@ -96,14 +109,60 @@ GamePlay.prototype.update = function () {
         }
     }
 
+    if (this.showingHelp) {
+        if ((game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) ||
+            (game.input.keyboard.isDown(Phaser.Keyboard.ESC)) ||
+            (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) ||
+            (game.input.mousePointer.isDown))    {
+            game.groups.help.remove(this.showingHelp, true)
+            this.showingHelp = null
+            game.pausePlay = false
+        } else {
+            return
+        }
+    }
+
+    // Show tutorial/help messages
+    if (this.showWelcome && this.ticks > 2.5 * CONST_FPS) {
+        this.showWelcome = false
+        this.showingHelp = new Help(game, 'welcome')
+        localStorage.setItem("welcome_already_shown", true)
+        game.groups.help.add(this.showingHelp)
+        game.pausePlay = true
+        return
+    } else if (game.input.keyboard.isDown(Phaser.Keyboard.F1)) {
+        this.showingHelp = new Help(game, 'keys')
+        game.groups.help.add(this.showingHelp)
+        game.pausePlay = true
+        return
+    }
+
     // Handler player input
     for (var player of this.players) {
         player.do_action()
     }
 
+    // Check for winner
+    for (var player of this.players) {
+        if (player.score >= vars.win_score) {
+            this.startGameover(true)
+        }
+        if (player.compliment) {
+            player.compliment = false
+            var idx = parseInt(Math.random()*COMPLIMENTS.length),
+                color = CONST_MESSAGE_COLORS[player.playernum]
+            new Message(game, COMPLIMENTS[idx], color)
+        }
+        if (player.insult) {
+            player.insult = false
+            var idx = parseInt(Math.random()*INSULTS.length),
+                color = CONST_MESSAGE_COLORS[player.playernum]
+            new Message(game, INSULTS[idx], color)
+        }
+    }
 
     // Perform object behavior and interactions
-    runobjects(this.game)
+    runobjects(game)
 }
 
 GamePlay.prototype.render = function () {
@@ -114,16 +173,36 @@ GamePlay.prototype.render = function () {
                     (game.time.fps || '--'), 20, 560, "#00ff00")
 }
 
-GamePlay.prototype.gameover = function () {
+GamePlay.prototype.message = function (msg, frames) {
+    var game = this.game
+}
+
+GamePlay.prototype.startGameover = function (win) {
     var self = this,
-        game = this.game
+        game = this.game,
+        delay = 2000
+    if (this.gameover) { return }
+    this.gameover = true
+
+    game.groups.hud.children[0].disappear()
+
+    new Message(game, "Game Over")
     for (var player of this.players) {
-        player.ship.explode(true)
-        player.ship.pending_frames = 3600 // No re-appear
+        if (player.score >= vars.win_score) {
+            var msg = "Player " + (player.playernum+1) + " wins!",
+                color = CONST_MESSAGE_COLORS[player.playernum]
+            new Message(game, msg, color, vars.message_frames*4)
+            player.ship.warp()
+            delay = 6000
+        } else {
+            player.ship.explode(true)
+            player.ship.pending_frames = 3600 // No re-appear
+        }
     }
     setTimeout(function () {
         for (var m of game.music.play) { m.stop() }
         saveStarLayers(game.groups.stars)
+        game.sounds.gameover.stop()
         self.state.start('Menu');
-    }, 1000)
+    }, delay)
 }

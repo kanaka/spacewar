@@ -5,8 +5,9 @@ var starLayerCache = []
 //
 // Star object
 //
-var StarLayer = function(game, layer, x, y, vx, vy, cnt, bitmap) {
-    var color = [layer*40+110, layer*35+100, layer*22+150],
+function StarLayer(game, layer, x, y, vx, vy, cnt, bitmap) {
+    //var color = [layer*45+65, layer*50+60, layer*35+110],
+    var color = [layer*35+115, layer*50+70, layer*45+85],
         bm
     if (typeof bitmap === 'undefined') {
         bm = game.add.bitmapData(800,800)
@@ -54,7 +55,7 @@ function starLayerGroup(game) {
     if (starLayerCache.length === 0) {
         // Restore stars layers from cache
         for (var layer = 0; layer < CONST_STAR_LAYERS; layer++) {
-            var vx = -0.2 * layer, vy = 0.19 * layer
+            var vx = -0.1 + -0.25 * layer, vy = 0.09 + 0.15 * layer
             grp.add(new StarLayer(game, layer,
                                   0, 0, vx, vy,
                                   vars.num_stars / CONST_STAR_LAYERS))

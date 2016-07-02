@@ -7,9 +7,68 @@ var VERSION               = 0.6,
     CONST_PLAYER_OFF      = 0,
     CONST_PLAYER_HUMAN    = 1,
     CONST_PLAYER_COMPUTER = 2,
-    CONST_HEALTH_COLORS   = [[75, 0, 0], [0, 75, 0], [0, 0, 75], [75, 75, 0]],
+    CONST_HEALTH_COLORS   = [[75, 0, 0],
+                             [0, 75, 0],
+                             [0, 0, 75],
+                             [75, 75, 0]],
+    CONST_MESSAGE_COLORS  = [[255, 128, 128],
+                             [128, 255, 128],
+                             [128, 128, 255],
+                             [255, 255, 128]],
     CONST_FPS             = 60,
     CONST_STAR_LAYERS     = 4
+
+
+// number of insultsmust match num of complements, be careful
+var COMPLIMENTS = [
+    'Nice',
+    'Smooth',
+    'Deck',
+    'Last Starfighter',
+    'Oh yeah',
+
+    'Rocket Scientist',
+    'King of the Well',
+    'Bring the smack',
+    'Own a PDP-1?',
+    'Boom!',
+
+    'There is no spoon',
+    'Ship parts for sale',
+    'Walk in the park',
+    'Easy as pie',
+    'Candy from a baby',
+
+    'Eat that!',
+    'One down...',
+    'Yes!',
+    'I brake for no one'
+]
+var INSULTS = [
+    'Ouch',
+    'Sloppy',
+    'What was that?',
+    'This is your ship on drugs',
+    'Flying by braile',
+
+    'Flying blind',
+    'Look ma, no han...',
+    'Get the clue stick',
+    'Thrusters on, nobody home',
+    'Watch the event horizon',
+
+    'Mayday, mayday',
+    'Eject!',
+    'That\'s no moon!',
+    'Not that button!',
+    'Holy hand-grenade, Batman!',
+
+    'Bring out your dead!',
+    'Orange ... no, Blue!',
+    'Luke, pull up!',
+    'Run, the sky\'s falling!'
+]
+
 
 //
 // Game settings
@@ -18,6 +77,7 @@ var vars = {
     frames_per_sec: CONST_FPS,  // TODO: depends on Phaser goal
     num_stars: 1000,
     fire_life: 4 * CONST_FPS,
+    message_frames: 2 * CONST_FPS,
 
     start_clearance: 30, // distance ships start from other objects
 
@@ -50,7 +110,7 @@ var vars = {
 
     graphics:            2, // 0 = no stars/smoke, 1 = smoke, 2 = smoke+stars
 
-    win_score:           10,
+    win_score:           7,
     death_score:         -1,
     music:               1,
     sounds:              1,
@@ -83,7 +143,7 @@ var prefs = [
 //    ["game_mode", [["Normal", 1], ["1 Player Tutorial", 2]]],
     ["graphics", [["Minimal", 0], ["Smoke", 1], ["Smoke and Stars", 2]]],
 //    ["display", [["Window", 0], ["Fullscreen", 1]]],
-//    ["win_score", [["3", 3], ["7", 7], ["11", 11], ["21", 21]]],
+    ["win_score", [["3", 3], ["5", 5], ["7", 7], ["11", 11], ["21", 21]]],
     ["death_score", [["-2", -2], ["-1", -1], ["0", 0]]],
     ["music", [["Mute", 0], ["Quiet", 0.3], ["Normal", 1]]],
     ["sounds", [["Mute", 0], ["Quiet", 0.3], ["Normal", 1]]],

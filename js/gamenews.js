@@ -1,6 +1,6 @@
 "use strict";
 
-var GameNews = function(game) {}
+function GameNews(game) {}
 
 GameNews.prototype.init = function () {
 }

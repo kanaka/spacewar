@@ -1,6 +1,6 @@
 "use strict";
 
-var MenuItem = function (game, name, state) {
+function MenuItem(game, name, state) {
     Phaser.Sprite.call(this, game, 0, 0, 'menu-'+name+'-off')
     this.visible = true
     this.anchor.set(0.5, 0.5)
@@ -50,7 +50,7 @@ MenuItem.prototype.update = function() {
     }
 }
 
-var GameMenu = function(game) {
+function GameMenu(game) {
     this.current = 0
 }
 

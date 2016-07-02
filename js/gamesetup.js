@@ -1,14 +1,6 @@
 "use strict";
 
-function capitalize(txt) {
-        return txt.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase() })
-}
-
-function label(txt) {
-    return capitalize(txt.replace(/_/g, " "))
-}
-
-var GameSetup = function(game) {
+function GameSetup(game) {
     this.user_vars = {}
 
     var raw = localStorage.getItem("vars")

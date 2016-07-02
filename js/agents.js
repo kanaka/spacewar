@@ -1,6 +1,6 @@
 "use strict";
 
-var Agent = function(game, playernum, ship) {
+function Agent(game, playernum, ship) {
     this.game = game
     this.playernum = playernum
     this.ship = ship
@@ -8,11 +8,11 @@ var Agent = function(game, playernum, ship) {
     this.score = 0
     this.deaths = 0
 
-    this.complement = 0
-    this.insult = 0
+    this.compliment = false
+    this.insult = false
 }
 
-var HumanAgent = function(game, playernum, ship) {
+function HumanAgent(game, playernum, ship) {
     Agent.call(this, game, playernum, ship)
 }
 HumanAgent.prototype = Object.create(Agent.prototype)
@@ -72,7 +72,7 @@ HumanAgent.prototype.do_action = function (keyset) {
     }
 }
 
-var DNAAgent = function(game, playernum, ship, dna, groups) {
+function DNAAgent(game, playernum, ship, dna, groups) {
     Agent.call(this, game, playernum, ship)
     this.dna = dna
     this.groups = groups
