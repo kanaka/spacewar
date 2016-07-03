@@ -16,12 +16,12 @@ learn python (for various reasons) and this game was the result. In
 
 The game menu:
 
-<img src="http://kanaka.github.com/spacewar/spacewar1.png">
+<img src="http://kanaka.github.com/spacewar/data/spacewar1.png">
 
 
 1 human player against 3 AI players:
 
-<img src="http://kanaka.github.com/spacewar/spacewar2.png">
+<img src="http://kanaka.github.com/spacewar/data/spacewar2.png">
 
 
 ### Game Play
