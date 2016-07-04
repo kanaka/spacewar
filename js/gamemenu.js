@@ -92,13 +92,22 @@ GameMenu.prototype.create = function () {
             game.groups.menu)
     this.info.setShadow(2, 2, 'rbga(128,128,128,0.7)', 2)
 
-    this.version = game.add.text(100, 460,
+    this.link = game.add.text(780, 570,
+            'github.com/kanaka/spacewar',
+            {font: "Arial Black",
+             fontSize: 10,
+             fill: rgba(200, 180, 140)},
+            game.groups.menu)
+    this.link.anchor.set(1, 0)
+    this.link.setShadow(2, 2, 'rbga(128,128,128,0.7)', 2)
+
+    this.mode = game.add.text(100, 460,
             'with ' + vars.player_cnt() + ' players',
             {font: "Arial Black",
              fontSize: 11,
              fill: rgba(200, 175, 120)},
             game.groups.menu)
-    this.version.setShadow(2, 2, 'rbga(128,128,128,0.7)', 2)
+    this.mode.setShadow(2, 2, 'rbga(128,128,128,0.7)', 2)
 
     // Menu items
     this.menu = [new MenuItem(game, 'start', 'Play'),
@@ -144,6 +153,19 @@ GameMenu.prototype.create = function () {
         saveStarLayers(game.groups.stars)
         self.state.start(self.menu[self.current].state);
     }
+    function mouseClick(pointer, event) {
+        // Handle this directly so that we can adjust for game scaling
+        // (which does not seem to be detected by the default sprite
+        // click handler)
+        var x = event.x/game.scaleVal, y = event.y/game.scaleVal,
+            m = self.menu[self.current].on_sprite,
+            l = self.link
+        if (x >= m.left && x < m.right && y >= m.top && y < m.bottom) {
+            choose()
+        } else if (x >= l.left && x < l.right && y >= l.top && y < l.bottom) {
+            window.location = 'https://github.com/kanaka/spacewar'
+        }
+    }
 
     // Add keyboard interaction
     var k = game.input.keyboard
@@ -151,7 +173,7 @@ GameMenu.prototype.create = function () {
     k.addKey(Phaser.Keyboard.RIGHT).onDown.add(function() { move(+1) })
     k.addKey(Phaser.Keyboard.ENTER   ).onDown.add(choose)
     k.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(choose)
-    game.input.onDown.add(choose)
+    game.input.onDown.add(mouseClick)
 
     // Add mouse interaction
     game.input.addMoveCallback(function(pointer, absX, absY) {
