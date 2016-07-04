@@ -151,7 +151,7 @@ HUD.prototype.update = function() {
         total_kills += this.players[i].score
 
         // Update score
-        stats.score.setText(this.players[i].score)
+        stats.score.setText(this.players[i].score + " / " + vars.win_score)
 
         // Update health bar
         stats.health.scale.setTo(healthp, 1)

@@ -166,8 +166,9 @@ Smoke.prototype.start = function(x, y, vx, vy) {
 //
 // Fire objects
 //
-function Fire(game, key) {
-    Mass.call(this, game, key || 'fire')
+function Fire(game) {
+    this.mode = this.mode || 'fire'
+    Mass.call(this, game, this.mode)
 
     this.animations.add('anim', [0,1,2,3], 10, true)
 
@@ -188,9 +189,7 @@ Fire.prototype.start = function(x, y, vx, vy) {
     this.owner = null
     this.dead_by_hit = false
     this.ticks_to_live = vars.fire_life
-    this.animations.stop('fire')
-    this.animations.stop('superfire')
-    this.animations.play(this.mode)
+    this.animations.play('anim')
 }
 
 Fire.prototype.hit_by = function(other_mass) {
@@ -201,7 +200,8 @@ Fire.prototype.hit_by = function(other_mass) {
 }
 
 function SuperFire(game) {
-    Fire.call(this, game, 'superfire')
+    this.mode = 'superfire'
+    Fire.call(this, game)
 
     this.damage = parseInt(vars.fire_damage * 1.5)
 }
@@ -209,7 +209,6 @@ SuperFire.prototype = Object.create(Fire.prototype)
 SuperFire.prototype.constructor = SuperFire
 
 SuperFire.prototype.start = function(x, y, vx, vy) {
-    this.mode = 'superfire'
     Fire.prototype.start.call(this, x, y, vx, vy)
     this.ticks_to_live = vars.fire_life * 1.5
 }

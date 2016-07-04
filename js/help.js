@@ -5,22 +5,23 @@ var HelpText = {
     {title: "Welcome to Spacewar",
      w: 420, h: 480, size: 15, font: "Arial",
      text:
-     "The objective of Spacwar is to pilot a ship and score points " +
-     "by killing your opponents. Your ship is equipped with a blaster " +
-     "and forward and reverse thrusters." +
+     "The objective of Spacwar is to score points by killing your " +
+     "opponents while avoiding collisions with deadly objects. " +
+     "Your ship is equipped with a blaster and forward and reverse " +
+     "thrusters. " +
      "\n\n" +
-     "Shield and blaster powerups will appear every now and then. If " +
-     "you run into these with your ship, you will receive a charge to " +
-     "shields or blasters. Asteroids and spiked balls also appear " +
-     "periodically and collisions with them are fatal. " +
+     "Shield and blaster powerups will appear periodically. All " +
+     "objects in the game exert and are influenced by gravity. " +
+     "Collisions with the central sun, asteroids and spike balls are " +
+     "instantly fatal." +
      "\n\n" +
      "The vital stats for each player's ship appear on the heads up " +
      "display to the right. Below the ship image is the player's " +
      "score. Below the score is the health of the ship and below that " +
      "is the shield strength if the ship has gotten a shield powerup. " +
      "\n\n" +
-     "Press F1 during the game to show the keys that control each " +
-     "player."},
+     "Press F1 during the game to show control keys for each player. " +
+     "Gameplay is configurable via the setup menu."},
     keys:
     {title: "Player Control Keys",
      w: 480, h: 350, size: 13, font: "Monospace",
@@ -88,19 +89,28 @@ function Help(game, item) {
 
     // Dotted line animation
     var frameCnt = 20,
-        sheet = game.add.bitmapData(frameCnt * data.w, data.h)
-    for (var i=0; i < frameCnt; i++) {
-        var amplitude = Math.cos(Math.PI * 2 * i/frameCnt),
+        fx = 0, fy = 0,
+        scale = 2,
+        w = data.w / scale, h = data.h / scale,
+        lineWidth = 2 / scale,
+        dashes = [frameCnt/scale, frameCnt/scale],
+        sheet = game.add.bitmapData(5 * w, 4 * h)
+    for (var f=0; f < frameCnt; f++) {
+        var amplitude = Math.cos(Math.PI * 2 * f/frameCnt),
             color = rgba(255,
                          parseInt(220 + amplitude * 30),
                          parseInt(180 + amplitude * 65))
-        borderRect(sheet,
-                   i * data.w, 0, data.w, data.h,
-                   color, 2, [frameCnt/2, frameCnt/2], i)
+        borderRect(sheet, fx, fy, w, h, color, lineWidth, dashes, f)
+        fx += w
+        if (fx >= 5 * w) {
+            fx = 0
+            fy += h
+        }
     }
     game.cache.addSpriteSheet(item, '', sheet.canvas,
-                              data.w, data.h, frameCnt, 0, 0)
+                              w, h, frameCnt, 0, 0)
     this.border = this.create(0, 0, item)
+    this.border.scale.set(scale)
     this.border.animations.add('anim', null, 30, true)
     this.border.animations.play('anim')
 }
