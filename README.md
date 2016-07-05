@@ -67,6 +67,11 @@ The controls for each player are as follows:
         Fire:     Numpad 0
 
 
+### License
+
+Spacewar is licensed under the LGPL 2.1 (Less GNU Public License 2.1).
+See LICENSE.LGPL-2.1 for the full license.
+
 ### Acknowlegements
 
 Some of the graphics, music/sfx, and original initialization code in
