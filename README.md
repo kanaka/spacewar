@@ -1,7 +1,6 @@
 Spacewar is an arcade game in the rich tradition of creating knockoffs
 of the original [Spacewar!](http://en.wikipedia.org/wiki/Spacewar!)
-(considered one of the first computer games). Spacewar is licensed
-under the LGPL (see LICENSE.LGPL-2.1).
+(considered one of the first computer games).
 
 ### Background 
 
